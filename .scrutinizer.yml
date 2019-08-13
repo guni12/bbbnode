@@ -1,0 +1,20 @@
+checks:
+    javascript: true
+
+build:
+    dependencies:
+        #before:
+            #- npm install istanbul   # or add it as part of your package.json
+
+    tests:
+        before:
+            command: 'chown -R $USER:$USER ./db'
+            command: 'chmod +x db/reset_test_db.bash'
+        override:
+            -
+                #command: 'istanbul cover --report clover test.js'
+                #command: 'npm run test-scrutinizer'
+                command: 'npm test'
+                coverage:
+                    file: 'coverage/clover.xml'
+                    format: 'clover'

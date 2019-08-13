@@ -1,0 +1,11 @@
+server {
+    server_name bbb;
+
+    root /var/www/bbb;
+
+    location /.well-known {
+        allow all;;
+    }
+
+    listen 80;
+}

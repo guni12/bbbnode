@@ -1,0 +1,29 @@
+language: node_js
+
+node_js:
+    - "node"
+    - "10"
+    - "8"
+    - "6"
+
+sudo: false
+
+services:
+    - sqlite3
+
+before_install:
+    chown -R $USER:$USER ./db;
+    chmod +x db/reset_test_db.bash;
+
+git:
+    submodules: false
+
+before_script:
+    - npm install
+
+script:
+    - npm test
+
+after_success:
+    - npm run report-coveralls
+    - npm run report-codecov

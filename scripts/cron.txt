@@ -1,0 +1,2 @@
+05 16 * * * /usr/bin/python3 /home/pi/bbbnode/public/scripts/spot/getspot.py 2> /var/log/mylog.log
+*/10 * * * * wget http://ipv6home.org:1337/tempupdate
