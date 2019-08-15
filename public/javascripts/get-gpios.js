@@ -8,7 +8,7 @@ module.exports = (function () {
             if (err) {
                 throw err;
             }
-            console.log(JSON.parse(data), "Parsat");
+            //console.log(JSON.parse(data), "Parsat");
             return res.json(JSON.parse(data));
         });
     }

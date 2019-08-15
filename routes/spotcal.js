@@ -11,7 +11,7 @@ router.get("/",
 );
 
 router.get("/:id",
-    (req, res, next) => codes.asksqlite(req, res, next),
+    (req, res, next) => codes.asksqlite(req, res, next, '/spotcal'),
     (req, res, next) => cal.hubinfo(req, res, next),
     (req, res) => cal.show(req, res)
 );

@@ -1,69 +1,107 @@
-var rpio = require('rpio');
+const rpio = require('rpio');
 const fs = require('fs');
+const reg = require('./status.js');
 
 module.exports = (function () {
-    function update(req, res) {
-        console.log(req.body);
+    function update(req, res, next) {
+        //console.log(req.body);
         let gpio = parseInt(req.body.gpio);
         let stat = parseInt(req.body.status);
         let mode = req.body.mode;
 
-        console.log(gpio, stat, mode);
+        //console.log(gpio, stat, mode);
         if (mode === "out") {
             rpio.open(gpio, rpio.OUTPUT, stat);
             rpio.write(gpio, stat);
             stat = rpio.read(gpio);
-            console.log("Här: ", stat);
+            let updated = { gpio: gpio, status: stat, mode: mode };
+
+            //console.log(updated);
+            if (stat) {
+                req.updated = updated;
+
+                next();
+            } else {
+                let obj = reg.reterror(500, "/hourcontrol", "gpio out kunde inte läsas av", updated);
+
+                return res.status(500).json(obj);
+            }
         } else {
             rpio.open(gpio, rpio.INPUT);
             stat = rpio.read(gpio);
+            let inupdated = { gpio: gpio, status: stat, mode: mode };
+
+            if (stat) {
+                req.updated = inupdated;
+
+                next();
+            } else {
+                let obj = reg.reterror(500, "/hourcontrol", "gpio in kunde inte läsas av", inupdated);
+
+                return res.status(500).json(obj);
+            }
         }
-
-        let updated = { gpio: gpio, status: stat, mode: mode };
-
-        console.log(updated);
-
-        updateFile(updated);
-
-        return res.status(201).json(updated);
     }
 
-    function updateFile(item) {
-        fs.readFile('./public/scripts/gpiodetails.txt', (err, data) => {
-            if (err) {
-                console.log("err i update", err);
-                throw err;
-            }
-            let list = JSON.parse(data);
-            //console.log(list, "Parsat i edit");
-            let updated = updateList(item, list);
+    function updateFile(req, res, next) {
+        updateList(req.updated, req.gpiodetails);
+        next();
+    }
 
-            //console.log("Uppdaterat: ", updated);
-            writeList(updated);
-        });
+    function updateInLoop(updated, list) {
+        return void updateList(updated, list);
     }
 
     function updateList(item, list) {
-        list.forEach((one, index) => {
-            if (one.gpio === item.gpio) {
-                console.log("item.gpio", item.gpio);
-                list[index] = item;
-            }
-        });
-        return list;
+        try {
+            list.forEach((one, index) => {
+                if (one.gpio === item.gpio) {
+                    //console.log("item.gpio", item.gpio);
+                    list[index] = item;
+                }
+            });
+            return list;
+        } catch (err) {
+            console.log("err", err);
+            throw err;
+        }
     }
 
-    function writeList(list) {
-        fs.writeFile('./public/scripts/gpiodetails.txt', JSON.stringify(list), function (err) {
+    function writeList(req, res) {
+        let list = req.list;
+        console.log("writeList", list, JSON.stringify(list));
+
+        fs.writeFile('./public/scripts/gpiodetails.txt', JSON.stringify(list), err => {
             if (err) {
-                throw err;
+                let obj = reg.reterror(500, "/hourcontrol", "listan kunde inte skrivas in", err);
+
+                return res.status(500).json(obj);
             }
-            //console.log('Sparade till gpiodetails.txt');
         });
+        //console.log('Sparade till gpiodetails.txt');
+        return res.status(201).json(list);
+    }
+
+    function readList(req, res, next, file) {
+        console.log("Framme!!!!");
+        fs.readFile('./public/scripts/' + file, (err, data) => {
+            if (err) {
+                console.log("err i readList", err);
+                let obj = reg.reterror(500, "/hourcontrol", "listan kunde inte läsas av", err);
+
+                return res.status(500).json(obj);
+            }
+            req.gpiodetails = JSON.parse(data);
+            next();
+        })
     }
 
     return {
         update: update,
-        updateFile: updateFile
+        updateFile: updateFile,
+        updateList: updateList,
+        writeList: writeList,
+        updateInLoop: updateInLoop,
+        readList: readList
     };
 }());

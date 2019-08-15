@@ -35,7 +35,7 @@ module.exports = (function () {
 
                     next();
                 } else {
-                    let message = err === null ? "Tom databas" : err.message;
+                    let message = err === null ? "Detta id finns inte" : err.message;
                     let obj = reg.reterror(500, "/zones", message);
 
                     return res.status(500).json(obj);

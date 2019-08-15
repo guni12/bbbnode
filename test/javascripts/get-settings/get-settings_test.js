@@ -10,7 +10,7 @@ const server = require("../../../app.js");
 chai.use(chaiHttp);
 chai.should();
 
-describe("Visit and get spotcal", function() {
+describe("Visit and get all settings", function() {
     describe("GET /settings", () => {
         it("1. 200 HAPPY PATH", (done) => {
             chai.request(server)

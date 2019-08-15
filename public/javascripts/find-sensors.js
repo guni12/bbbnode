@@ -1,9 +1,27 @@
 const fs = require('fs');
 const rpio = require('rpio');
 const sensor = require('ds18b20-raspi');
+const reg = require('./status.js');
 
 module.exports = (function () {
-    function getAllZones(req, res) {
+    const options = {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+    };
+
+    const timeoptions = {
+        hour12: false,
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+    };
+
+    const d = new Date();
+    let time = d.toLocaleTimeString('sv-SE', timeoptions);
+    let date = d.toLocaleDateString('sv-SE', options);
+
+    function initPins(req, res, next) {
         let gpiolist = [];
         let pins = [
             3, 5, 7, 8, 10, 11, 12, 13, 15, 16, 18, 19,
@@ -22,71 +40,74 @@ module.exports = (function () {
 
             gpiolist.push(pinobj);
         }
-        printFile(gpiolist, 'gpiodetails.txt');
-        console.log(gpiolist);
-
-        let options = {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit'
-        };
-
-        let timeoptions = {
-            hour12: false,
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit'
-        };
+        req.printobj = gpiolist;
+        req.file = 'gpiodetails.txt';
+        next();
+    }
 
 
-        let d = new Date();
-        let time = d.toLocaleTimeString('sv-SE', timeoptions);
-        let date = d.toLocaleDateString('sv-SE', options);
-
+    function initSensors(req, res, next) {
         sensor.list((err, deviceIds) => {
             if (err) {
-                console.log(err);
+                let obj = reg.reterror(500, './find', err);
+
+                return res.status(500).json(obj);
             } else {
-                console.log(deviceIds);
-                let f = './public/scripts/sensors.txt';
+                //console.log(deviceIds);
 
                 deviceIds.push(time);
                 deviceIds.push(date);
-                fs.writeFile(f, JSON.stringify(deviceIds), function (err) {
-                    if (err) {
-                        throw err;
-                    }
-                    console.log('Sparad');
-                });
+                req.printobj = deviceIds;
+                req.file = 'sensors.txt';
+                next();
             }
         });
+    }
+
+    function sensorsWithTime(req, res, next) {
+        let item = {time: time, date: date};
 
         sensor.readAllC(2, (err, temps) => {
             if (err) {
-                console.log(err);
-                return res.json(err);
-            } else {
-                let item = {time: time, date: date};
+                let obj = reg.reterror(500, './find', err, item);
 
+                return res.status(500).json(obj);
+            } else {
                 temps.push(item);
-                printFile(temps, 'sensordetails.txt');
-                return res.json(temps);
+                req.printobj = temps;
+                req.file = 'sensordetails.txt';
             }
         });
+        next();
+    }
+
+
+    function show(req, res) {
+        return res.json(req.printobj);
     }
 
 
 
-    function printFile(obj, file) {
-        fs.writeFile('./public/scripts/' + file, JSON.stringify(obj), function (err) {
+    function printFile(req, res, next) {
+        let file = req.file;
+        let obj = req.printobj;
+        //console.log("I printfile", file, obj);
+
+        fs.writeFile('./public/scripts/' + file, JSON.stringify(obj), err => {
             if (err) {
-                throw err;
+                let obj = reg.reterror(500, './find', err);
+
+                return res.status(500).json(obj);
             }
-            console.log('Sparade till ', file);
         });
+        next();
     }
 
     return {
-        getAllZones: getAllZones
+        initPins: initPins,
+        initSensors: initSensors,
+        printFile: printFile,
+        sensorsWithTime: sensorsWithTime,
+        show: show
     };
 }());

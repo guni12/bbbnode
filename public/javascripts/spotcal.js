@@ -194,9 +194,22 @@ module.exports = (function () {
         return temp;
     }
 
+    function spotdata(req, res) {
+        let myfile = __dirname + '/../array.txt';
+
+        fs.readFile(myfile, (err, data) => {
+            if (err) {
+                throw err;
+            }
+            //console.log(JSON.parse(data), "Parsat");
+            return res.json(JSON.parse(data));
+        });
+    }
+
     return {
         hubinfo: hubinfo,
         show: show,
-        tocontrol: tocontrol
+        tocontrol: tocontrol,
+        spotdata: spotdata
     };
 }());

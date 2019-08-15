@@ -10,13 +10,13 @@ const server = require("../../../app.js");
 chai.use(chaiHttp);
 chai.should();
 
-describe("Visit and get spotcal", function() {
+describe("Visit and get zones", function() {
     describe("GET /zones", () => {
         it("1. 200 HAPPY PATH", (done) => {
             chai.request(server)
                 .get("/zones")
                 .end((err, res) => {
-                    //console.log("1. res.body", res.body);
+                    console.log("1. res.body", res.body);
                     res.should.have.status(200);
                     res.body.should.be.an("array");
                     res.body.should.have.lengthOf(0);
@@ -25,7 +25,7 @@ describe("Visit and get spotcal", function() {
         });
 
         it("2. 500 HAPPY PATH", (done) => {
-            let title = "Tom databas";
+            let title = "Detta id finns inte";
 
             chai.request(server)
                 .get("/zones/11")

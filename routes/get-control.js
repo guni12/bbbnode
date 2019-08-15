@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const control = require('../public/javascripts/get-control.js');
+const control = require('../public/javascripts/spotcal.js');
 
 router.get("/",
 
