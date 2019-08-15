@@ -54,67 +54,33 @@ let mockRequest = (upd, lt, gt=null) => ({
     body: upd,
     updated: upd,
     list: lt,
+    newlist: lt,
     gpiodetails: gt
 });
 
+let content = {
+    gpio: 5,
+    status: 1,
+    mode: "out"
+};
+
+const smlist = [
+    {"gpio": 3, "mode": "out", "status": 0},
+    {"gpio": 5, "mode": "out", "status": 1},
+    {"gpio": 7, "mode": "out", "status": 0}
+];
+
+
+const mockResponse = () => {
+    const res = {};
+
+    res.status = sinon.stub().returns(res);
+    res.json = sinon.stub().returns(res);
+    return res;
+};
+
 describe("Visit and update hourcontrols", function() {
     describe("GET /hourcontrol", () => {
-        beforeEach(function () {
-            writeFileStub = sinon.stub(fs, 'writeFile')
-                .returns("I am a fake call!");
-        });
-
-        afterEach(function () {
-            fs.writeFile.restore(); // Unwraps the spy
-        });
-
-        let content = {
-            gpio: 5,
-            status: 1,
-            mode: "out"
-        };
-        
-
-        const smlist = [
-            {"gpio": 3, "mode": "out", "status": 0},
-            {"gpio": 5, "mode": "out", "status": 1},
-            {"gpio": 7, "mode": "out", "status": 0}
-        ];
-
-
-        const mockResponse = () => {
-            const res = {};
-
-            res.status = sinon.stub().returns(res);
-            res.json = sinon.stub().returns(res);
-            return res;
-        };
-
-        it("1. Test WriteList", () => {
-            const req = mockRequest(
-                {},
-                list,
-                list
-            );
-
-            let what = "";
-            let url = "./public/scripts/gpiodetails.txt";
-            const res = mockResponse();
-
-            writeFileStub.callsFake((firstArg) => {
-                what = 'My first arg is: ' + firstArg;
-            });
-
-            updateGpio.writeList(req, res);
-
-            writeFileStub.should.have.been.called;
-            writeFileStub.should.have.been.calledWith(url, JSON.stringify(req.list));
-            what.should.be.equal("My first arg is: ./public/scripts/gpiodetails.txt");
-            res.status.should.have.been.calledWith(201);
-            res.json.should.have.been.calledWith(list);
-        });
-
-
         it("2. 500 rpio can't reach pins", (done) => {
             let check = "gpio out kunde inte läsas av";
 
@@ -160,80 +126,62 @@ describe("Visit and update hourcontrols", function() {
                     done();
                 });
         });
-
-        it("4. Test updateList", () => {
-            const item = {"gpio": 5, "mode": "out", "status": 0};
-            let test = updateGpio.updateList(item, smlist);
-
-            test.should.be.an("array");
-            test[1].should.be.equal(item);
-        });
+    });
 
 
-        it("5. Test updateFile", () => {
+    describe("Functions with filewriteStub", () => {
+        it("1. Test WriteList", () => {
             const req = mockRequest(
                 {},
                 list,
                 list
             );
 
+            let what = "";
+            let url = "./public/scripts/gpiodetails.txt";
             const res = mockResponse();
-            const spy = sinon.spy();
 
-            updateGpio.updateFile(req, res, spy);
-            spy.called.should.be.true;
+            writeFileStub = sinon.stub(fs, 'writeFile')
+                .returns("I am a fake call!");
+
+            writeFileStub.callsFake((firstArg) => {
+                what = 'My first arg is: ' + firstArg;
+            });
+
+            updateGpio.writeList(req, res);
+
+            writeFileStub.should.have.been.called;
+            writeFileStub.should.have.been.calledWith(url, JSON.stringify(req.list));
+            what.should.be.equal("My first arg is: ./public/scripts/gpiodetails.txt");
+            res.status.should.have.been.calledWith(201);
+            res.json.should.have.been.calledWith(list);
+            fs.writeFile.restore();
         });
 
 
-        it("6. Test updateList empty list with catch", () => {
-            let empty = null;
-            sinon.spy(updateGpio, "updateList");
-            //should.throws(() => updateGpio.updateList(content, empty), TypeError);
-            //updateGpio.updateList(content, empty).should.throw(TypeError("Cannot read property 'forEach' of null"));
-
-            try {
-                updateGpio.updateList(content, empty);
-                //test.should.throws(() => x.y.z, TypeError);
-            } catch (err) {
-                err.should.include(new TypeError("Cannot read property 'forEach' of null"));
-            }
-        });
-
-
-
-        it("7. Test updateInLoop empty list with catch", () => {
-            const updated = {"gpio": 7, "mode": "in", "status": 0};
-            let empty = null;
-            const spy = sinon.spy(updateGpio, "updateInLoop");
-
-             try {
-                updateGpio.updateInLoop(updated, empty);
-                spy.should.have.been.calledWith(updated, empty);
-            } catch (err) {
-                err.should.include(new TypeError("Cannot read property 'forEach' of null"));
-            }
-            updateGpio.updateInLoop.restore();
-        });
-
-        it("8. Test writeList with nothing in req", () => {
+        it("2. Test writeList with nothing in req", () => {
             const req = mockRequest(
                 null,
                 null,
                 null
             );
 
-            let what = "";
-            let url = "./public/scripts/gpiodetails.txt";
             const res = mockResponse();
+
+            writeFileStub = sinon.stub(fs, 'writeFile')
+                .returns("I am a fake call!");
 
             writeFileStub.yields( new Error("Testfel här"));
             updateGpio.writeList(req, res);
 
             writeFileStub.should.have.been.called;
+            fs.writeFile.restore();
         });
+    });
 
 
-        it("9. Test readList with error", (done) => {
+    describe("Functions with filereadStub", () => {
+        it("1. Test readList with error", (done) => {
             const req = mockRequest(
                 {},
                 list,
@@ -252,6 +200,61 @@ describe("Visit and update hourcontrols", function() {
             spy.called.should.be.false;
             fs.readFile.restore();
             done();
+        });
+    });
+
+
+    describe("Functions with no req, res", () => {
+        it("1. Test updateList", () => {
+            const item = {"gpio": 5, "mode": "out", "status": 0};
+            let test = updateGpio.updateList(item, smlist);
+
+            test.should.be.an("array");
+            test[1].should.be.equal(item);
+        });
+
+
+        it("2. Test updateFile", () => {
+            const req = mockRequest(
+                {},
+                list,
+                list
+            );
+
+            const res = mockResponse();
+            const spy = sinon.spy();
+
+            updateGpio.updateFile(req, res, spy);
+            spy.called.should.be.true;
+        });
+
+
+        it("3. Test updateList empty list with catch", () => {
+            let empty = null;
+
+            sinon.spy(updateGpio, "updateList");
+
+            try {
+                updateGpio.updateList(content, empty);
+                //test.should.throws(() => x.y.z, TypeError);
+            } catch (err) {
+                err.should.include(new TypeError("Cannot read property 'forEach' of null"));
+            }
+        });
+
+
+        it("4. Test updateInLoop empty list with catch", () => {
+            const updated = {"gpio": 7, "mode": "in", "status": 0};
+            let empty = null;
+            const spy = sinon.spy(updateGpio, "updateInLoop");
+
+            try {
+                updateGpio.updateInLoop(updated, empty);
+                spy.should.have.been.calledWith(updated, empty);
+            } catch (err) {
+                err.should.include(new TypeError("Cannot read property 'forEach' of null"));
+            }
+            updateGpio.updateInLoop.restore();
         });
     });
 });

@@ -18,15 +18,6 @@ chai.should();
 
 describe("Visit sensors and update temperatures", function() {
     describe("GET /tempupdate", () => {
-        before(function () {
-            writeFileStub = sinon.stub(fs, 'writeFile')
-                .returns("I am a fake call!");
-        });
-
-        after(function () {
-            fs.writeFile.restore(); // Unwraps the spy
-        });
-
         const mockRequest = (list) => ({
             sensors: list,
             details: list,
@@ -83,6 +74,9 @@ describe("Visit sensors and update temperatures", function() {
 
             const spy = sinon.spy();
 
+            writeFileStub = sinon.stub(fs, 'writeFile')
+                .returns("I am a fake call!");
+
             writeFileStub.callsFake((firstArg) => {
                 what = 'My first arg is: ' + firstArg;
             });
@@ -93,6 +87,7 @@ describe("Visit sensors and update temperatures", function() {
             writeFileStub.should.have.been.calledWith(url, JSON.stringify(req.sensors));
             what.should.be.equal("My first arg is: " + url);
             spy.called.should.be.true;
+            fs.writeFile.restore();
         });
 
 
@@ -114,13 +109,15 @@ describe("Visit sensors and update temperatures", function() {
             );
             const res = mockResponse();
             const spy = sinon.spy();
-            let url = "/home/pi/bbbnode/public/scripts/sensordetails.txt";
+
+            writeFileStub = sinon.stub(fs, 'writeFile')
+                .returns("I am a fake call!");
 
             writeFileStub.yields( new Error("Testfel här"));
 
             updateTemp.printFile(req, res, spy);
-            spy.called.should.be.false;
             writeFileStub.should.have.been.called;
+            fs.writeFile.restore();
         });
     });
 });

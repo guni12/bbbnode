@@ -17,12 +17,13 @@ module.exports = (function () {
             let updated = { gpio: gpio, status: stat, mode: mode };
 
             //console.log(updated);
-            if (stat) {
+            if (stat === 0 || stat === 1) {
                 req.updated = updated;
 
                 next();
             } else {
-                let obj = reg.reterror(500, "/hourcontrol", "gpio out kunde inte läsas av", updated);
+                let text = "gpio out kunde inte läsas av";
+                let obj = reg.reterror(500, "/hourcontrol", text, updated);
 
                 return res.status(500).json(obj);
             }
@@ -36,7 +37,8 @@ module.exports = (function () {
 
                 next();
             } else {
-                let obj = reg.reterror(500, "/hourcontrol", "gpio in kunde inte läsas av", inupdated);
+                let text = "gpio in kunde inte läsas av";
+                let obj = reg.reterror(500, "/hourcontrol", text, inupdated);
 
                 return res.status(500).json(obj);
             }
@@ -44,7 +46,9 @@ module.exports = (function () {
     }
 
     function updateFile(req, res, next) {
-        updateList(req.updated, req.gpiodetails);
+        let newlist = updateList(req.updated, req.gpiodetails);
+
+        req.newlist = newlist;
         next();
     }
 
@@ -68,8 +72,7 @@ module.exports = (function () {
     }
 
     function writeList(req, res) {
-        let list = req.list;
-        console.log("writeList", list, JSON.stringify(list));
+        let list = req.newlist;
 
         fs.writeFile('./public/scripts/gpiodetails.txt', JSON.stringify(list), err => {
             if (err) {
@@ -93,7 +96,7 @@ module.exports = (function () {
             }
             req.gpiodetails = JSON.parse(data);
             next();
-        })
+        });
     }
 
     return {
