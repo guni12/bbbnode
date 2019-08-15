@@ -7,7 +7,8 @@
       "public/**/*.js"
     ],
     "exclude": [
-      "coverage/"
+      "coverage/",
+      "scripts/"
     ],
     "all": true,
     "report-dir": "./build/coverage",
