@@ -1,14 +1,13 @@
 checks:
     javascript: true
 
+filter:
+    excluded_paths:
+        - scripts/*
+
 build:
     environment:
         node: v10.16.0
-
-    filter:
-        excluded_paths:
-            - tests/*
-            - scripts/*
 
     dependencies:
         #before:
