@@ -1,0 +1,16 @@
+server {
+    listen 8636;
+
+    server_name react;
+
+    root /var/www/react/html;
+
+    index index.html index.htm;
+    charset utf-8;
+
+    error_page 404 /error.html;
+
+    location /.well-known {
+        allow all;
+    }
+}

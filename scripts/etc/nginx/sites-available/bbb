@@ -4,7 +4,7 @@ server {
     root /var/www/bbb;
 
     location /.well-known {
-        allow all;;
+        allow all;
     }
 
     listen 80;

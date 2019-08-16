@@ -25,7 +25,9 @@ sudo apt-get install lsof
 sudo apt-get install nginx -y
 
 sudo cp /home/pi/bbbnode/bbb /etc/nginx/sites-available/
+sudo cp /home/pi/bbbnode/react /etc/nginx/sites-available/
 sudo ln -s /etc/nginx/sites-available/bbb /etc/nginx/sites-enabled/bbb
+sudo ln -s /etc/nginx/sites-available/react /etc/nginx/sites-enabled/react
 
 #Gå in i /etc/apt/sources.list.d/raspi.list och avkommentera sista raden
 sudo apt-get install gcc-4.8 -y

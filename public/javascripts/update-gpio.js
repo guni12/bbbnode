@@ -57,18 +57,13 @@ module.exports = (function () {
     }
 
     function updateList(item, list) {
-        try {
-            list.forEach((one, index) => {
-                if (one.gpio === item.gpio) {
-                    //console.log("item.gpio", item.gpio);
-                    list[index] = item;
-                }
-            });
-            return list;
-        } catch (err) {
-            console.log("err", err);
-            throw err;
-        }
+        list.forEach((one, index) => {
+            if (one.gpio === item.gpio) {
+                //console.log("item.gpio", item.gpio);
+                list[index] = item;
+            }
+        });
+        return list;
     }
 
     function writeList(req, res) {
@@ -86,10 +81,9 @@ module.exports = (function () {
     }
 
     function readList(req, res, next, file) {
-        console.log("Framme!!!!");
         fs.readFile('./public/scripts/' + file, (err, data) => {
             if (err) {
-                console.log("err i readList", err);
+                //console.log("err i readList", err);
                 let obj = reg.reterror(500, "/hourcontrol", "listan kunde inte läsas av", err);
 
                 return res.status(500).json(obj);
