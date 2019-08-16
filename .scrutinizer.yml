@@ -13,13 +13,10 @@ build:
         before:
             command: 'chown -R $USER:$USER db/*'
             command: 'chmod +x db/reset_test_db.bash'
-
         override:
             - js-scrutinizer-run
-
                 command: 'npm run pretest'
                 command: 'npm test'
-
                 coverage:
                     file: 'coverage/clover.xml'
                     format: 'clover'
