@@ -1,6 +1,11 @@
 #!/bin/sh
 #2019-07-22
 
+# Enable ssh
+# Andra configurationer som tangentbord etc
+# Byt lösenord!!!
+# Enable 1-Wire
+
 sudo apt-get update -y
 #gets Raspian updates
 
