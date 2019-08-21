@@ -1,1 +1,1 @@
-grep -q -F "export JWT_SECRET='LååångtLösenord'" /home/pi/.profile || sudo bash -c "echo 'export JWT_SECRET=\"LååångtLösenord\"' >> /home/pi/.profile"
+echo 'export JWT_SECRET=LååångtLösenord' | sudo tee -a /home/pi/.profile > /dev/null

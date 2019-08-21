@@ -2,14 +2,20 @@ const db = require('../../db/database.js');
 const reg = require('./status.js');
 
 module.exports = (function () {
+    function getZones(req, res, next) {
+        if (req.params.id) {
+            getOneZone(req, res, next);
+        } else {
+            getAllZones(req, res, next);
+        }
+    }
+
     function getAllZones(req, res, next) {
         let sql = "SELECT * FROM zones;";
 
         db.all(sql,
             (err, rows) => {
                 if (rows) {
-                    //console.log(rows);
-                    //return res.json(rows);
                     req.zones = rows;
                     next();
                 } else {
@@ -25,12 +31,9 @@ module.exports = (function () {
     function getOneZone(req, res, next) {
         let sql = "SELECT * FROM zones WHERE id = ?";
 
-        //console.log(req.body, req.params);
         db.get(sql,
             req.params.id, (err, row) => {
                 if (row) {
-                    //console.log(row);
-                    //return res.json(row);
                     req.zones = row;
 
                     next();
@@ -48,7 +51,6 @@ module.exports = (function () {
     function show(req, res) {
         let what = req.zones;
 
-        //console.log(what);
         return res.json(what);
     }
 
@@ -56,6 +58,7 @@ module.exports = (function () {
     return {
         getAllZones: getAllZones,
         getOneZone: getOneZone,
+        getZones: getZones,
         show: show
     };
 }());

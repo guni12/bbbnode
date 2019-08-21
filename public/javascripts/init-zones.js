@@ -10,11 +10,9 @@ module.exports = (function () {
 
         fs.readFile(myfile, function(err, data) {
             if (err) {
-                //console.log("err", err);
                 return res.json(err);
             } else {
                 list = JSON.parse(data);
-                //console.log("Rad 17", list);
                 next();
             }
         });
@@ -23,12 +21,9 @@ module.exports = (function () {
     function check(req, res, next) {
         let sql = "SELECT * FROM zones";
 
-        //console.log("Rad 28", list);
-
         db.get(sql,
             (err, row) => {
                 if (row) {
-                    //console.log("row", row);
                     let message = {"message": "Redan initierat"};
 
                     res.json(message);
@@ -42,9 +37,6 @@ module.exports = (function () {
 
     function insert(req, res) {
         let nr = 1;
-
-        //console.log("list, 47", list);
-        //console.log("liststring, 48", liststring);
 
         let time = list[list.length - 1].time;
         let date = list[list.length - 1].date;
@@ -87,7 +79,6 @@ module.exports = (function () {
             );
             nr += 1;
         }
-        //console.log(message);
         res.json(message);
     }
 

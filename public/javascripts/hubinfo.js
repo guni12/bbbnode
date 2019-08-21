@@ -8,18 +8,12 @@ module.exports = (function () {
         let hour = d.getHours();
 
         if (req.params.id === 'control') {
-            console.log(req.settings, "Direkt control");
             spotcal.tocontrol(req, res, next);
         } else {
-            console.log("req.params.id", req.params.id, typeof(req.params.id), req.params);
             let day = req.params.id === '2' && hour > 16 ? 'spotprice2.txt' : 'spotprice.txt';
             let myfile = __dirname + '/../scripts/spot/' + day;
             let chosen = "";
             let arr = [];
-
-            console.log(myfile);
-
-            //console.log(req.settings);
 
             const fileStream = fs.createReadStream(myfile);
             const parser = csv.parse({
@@ -72,14 +66,13 @@ module.exports = (function () {
                     arr.push(data);
                 })
                 .on('end', (rowCount) => {
-                    console.log(`Parsed ${rowCount} rows`);
                     let area = req.settings.area;
                     let currency = req.settings.currency;
 
                     chosen = arr.find(
                         (im) => im.Area === area && im.Currency === currency
                     );
-                    console.log("chosen i Hubinfo: ", chosen);
+                    console.log(rowCount, "rader hittade.");
                     req.chosen = chosen;
                     next();
                 });

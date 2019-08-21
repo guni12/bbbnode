@@ -53,8 +53,6 @@ module.exports = (function () {
 
                 return res.status(500).json(obj);
             } else {
-                //console.log(deviceIds);
-
                 deviceIds.push(time);
                 deviceIds.push(date);
                 req.printSensors = deviceIds;
@@ -92,8 +90,6 @@ module.exports = (function () {
         //let file = req.file;
         //let obj = req.printobj;
         let obj = req[what];
-
-        console.log("I printfile", file, obj);
 
         fs.writeFile('./public/scripts/' + file, JSON.stringify(obj), err => {
             if (err) {

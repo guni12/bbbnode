@@ -4,19 +4,16 @@ const reg = require('./status.js');
 
 module.exports = (function () {
     function update(req, res, next) {
-        //console.log(req.body);
         let gpio = parseInt(req.body.gpio);
         let stat = parseInt(req.body.status);
         let mode = req.body.mode;
 
-        //console.log(gpio, stat, mode);
         if (mode === "out") {
             rpio.open(gpio, rpio.OUTPUT, stat);
             rpio.write(gpio, stat);
             stat = rpio.read(gpio);
             let updated = { gpio: gpio, status: stat, mode: mode };
 
-            //console.log(updated);
             if (stat === 0 || stat === 1) {
                 req.updated = updated;
 
@@ -45,21 +42,9 @@ module.exports = (function () {
         }
     }
 
-    function updateFile(req, res, next, what) {
-        let newlist = updateList(req.updated, req[what]);
-
-        req.newlist = newlist;
-        next();
-    }
-
-    function updateInLoop(updated, list) {
-        return void updateList(updated, list);
-    }
-
     function updateList(item, list) {
         list.forEach((one, index) => {
             if (one.gpio === item.gpio) {
-                //console.log("item.gpio", item.gpio);
                 list[index] = item;
             }
         });
@@ -76,14 +61,12 @@ module.exports = (function () {
                 return res.status(500).json(obj);
             }
         });
-        //console.log('Sparade till gpiodetails.txt');
         return res.status(201).json(list);
     }
 
     function readList(req, res, next, file, what) {
         fs.readFile('./public/scripts/' + file, (err, data) => {
             if (err) {
-                //console.log("err i readList", err);
                 let obj = reg.reterror(500, "/hourcontrol", "listan kunde inte läsas av", err);
 
                 return res.status(500).json(obj);
@@ -95,10 +78,8 @@ module.exports = (function () {
 
     return {
         update: update,
-        updateFile: updateFile,
         updateList: updateList,
         writeList: writeList,
-        updateInLoop: updateInLoop,
         readList: readList
     };
 }());

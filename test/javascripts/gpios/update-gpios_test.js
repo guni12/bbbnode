@@ -214,22 +214,7 @@ describe("Visit and update hourcontrols", function() {
         });
 
 
-        it("2. Test updateFile", () => {
-            const req = mockRequest(
-                {},
-                list,
-                list
-            );
-
-            const res = mockResponse();
-            const spy = sinon.spy();
-
-            updateGpio.updateFile(req, res, spy, 'gpiodetails');
-            spy.called.should.be.true;
-        });
-
-
-        it("3. Test updateList empty list with catch", () => {
+        it("2. Test updateList empty list with catch", () => {
             let empty = null;
 
             sinon.spy(updateGpio, "updateList");
@@ -240,21 +225,6 @@ describe("Visit and update hourcontrols", function() {
             } catch (err) {
                 err.should.include(new TypeError("Cannot read property 'forEach' of null"));
             }
-        });
-
-
-        it("4. Test updateInLoop empty list with catch", () => {
-            const updated = {"gpio": 7, "mode": "in", "status": 0};
-            let empty = null;
-            const spy = sinon.spy(updateGpio, "updateInLoop");
-
-            try {
-                updateGpio.updateInLoop(updated, empty);
-                spy.should.have.been.calledWith(updated, empty);
-            } catch (err) {
-                err.should.include(new TypeError("Cannot read property 'forEach' of null"));
-            }
-            updateGpio.updateInLoop.restore();
         });
     });
 });

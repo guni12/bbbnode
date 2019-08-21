@@ -38,9 +38,7 @@ sudo ln -s /etc/nginx/sites-available/react /etc/nginx/sites-enabled/react
 #Gå in i /etc/apt/sources.list.d/raspi.list och avkommentera sista raden
 sudo apt-get install gcc-4.8 -y
 
-sudo cat >/etc/udev/rules.d/20-gpiomem.rules <<EOF
-SUBSYSTEM=="bcm2835-gpiomem", KERNEL=="gpiomem", GROUP="gpio", MODE="0660"
-EOF
+echo 'SUBSYSTEM=="bcm2835-gpiomem", KERNEL=="gpiomem", GROUP="gpio", MODE="0660"' | sudo tee -a /etc/udev/rules.d/20-gpiomem.rules > /dev/null
 
 grep -q -F "dtoverlay=w1-gpio,gpiopin=4" /boot/config.txt || sudo bash -c "echo 'dtoverlay=w1-gpio,gpiopin=4' >> /boot/config.txt"
 sudo chown -R pi:www-data /var/www

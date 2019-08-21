@@ -4,54 +4,44 @@ const gpioupdate = require('./update-gpio');
 
 module.exports = (function () {
     function update(req, res, next) {
-        //console.log(req.controls);
         let zones = req.zones;
         let controls = req.controls;
 
         let d = new Date();
         let hour = d.getHours();
         let control = controls[hour-1];
+        let key = 'c' + control;
+        let list = req.prep_gpiodetails;
 
-        //console.log(hour, controls.length, controls[23]);
-
-        //console.log(req.params);
         if (req.params.id) {
-            let key = 'c' + control;
             let status = m[key](zones);
 
-            try {
-                req.updated = m.updatePin(zones.gpio, status);
-                next();
-            } catch (err) {
-                let message = "Gpio pinne kunde ej läsas.";
-                let obj = reg.reterror(500, "/hourcontrol", message, err);
-
-                return res.status(500).json(obj);
-            }
+            list = updateList(req, res, zones, status, list);
         } else {
-            let list = req.prep_gpiodetails;
-
             zones.map((item) => {
-                //console.log(control, item);
-                let key = 'c' + control;
                 let status = m[key](item);
 
-                req.gpio = item.gpio;
-                //req.gpiostatus = status;
-                try {
-                    let updated = m.updatePin(item.gpio, status);
-
-                    list = gpioupdate.updateInLoop(updated, list);
-                } catch (err) {
-                    let message = "Gpio pinne kunde ej läsas.";
-                    let obj = reg.reterror(500, "/hourcontrol", message, err);
-
-                    return res.status(500).json(obj);
-                }
+                list = updateList(req, res, item, status, list);
             });
-            req.gpiodetails = list;
-            next();
         }
+        req.gpiodetails = list;
+        next();
+    }
+
+    function updateList(req, res, item, status, list) {
+        let temp;
+
+        try {
+            let updated = m.updatePin(item.gpio, status);
+
+            temp = gpioupdate.updateList(updated, list);
+        } catch (err) {
+            let message = "Gpio pinne kunde ej läsas.";
+            let obj = reg.reterror(500, "/hourcontrol", message, err);
+
+            return res.status(500).json(obj);
+        }
+        return temp;
     }
 
     function show(req, res, what) {

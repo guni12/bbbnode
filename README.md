@@ -1,24 +1,44 @@
-# bbbnode
-[![Build Status](https://travis-ci.org/guni12/bbbnode.svg?branch=master)](https://travis-ci.org/guni12/bbbnode) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/guni12/bbbnode/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/guni12/bbbnode/?branch=master) [![Build Status](https://scrutinizer-ci.com/g/guni12/bbbnode/badges/build.png?b=master)](https://scrutinizer-ci.com/g/guni12/bbbnode/build-status/master) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/b293df61900a45f5afae54b63d759876)](https://www.codacy.com/app/guni12/bbbnode?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=guni12/bbbnode&amp;utm_campaign=Badge_Grade)
+[![Build Status](https://travis-ci.org/guni12/bbbnode.svg?branch=master)](https://travis-ci.org/guni12/bbbnode) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/guni12/bbbnode/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/guni12/bbbnode/?branch=master) [![Build Status](https://scrutinizer-ci.com/g/guni12/bbbnode/badges/build.png?b=master)](https://scrutinizer-ci.com/g/guni12/bbbnode/build-status/master) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/b293df61900a45f5afae54b63d759876)](https://www.codacy.com/app/guni12/bbbnode?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=guni12/bbbnode&amp;utm_campaign=Badge_Grade) [![Coverage Status](https://coveralls.io/repos/github/guni12/bbbnode/badge.svg?branch=master)](https://coveralls.io/github/guni12/bbbnode?branch=master)
 
-# TODO
+# BehovsBoBoxen är ett styrsystem för smarta hem baserad på Raspberry Pi.
 
-* Konfigurera sd-kort
-* Ladda hem raspbian
-* Enable ssh
-* Andra configurationer som tangentbord etc
-* Byt lösenord!!!
-* Enable 1-Wire
-* Enable spi
+![detta behöver du](http://www.behovsbo.se/themes/images/bbbmaterial.jpg)
+
+Bom | Antal | Materiallista
+--- | ------|--------------
+1 | 1 | Raspberry pi 2 eller 3 modell B
+2 | 9 | ds18b20 (1-wire eller dallas)
+3 | 1 | micro SD kort, gärna minst 32GB
+4 | 1 | reläkort med 8 relän
+5 | 1 | 5V 2,1A USB laddare
+6 | 1 | kopplingsdäck
+7 | 1 | knippe kopplingssladdar hane-hane
+8 | 1 | knippe kopplingssladdar hona-hona
+9 | 1 | Ethernetsladd
+
+Mjukvaran för styrsystemet är byggt med Node.js, Express, React och Sqlite3.
+
+### Gör så här:
+
+  - Konfigurera sd-kortet, installera raspbian och konfigurera till svenska förhållanden.
+  - `https://www.raspberrypi.org/documentation/installation/noobs.md`
+  - Aktivera ssh.
+  - Byt lösenord!!!
+  - Aktivera 1-Wire
+  - Aktivera spi
+  - Hämta BehovsBoBoxen med:
 ```sh
 git clone https://github.com/guni12/bbbnode
 ```
-* öppna `/home/pi/bbbnode/scripts/pass.txt` - ändra lösenordet till ditt eget val
-* kopiera hela kommandot och kör i en terminal
+  - Öppna `/home/pi/bbbnode/scripts/pass.txt` och ändra lösenordet till ditt eget val
+  - Kopiera hela ovan kommando och kör det i en terminal
+  - Kör sedan
 ```sh
 sudo sh /home/pi/bbbnode/scripts/install.sh
 ```
-* `cd bbbnode`
+  - Efter reboot gå till boxens katalog:
+  - `cd bbbnode`
+  - Kör följande kommandon:
 
 ```sh
 npm install
@@ -27,34 +47,35 @@ sqlite3 texts.sqlite
 .read migrate.sqlite
 .exit
 ```
-* `cd ..`
-öppna terminal och kör igång servern:
+  - Gå tillbaka:
+  - `cd ..`
+  - Öppna en terminal och kör igång servern:
 ```sh
 npm start
 ```
-* gå in i webbläsaren med `http://localhost/find`
-* sedan `http://localhost/init`
-* sedan installera sensorer...
-* sedan `http://ditt.ip.n.r:8787/zones`
-* Bestäm namn på zonerna
-* Koppla aktiva relän till zonerna via `http://ip.nr:8787/rpio`
-* hämta spotpriser genom ett pythonscript
+  - Installera sensorer:
+  - Gå in i webbläsaren med `http://localhost/find`
+  - sedan `http://localhost/init`
+  - sedan `http://ditt.ip.n.r:8787/zones`
+  - Bestäm namn på zonerna
+  - Koppla aktiva relän till zonerna via `http://ip.nr:8787/rpio`
+  - hämta spotpriser genom ett pythonscript
 ```sh
 python3 /home/pi/bbbnode/public/scripts/spot/checkfile.py
 ```
-* `http://localhost:1337/tempupdate`
-* `http://localhost:1337/hourcontrol`
-* öppna ny terminal:
+  - `http://localhost:1337/tempupdate`
+  - `http://localhost:1337/hourcontrol`
+  - öppna ny terminal:
 ```sh
 sudo crontab -l -u root |  cat /home/pi/bbbnode/scripts/cron.txt | sudo crontab -u root -
 ```
-* om du vill se vilka processer som är aktiva:
+  - om du vill se vilka processer som är aktiva:
 ```sh
 sudo lsof -i -P -n | grep LISTEN
 ```
-* för att släcka server-process och göra omstart:
+  - för att släcka server-process och göra omstart:
 ```sh
 sudo fuser -k 1337/tcp
 ```
 *
-* port forwarding...
+  - port forwarding...

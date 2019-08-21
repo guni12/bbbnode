@@ -90,4 +90,5 @@ typings/
 howto.txt
 torasp.txt
 *.sqlite
+.coveralls.yml
 

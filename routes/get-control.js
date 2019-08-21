@@ -1,10 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const control = require('../public/javascripts/spotcal.js');
+const show = require('../public/javascripts/showSpot.js');
 
 router.get("/",
-
-    (req, res) => control.spotdata(req, res)
+    (req, res) => show.spotdata(req, res)
 );
 
 module.exports = router;

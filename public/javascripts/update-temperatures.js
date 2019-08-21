@@ -67,7 +67,6 @@ module.exports = (function () {
         for (let i = 0; i < len-1; i++) {
             let params = [obj[i].t, measured, obj[i].id];
 
-            //console.log("update:", obj[i]);
             db.run(sql,
                 params, (err) => {
                     if (err) {
@@ -82,7 +81,6 @@ module.exports = (function () {
                 }
             );
         }
-        //console.log("update:", "Klart");
         return res.json(message);
     }
 

@@ -27,7 +27,6 @@ else:
     SOURCE = FTP('ftp.nordpoolspot.com')
     SOURCE.login('spot', 'spo1245t')
     SOURCE.retrbinary('RETR spotprice.sdv', open('/home/pi/bbbnode/public/scripts/spot/spotprice.sdv', 'wb').write)
-
     TEXT = file_get_contents('/home/pi/bbbnode/public/scripts/spot/spotprice.sdv')
 
     TFILE = "/home/pi/bbbnode/public/scripts/spot/spotprice2.txt"

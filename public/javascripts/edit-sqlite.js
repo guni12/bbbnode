@@ -3,7 +3,6 @@ const db = require('../../db/database.js');
 
 module.exports = (function () {
     function hascred(req, res, next, where) {
-        //console.log("req.body.id", req.body.id);
         if (!req.body.column || !req.body.value) {
             let obj = reg.reterror(401, where, "Kolumn eller värde saknas");
 
@@ -21,8 +20,6 @@ module.exports = (function () {
         let id = req.body.id ? parseInt(req.body.id) : 1;
         let sql = "UPDATE " + table + " SET " + col + " = ? WHERE id = ?";
         let params = [val, id];
-
-        //console.log("update: ", col, sql, params, req.body);
 
         db.run(sql,
             params, (err) => {
