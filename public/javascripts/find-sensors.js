@@ -40,8 +40,8 @@ module.exports = (function () {
 
             gpiolist.push(pinobj);
         }
-        req.printobj = gpiolist;
-        req.file = 'gpiodetails.txt';
+        req.printPins = gpiolist;
+        req.pinfile = 'gpiodetails.txt';
         next();
     }
 
@@ -57,7 +57,7 @@ module.exports = (function () {
 
                 deviceIds.push(time);
                 deviceIds.push(date);
-                req.printobj = deviceIds;
+                req.printSensors = deviceIds;
                 req.file = 'sensors.txt';
                 next();
             }
@@ -74,7 +74,7 @@ module.exports = (function () {
                 return res.status(500).json(obj);
             } else {
                 temps.push(item);
-                req.printobj = temps;
+                req.printSwt= temps;
                 req.file = 'sensordetails.txt';
             }
         });
@@ -88,10 +88,12 @@ module.exports = (function () {
 
 
 
-    function printFile(req, res, next) {
-        let file = req.file;
-        let obj = req.printobj;
-        //console.log("I printfile", file, obj);
+    function printFile(req, res, next, file, what) {
+        //let file = req.file;
+        //let obj = req.printobj;
+        let obj = req[what];
+
+        console.log("I printfile", file, obj);
 
         fs.writeFile('./public/scripts/' + file, JSON.stringify(obj), err => {
             if (err) {

@@ -61,7 +61,7 @@ module.exports = (function () {
             let params = [
                 list[i].id,
                 zone,
-                null,
+                0,
                 0,
                 0,
                 list[i].t,

@@ -2,17 +2,21 @@ const fs = require('fs');
 
 module.exports = (function () {
     function printChosen(req, res, next) {
-        let arr = req.cal;
-        const file = fs.createWriteStream('./public/array.txt');
+        if (req.params.id === 'control') {
+            next();
+        } else {
+            let arr = req.chosen;
+            const file = fs.createWriteStream('./public/array.txt');
 
-        file.on('error', function(err) { console.log(err); });
-        file.write(JSON.stringify(arr));
-        file.end();
-        next();
+            file.on('error', function(err) { console.log(err); });
+            file.write(JSON.stringify(arr));
+            file.end();
+            next();
+        }
     }
 
     function show(req, res) {
-        let what = req.cal;
+        let what = req.params.id === 'control' ? req.controls : req.chosen;
 
         return res.json(what);
     }
@@ -25,30 +29,29 @@ module.exports = (function () {
             if (err) {
                 throw err;
             }
-            //console.log("tocontrol", req.codes);
+            //console.log("tocontrol", req.settings);
             let parsed = JSON.parse(data);
             let isaway = false;
 
-            if (req.codes.awayfrom !== null && req.code.awayto !== null) {
+            if (req.settings.awayfrom !== null && req.settings.awayto !== null) {
                 isaway = true;
             }
-            let arr = extractControls(parsed, req.codes, isaway);
+            let arr = extractControls(parsed, req.settings, isaway);
 
-            req.cal = arr;
-
-            //console.log(req.cal);
+            req.controls = arr;
+            console.log("req.controls", req.controls);
             next();
         });
     }
 
 
 
-    function extractControls(data, codes, isaway) {
+    function extractControls(data, settings, isaway) {
         let temp = [];
         let avg = parseFloat(data['Average']) / 10;
-        let marker = (codes.percent/10)+1;
+        let marker = (settings.percent/10)+1;
 
-        //console.log("I extract: ", codes.percent, avg, marker);
+        //console.log("I extract: ", settings.percent, avg, marker);
 
         for (let i = 1; i < 26; i++) {
             let key = i < 3 ? 'Hour' + i : 'Hour' + (i-1);
@@ -108,7 +111,7 @@ module.exports = (function () {
         if (isaway) {
             temp.fill(3);
         }
-        if (codes.percenton === 0) {
+        if (settings.percenton === 0) {
             temp.fill(0);
         }
         return temp;

@@ -32,7 +32,7 @@
   },
   "scripts": {
     "pretest": "$(db/reset_test_db.bash)",
-    "test": "NODE_ENV='test' nyc --reporter=html --reporter=text mocha 'test/javascripts/**/*.js'",
+    "test": "nyc --reporter=html --reporter=text mocha 'test/javascripts/**/*.js' --env NODE_ENV='test'",
     "posttest": "npm run eslint",
     "dev": "nodemon app.js",
     "production": "NODE_ENV='production' node app.js",
@@ -41,7 +41,8 @@
     "report-codecov": "nyc report --reporter=lcov > coverage.lcov && codecov",
     "clean": "rm -rf npm-debug.log coverage .nyc_output",
     "eslint": "eslint .",
-    "start": "concurrently \"npm run dev\" \"npm run client\""
+    "startall": "concurrently \"npm run dev\" \"npm run client\"",
+    "start": "node app.js"
   },
   "keywords": [],
   "author": "",

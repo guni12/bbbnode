@@ -45,8 +45,8 @@ module.exports = (function () {
         }
     }
 
-    function updateFile(req, res, next) {
-        let newlist = updateList(req.updated, req.gpiodetails);
+    function updateFile(req, res, next, what) {
+        let newlist = updateList(req.updated, req[what]);
 
         req.newlist = newlist;
         next();
@@ -80,7 +80,7 @@ module.exports = (function () {
         return res.status(201).json(list);
     }
 
-    function readList(req, res, next, file) {
+    function readList(req, res, next, file, what) {
         fs.readFile('./public/scripts/' + file, (err, data) => {
             if (err) {
                 //console.log("err i readList", err);
@@ -88,7 +88,7 @@ module.exports = (function () {
 
                 return res.status(500).json(obj);
             }
-            req.gpiodetails = JSON.parse(data);
+            req[what] = JSON.parse(data);
             next();
         });
     }

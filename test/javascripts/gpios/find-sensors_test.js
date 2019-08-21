@@ -23,7 +23,7 @@ chai.should();
 
 const mockRequest = (f, lt) => ({
     file: f,
-    printobj: lt,
+    printPins: lt
 });
 
 let gpiolist = [
@@ -116,7 +116,7 @@ describe("Find and store all sensors", function() {
                 what = 'My first arg is: ' + firstArg;
             });
 
-            findSensors.printFile(req, res, spy);
+            findSensors.printFile(req, res, spy, 'gpiodetails.txt', 'printPins');
 
             writeFileStub.should.have.been.called;
             writeFileStub.should.have.been.calledWith(url, JSON.stringify(gpiolist));

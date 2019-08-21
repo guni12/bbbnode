@@ -81,7 +81,7 @@ const mockResponse = () => {
 
 describe("Visit and update hourcontrols", function() {
     describe("GET /hourcontrol", () => {
-        it("2. 500 rpio can't reach pins", (done) => {
+        it("1. 500 rpio can't reach pins", (done) => {
             let check = "gpio out kunde inte läsas av";
 
             chai.request(server)
@@ -101,7 +101,7 @@ describe("Visit and update hourcontrols", function() {
                 });
         });
 
-        it("3. 500 rpio can't reach pins with mode in", (done) => {
+        it("2. 500 rpio can't reach pins with mode in", (done) => {
             let check = "gpio in kunde inte läsas av";
             let incontent = {
                 gpio: 11,
@@ -224,7 +224,7 @@ describe("Visit and update hourcontrols", function() {
             const res = mockResponse();
             const spy = sinon.spy();
 
-            updateGpio.updateFile(req, res, spy);
+            updateGpio.updateFile(req, res, spy, 'gpiodetails');
             spy.called.should.be.true;
         });
 

@@ -4,7 +4,6 @@
 Move tomorrow-file to today at midnight
 2018-08-19
 """
-import datetime
 import os
 
 def file_get_contents(filename):

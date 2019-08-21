@@ -4,19 +4,23 @@ const spotcal = require('./spotcal');
 
 module.exports = (function () {
     function hubinfo(req, res, next) {
+        let d = new Date();
+        let hour = d.getHours();
+
         if (req.params.id === 'control') {
-            //console.log(req.codes, "Direkt control");
+            console.log(req.settings, "Direkt control");
             spotcal.tocontrol(req, res, next);
         } else {
-            //console.log("req.params.id", req.params.id, typeof(req.params.id), req.params);
-            let day = req.params.id === '2' ? 'spotprice2.txt' : 'spotprice.txt';
+            console.log("req.params.id", req.params.id, typeof(req.params.id), req.params);
+            let day = req.params.id === '2' && hour > 16 ? 'spotprice2.txt' : 'spotprice.txt';
             let myfile = __dirname + '/../scripts/spot/' + day;
             let chosen = "";
             let arr = [];
 
-            //console.log(req.codes);
+            console.log(myfile);
 
-            //fs.createWriteStream('test.csv');
+            //console.log(req.settings);
+
             const fileStream = fs.createReadStream(myfile);
             const parser = csv.parse({
                 comment: '#',
@@ -69,15 +73,14 @@ module.exports = (function () {
                 })
                 .on('end', (rowCount) => {
                     console.log(`Parsed ${rowCount} rows`);
-                    chosen = arr.find(
-                        (im) => im.Area === req.codes.area && im.Currency === req.codes.currency
-                    );
-                    console.log("chosen i Hubinfo: ", chosen, req.params.id);
-                    req.cal = chosen;
+                    let area = req.settings.area;
+                    let currency = req.settings.currency;
 
-                    if (req.params.id === undefined) {
-                        spotcal.printChosen(req, res, next);
-                    }
+                    chosen = arr.find(
+                        (im) => im.Area === area && im.Currency === currency
+                    );
+                    console.log("chosen i Hubinfo: ", chosen);
+                    req.chosen = chosen;
                     next();
                 });
         }

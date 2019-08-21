@@ -1,5 +1,10 @@
 server {
-    listen 8636;
+    listen 8787 default_server;
+    listen [::]:8787 default_server;
+
+    #listen [::]:444 ssl;
+    #ssl_certificate      /etc/nginx/democert.pem;
+    #ssl_certificate_key  /etc/nginx/democert.key;
 
     server_name react;
 
@@ -9,6 +14,12 @@ server {
     charset utf-8;
 
     error_page 404 /error.html;
+
+    location / {
+        if (!-e $request_filename) {
+            rewrite ^(.*)$ /index.html break;
+        }
+    }
 
     location /.well-known {
         allow all;

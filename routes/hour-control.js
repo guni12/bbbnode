@@ -10,21 +10,21 @@ router.get("/",
     (req, res, next) => settings.asksqlite(req, res, next),
     (req, res, next) => calc.tocontrol(req, res, next),
     (req, res, next) => zones.getAllZones(req, res, next),
-    (req, res, next) => update.readList(req, res, next, 'gpiodetails.txt'),
+    (req, res, next) => update.readList(req, res, next, 'gpiodetails.txt', 'prep_gpiodetails'),
     (req, res, next) => control.update(req, res, next),
-    (req, res, next) => update.readList(req, res, next, 'gpiodetails.txt'),
-    (req, res) => control.show(req, res)
+    (req, res, next) => update.readList(req, res, next, 'gpiodetails.txt', 'gpiodetails'),
+    (req, res) => control.show(req, res, 'gpiodetails')
 );
 
 router.get("/:id",
     (req, res, next) => settings.asksqlite(req, res, next),
     (req, res, next) => calc.tocontrol(req, res, next),
     (req, res, next) => zones.getOneZone(req, res, next),
-    (req, res, next) => update.readList(req, res, next, 'gpiodetails.txt'),
+    (req, res, next) => update.readList(req, res, next, 'gpiodetails.txt', 'prep_gpiodetails'),
     (req, res, next) => control.update(req, res, next),
-    (req, res, next) => update.updateFile(req, res, next),
-    (req, res, next) => update.readList(req, res, next, 'gpiodetails.txt'),
-    (req, res) => control.show(req, res)
+    (req, res, next) => update.updateFile(req, res, next, 'prep_gpiodetails'),
+    (req, res, next) => update.readList(req, res, next, 'gpiodetails.txt', 'newlist'),
+    (req, res) => control.show(req, res, 'newlist')
 );
 
 module.exports = router;

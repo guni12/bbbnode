@@ -82,7 +82,7 @@ app.use((err, req, res, next) => {
 const debug = require("debug")("express:*");
 const http = require("http");
 
-const port = normalizePort(process.env.PORT || "1337");
+const port = process.env.NODE_ENV === "test" ? "1339" : normalizePort(process.env.PORT || "1337");
 
 app.set("port", port);
 

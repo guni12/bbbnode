@@ -5,7 +5,6 @@ Downloads spotprice.sdv and adds the file in /home/pi
 2018-08-19
 """
 import datetime
-#import time
 from ftplib import FTP
 
 SOURCE = FTP('ftp.nordpoolspot.com')

@@ -25,7 +25,7 @@ module.exports = (function () {
     function getOneZone(req, res, next) {
         let sql = "SELECT * FROM zones WHERE id = ?";
 
-        //console.log(req.body.id);
+        //console.log(req.body, req.params);
         db.get(sql,
             req.params.id, (err, row) => {
                 if (row) {

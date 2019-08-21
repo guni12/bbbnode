@@ -4,9 +4,9 @@ const gpioupdate = require('./update-gpio');
 
 module.exports = (function () {
     function update(req, res, next) {
-        //console.log(req.cal);
+        //console.log(req.controls);
         let zones = req.zones;
-        let controls = req.cal;
+        let controls = req.controls;
 
         let d = new Date();
         let hour = d.getHours();
@@ -16,7 +16,8 @@ module.exports = (function () {
 
         //console.log(req.params);
         if (req.params.id) {
-            let status = m['c'+control](zones);
+            let key = 'c' + control;
+            let status = m[key](zones);
 
             try {
                 req.updated = m.updatePin(zones.gpio, status);
@@ -28,16 +29,19 @@ module.exports = (function () {
                 return res.status(500).json(obj);
             }
         } else {
+            let list = req.prep_gpiodetails;
+
             zones.map((item) => {
                 //console.log(control, item);
-                let status = m['c'+control](item);
+                let key = 'c' + control;
+                let status = m[key](item);
 
                 req.gpio = item.gpio;
-                req.gpiostatus = status;
+                //req.gpiostatus = status;
                 try {
                     let updated = m.updatePin(item.gpio, status);
 
-                    gpioupdate.updateInLoop(updated, req.gpiodetails);
+                    list = gpioupdate.updateInLoop(updated, list);
                 } catch (err) {
                     let message = "Gpio pinne kunde ej läsas.";
                     let obj = reg.reterror(500, "/hourcontrol", message, err);
@@ -45,12 +49,13 @@ module.exports = (function () {
                     return res.status(500).json(obj);
                 }
             });
+            req.gpiodetails = list;
             next();
         }
     }
 
-    function show(req, res) {
-        res.json(req.gpiodetails);
+    function show(req, res, what) {
+        res.json(req[what]);
     }
 
     return {

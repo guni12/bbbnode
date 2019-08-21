@@ -9,7 +9,7 @@ module.exports = (function () {
         db.get(sql,
             params, (err, row) => {
                 if (row) {
-                    req.codes = row;
+                    req.settings = row;
                     next();
                 } else {
                     let obj = reg.reterror(401, where, "Något gick fel med databasen.");
@@ -21,7 +21,7 @@ module.exports = (function () {
     }
 
     function show(req, res) {
-        let row = req.codes;
+        let row = req.settings;
 
         res.json(row);
     }
