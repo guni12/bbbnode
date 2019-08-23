@@ -27,8 +27,10 @@ describe("Register and login user", function() {
     describe("POST /register", () => {
         it("1. should get 401 as we do not provide valid password", (done) => {
             let user = {
-                email: "testing@example.com",
-                password: "",
+                //email: "testing@example.com",
+                //password: "",
+                column: "testing@example.com",
+                value: "",
             };
 
             chai.request(server)
@@ -46,8 +48,10 @@ describe("Register and login user", function() {
 
         it("2a. should get 201", (done) => {
             let user = {
-                email: "test@example.com",
-                password: "123test",
+                //email: "test@example.com",
+                //password: "123test",
+                column: "test@example.com",
+                value: "123test",
             };
 
             chai.request(server)
@@ -69,8 +73,10 @@ describe("Register and login user", function() {
 
         it("2b. should get 500 unique email constraint", (done) => {
             let user = {
-                email: "test@example.com",
-                password: "123test",
+                //email: "test@example.com",
+                //password: "123test",
+                column: "test@example.com",
+                value: "123test",
             };
 
             chai.request(server)
@@ -93,8 +99,10 @@ describe("Register and login user", function() {
             let pre = makeid();
             let unique = pre + "@example.com";
             let user = {
-                email: unique,
-                password: "1235test",
+                //email: unique,
+                //password: "1235test",
+                column: unique,
+                value: "1235test",
             };
 
             chai.request(server)
@@ -120,6 +128,7 @@ describe("Register and login user", function() {
             let user = {
                 email: "test@example.com",
                 //password: "123test",
+                column: "test@example.com",
             };
 
             chai.request(server)
@@ -129,7 +138,7 @@ describe("Register and login user", function() {
                     res.should.have.status(401);
                     res.body.should.be.an("object");
                     res.body.errors.status.should.be.equal(401);
-                    res.body.errors.title.should.be.equal("Email or password missing");
+                    res.body.errors.title.should.be.equal("Email eller lösenord saknas");
 
                     done();
                 });
@@ -139,7 +148,8 @@ describe("Register and login user", function() {
         it("5. should get 401 as we do not provide valid email", (done) => {
             let user = {
                 //email: "test@example.com",
-                password: "123test",
+                //password: "123test",
+                value: "123test",
             };
 
             chai.request(server)
@@ -149,7 +159,7 @@ describe("Register and login user", function() {
                     res.should.have.status(401);
                     res.body.should.be.an("object");
                     res.body.errors.status.should.be.equal(401);
-                    res.body.errors.title.should.be.equal("Email or password missing");
+                    res.body.errors.title.should.be.equal("Email eller lösenord saknas");
 
                     done();
                 });
@@ -158,8 +168,10 @@ describe("Register and login user", function() {
 
         it("6. should get 401 as we provide wrong email", (done) => {
             let user = {
-                email: "testing@example.com",
-                password: "123test",
+                //email: "testing@example.com",
+                //password: "123test",
+                column: "testing@example.com",
+                value: "123test",
             };
 
             chai.request(server)
@@ -178,8 +190,10 @@ describe("Register and login user", function() {
 
         it("7. should get 401 as we provide wrong password", (done) => {
             let user = {
-                email: "test@example.com",
-                password: "1234test",
+                //email: "test@example.com",
+                //password: "1234test",
+                column: "test@example.com",
+                value: "1234test",
             };
 
             chai.request(server)
@@ -200,8 +214,10 @@ describe("Register and login user", function() {
             process.env.JWT_SECRET = "secret";
             //console.log("jwt", process.env.JWT_SECRET);
             let user = {
-                email: "test@example.com",
-                password: "123test",
+                //email: "test@example.com",
+                //password: "123test",
+                column: "test@example.com",
+                value: "123test",
             };
 
             chai.request(server)

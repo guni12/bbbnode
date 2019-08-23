@@ -22,25 +22,8 @@ module.exports = (function () {
         });
     }
 
-    function sensorsWithTime(req, res, next) {
-        let item = {time: time, date: date};
-
-        sensor.readAllC(2, (err, temps) => {
-            if (err) {
-                let obj = reg.reterror(500, './find', err, item);
-
-                return res.status(500).json(obj);
-            } else {
-                temps.push(item);
-                req.printSwt= temps;
-                req.file = 'sensordetails.txt';
-            }
-        });
-        next();
-    }
 
     return {
-        initSensors: initSensors,
-        sensorsWithTime: sensorsWithTime
+        initSensors: initSensors
     };
 }());

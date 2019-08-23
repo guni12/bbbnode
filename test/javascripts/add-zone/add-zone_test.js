@@ -37,7 +37,9 @@ describe("Add a zone to the zones", function() {
             let params2 = JSON.stringify(params);
 
             let content = {
-                data: params2,
+                //data: params2,
+                column: "empty",
+                value: params2
             };
 
             let check = "Inlagt 28-021466fea4ff,zone1,,0,0,21.25,,,0,0,0,Namn,2019-08-10 09:30:01";
@@ -77,7 +79,9 @@ describe("Add a zone to the zones", function() {
             let params2 = JSON.stringify(params);
 
             let content = {
-                data: params2,
+                //data: params2,
+                column: "empty",
+                value: params2
             };
 
             let check = "SQLITE_CONSTRAINT: NOT NULL constraint failed: zones.sensorid";

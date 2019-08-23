@@ -1,17 +1,7 @@
-const reg = require('./status.js');
-const db = require('../../db/database.js');
+const reg = require('./status');
+const db = require('../../db/database');
 
 module.exports = (function () {
-    function hascred(req, res, next, where) {
-        if (!req.body.column || !req.body.value) {
-            let obj = reg.reterror(401, where, "Kolumn eller värde saknas");
-
-            return res.status(401).json(obj);
-        }
-        next();
-    }
-
-
     function update(req, res, table, where) {
         let col = req.body.column;
         let val = req.body.value === "null" ? null : req.body.value;
@@ -40,7 +30,6 @@ module.exports = (function () {
     }
 
     return {
-        hascred: hascred,
         update: update
     };
 }());

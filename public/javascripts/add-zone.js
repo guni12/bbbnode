@@ -2,17 +2,9 @@ const reg = require('./status.js');
 const db = require('../../db/database.js');
 
 module.exports = (function () {
-    function hascred(req, res, next) {
-        if (!req.body.data) {
-            let obj = reg.reterror(401, '/addzone', "Data saknas");
-
-            return res.status(401).json(obj);
-        }
-        next();
-    }
-
     function insert(req, res) {
-        let params = JSON.parse(req.body.data);
+        //let params = JSON.parse(req.body.data);
+        let params = JSON.parse(req.body.value);
         let cols = "(sensorid, zone, gpio, away, dsm, tempis, isoff, ison,";
 
         cols += " max, min, should, name, measured)";
@@ -37,7 +29,6 @@ module.exports = (function () {
     }
 
     return {
-        hascred: hascred,
         insert: insert
     };
 }());

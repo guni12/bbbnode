@@ -7,7 +7,8 @@ module.exports = (function () {
     function login(req, res) {
         let user = res.locals.user;
 
-        bcrypt.compare(req.body.password, user.password, (err, result) => {
+        //bcrypt.compare(req.body.password, user.password, (err, result) => {
+        bcrypt.compare(req.body.value, user.password, (err, result) => {
             if (err) {
                 let obj = reg.reterror(500, "/login", "bcrypt error");
 

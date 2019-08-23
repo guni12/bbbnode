@@ -13,7 +13,7 @@ const fs = require('fs');
 //let nock = require('nock');
 const rpio = require('rpio');
 let writeFileStub;
-const updateGpio = require('../../../public/javascripts/update-gpio');
+const updl = require('../../../public/javascripts/upd-gpio-list');
 const pf = require('../../../public/javascripts/printFile');
 const rf = require('../../../public/javascripts/readFile');
 
@@ -114,11 +114,11 @@ describe("Visit and update hourcontrols", function() {
                     if (err) {
                         done(err);
                     }
-                    //console.log(res.body);
+                    console.log(res.body);
                     res.should.have.status(500);
                     res.headers['content-type'].should.contain('application/json');
                     res.body.should.be.an("object");
-                    res.body.errors.extra.should.be.an("object");
+                    res.body.errors.detail.should.be.an("string");
                     res.body.errors.title.should.equal(check);
                     done();
                 });
@@ -218,7 +218,7 @@ describe("Visit and update hourcontrols", function() {
 
             req.updated = item;
             const spy = sinon.spy();
-            let test = updateGpio.updateList(req, res, spy, 'updated', 'list');
+            let test = updl.updateList(req, res, spy, 'updated', 'list');
 
             test.should.be.an("array");
             test[1].should.be.equal(item);
@@ -237,10 +237,10 @@ describe("Visit and update hourcontrols", function() {
             const res = mockResponse();
             const spy = sinon.spy();
 
-            sinon.spy(updateGpio, "updateList");
+            sinon.spy(updl, "updateList");
 
             try {
-                updateGpio.updateList(req, res, spy, content, empty);
+                updl.updateList(req, res, spy, content, empty);
             } catch (err) {
                 err.should.include(new TypeError("Cannot read property 'forEach' of null"));
             }

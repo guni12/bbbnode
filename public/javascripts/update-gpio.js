@@ -1,5 +1,6 @@
 const rpio = require('rpio');
-const reg = require('./status.js');
+const reg = require('./status');
+const ugo = require('./upd-gpio-out');
 
 module.exports = (function () {
     function update(req, res, next) {
@@ -8,55 +9,25 @@ module.exports = (function () {
         let mode = req.body.mode;
 
         if (mode === "out") {
-            rpio.open(gpio, rpio.OUTPUT, stat);
-            rpio.write(gpio, stat);
-            stat = rpio.read(gpio);
-            let updated = { gpio: gpio, status: stat, mode: mode };
-
-            if (stat === 0 || stat === 1) {
-                req.updated = updated;
-
-                next();
-            } else {
-                let text = "gpio out kunde inte läsas av";
-                let obj = reg.reterror(500, "/", text, updated);
-
-                return res.status(500).json(obj);
-            }
+            ugo.updOut(req, res, next, { gpio: gpio, status: stat, mode: mode });
         } else {
             rpio.open(gpio, rpio.INPUT);
             stat = rpio.read(gpio);
-            let inupdated = { gpio: gpio, status: stat, mode: mode };
 
             if (stat) {
-                req.updated = inupdated;
+                req.updated = { gpio: gpio, status: stat, mode: mode };
 
                 next();
             } else {
                 let text = "gpio in kunde inte läsas av";
-                let obj = reg.reterror(500, "/", text, inupdated);
+                let obj = reg.reterror(500, "/", text);
 
                 return res.status(500).json(obj);
             }
         }
     }
 
-    function updateList(req, res, next, item, list) {
-        let lst = req[list];
-        let itm = req[item];
-
-        lst.forEach((one, index) => {
-            if (one.gpio === itm.gpio) {
-                lst[index] = itm;
-            }
-        });
-        req.newlist = lst;
-        return lst;
-    }
-
-
     return {
-        update: update,
-        updateList: updateList
+        update: update
     };
 }());

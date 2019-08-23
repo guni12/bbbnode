@@ -14,6 +14,7 @@ const sensor = require('ds18b20-raspi');
 let writeFileStub;
 let sensorStub;
 const findSensors = require('../../../public/javascripts/find-sensors');
+const swt = require('../../../public/javascripts/sensorsWithTime');
 const pf = require('../../../public/javascripts/printFile');
 const show = require('../../../public/javascripts/show');
 
@@ -166,7 +167,7 @@ describe("Find and store all sensors", function() {
 
             sensor.readAllC(2, (err, sensorlist));
 
-            findSensors.sensorsWithTime(req, res, spy);
+            swt.sensorsWithTime(req, res, spy);
 
             sensorStub.should.have.been.called;
             sensorStub.should.have.been.calledWith(2, (err, sensorlist));

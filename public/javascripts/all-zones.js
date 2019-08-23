@@ -1,10 +1,11 @@
-const db = require('../../db/database.js');
-const reg = require('./status.js');
+const db = require('../../db/database');
+const reg = require('./status');
+const one = require('./getOneZone');
 
 module.exports = (function () {
     function getZones(req, res, next) {
         if (req.params.id) {
-            getOneZone(req, res, next);
+            one.getOne(req, res, next);
         } else {
             getAllZones(req, res, next);
         }
@@ -28,29 +29,8 @@ module.exports = (function () {
     }
 
 
-    function getOneZone(req, res, next) {
-        let sql = "SELECT * FROM zones WHERE id = ?";
-
-        db.get(sql,
-            req.params.id, (err, row) => {
-                if (row) {
-                    req.zones = row;
-
-                    next();
-                } else {
-                    let message = err === null ? "Detta id finns inte" : err.message;
-                    let obj = reg.reterror(500, "/zones", message);
-
-                    return res.status(500).json(obj);
-                }
-            }
-        );
-    }
-
-
     return {
         getAllZones: getAllZones,
-        getOneZone: getOneZone,
         getZones: getZones
     };
 }());

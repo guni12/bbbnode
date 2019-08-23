@@ -4,7 +4,8 @@ const reg = require('./status.js');
 module.exports = (function () {
     function asksqlite(req, res, next) {
         db.get("SELECT * FROM users WHERE email = ?",
-            req.body.email, (err, user) => {
+            //req.body.email, (err, user) => {
+            req.body.column, (err, user) => {
                 res.locals.err = err;
                 res.locals.user = user;
                 next();
