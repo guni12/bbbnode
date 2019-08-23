@@ -48,17 +48,9 @@ module.exports = (function () {
     }
 
 
-    function show(req, res) {
-        let what = req.zones;
-
-        return res.json(what);
-    }
-
-
     return {
         getAllZones: getAllZones,
         getOneZone: getOneZone,
-        getZones: getZones,
-        show: show
+        getZones: getZones
     };
 }());

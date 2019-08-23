@@ -20,15 +20,9 @@ module.exports = (function () {
         );
     }
 
-    function show(req, res) {
-        let row = req.settings;
-
-        res.json(row);
-    }
 
     return {
-        asksqlite: asksqlite,
-        show: show
+        asksqlite: asksqlite
     };
 }());
 

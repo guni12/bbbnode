@@ -10,7 +10,9 @@ const sinon = require("sinon");
 const sinonChai = require('sinon-chai');
 const fs = require('fs');
 let writeFileStub;
-const updateTemp = require('../../../public/javascripts/update-temperatures');
+//const updateTemp = require('../../../public/javascripts/update-temperatures');
+const pf = require('../../../public/javascripts/printFile');
+const update = require('../../../public/javascripts/updateSensors');
 
 chai.use(chaiHttp);
 chai.use(sinonChai);
@@ -18,9 +20,9 @@ chai.should();
 
 describe("Visit sensors and update temperatures", function() {
     describe("GET /tempupdate", () => {
-        const mockRequest = (list) => ({
+        const mockRequest = (list, m=null) => ({
             sensors: list,
-            details: list,
+            message: m
         });
 
         let temps = [
@@ -63,47 +65,20 @@ describe("Visit sensors and update temperatures", function() {
         });
 
 
-        it("2. Test printFile", () => {
+        it("2. Test updateSensors", () => {
             const req = mockRequest(
                 temps
             );
 
-            let what = "";
-            let url = "/home/pi/bbbnode/public/scripts/sensordetails.txt";
             const res = mockResponse();
-
             const spy = sinon.spy();
 
-            writeFileStub = sinon.stub(fs, 'writeFile')
-                .returns("I am a fake call!");
-
-            writeFileStub.callsFake((firstArg) => {
-                what = 'My first arg is: ' + firstArg;
-            });
-
-            updateTemp.printFile(req, res, spy);
-
-            writeFileStub.should.have.been.called;
-            writeFileStub.should.have.been.calledWith(url, JSON.stringify(req.sensors));
-            what.should.be.equal("My first arg is: " + url);
+            update.updateSensors(req, res, spy);
             spy.called.should.be.true;
-            fs.writeFile.restore();
         });
 
 
-        it("3. Test updateSqlite", () => {
-            const req = mockRequest(
-                temps
-            );
-
-            const res = mockResponse();
-
-            updateTemp.updateSqlite(req, res);
-            res.json.should.have.been.called;
-        });
-
-
-        it("4. Test printFile with error", () => {
+        it("3. Test printFile with error", () => {
             const req = mockRequest(
                 temps
             );
@@ -115,9 +90,10 @@ describe("Visit sensors and update temperatures", function() {
 
             writeFileStub.yields( new Error("Testfel här"));
 
-            updateTemp.printFile(req, res, spy);
+            pf.printFile(req, res, spy);
             writeFileStub.should.have.been.called;
             fs.writeFile.restore();
+            writeFileStub.restore();
         });
     });
 });

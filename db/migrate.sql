@@ -38,4 +38,4 @@ CREATE TABLE IF NOT EXISTS zones (
     measured VARCHAR(50)
 );
 
-INSERT INTO settings(area,currency,percent,dsmon,percenton) VALUES('SE1', 'SEK', 3, 0, 1);
+INSERT INTO settings(area,currency,percent,dsmon,percenton) VALUES('SE1', 'SEK', 2, 0, 1);

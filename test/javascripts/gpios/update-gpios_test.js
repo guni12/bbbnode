@@ -14,6 +14,8 @@ const fs = require('fs');
 const rpio = require('rpio');
 let writeFileStub;
 const updateGpio = require('../../../public/javascripts/update-gpio');
+const pf = require('../../../public/javascripts/printFile');
+const rf = require('../../../public/javascripts/readFile');
 
 rpio.init({mock: 'raspi-3'});
 
@@ -55,7 +57,8 @@ let mockRequest = (upd, lt, gt=null) => ({
     updated: upd,
     list: lt,
     newlist: lt,
-    gpiodetails: gt
+    gpiodetails: gt,
+    content: lt
 });
 
 let content = {
@@ -63,12 +66,6 @@ let content = {
     status: 1,
     mode: "out"
 };
-
-const smlist = [
-    {"gpio": 3, "mode": "out", "status": 0},
-    {"gpio": 5, "mode": "out", "status": 1},
-    {"gpio": 7, "mode": "out", "status": 0}
-];
 
 
 const mockResponse = () => {
@@ -130,7 +127,7 @@ describe("Visit and update hourcontrols", function() {
 
 
     describe("Functions with filewriteStub", () => {
-        it("1. Test WriteList", () => {
+        it("1. Test WriteList", (done) => {
             const req = mockRequest(
                 {},
                 list,
@@ -143,23 +140,25 @@ describe("Visit and update hourcontrols", function() {
 
             writeFileStub = sinon.stub(fs, 'writeFile')
                 .returns("I am a fake call!");
-
             writeFileStub.callsFake((firstArg) => {
                 what = 'My first arg is: ' + firstArg;
             });
 
-            updateGpio.writeList(req, res);
+            const spy = sinon.spy();
+
+            pf.printFile(req, res, spy, './public/scripts/gpiodetails.txt', 'newlist');
 
             writeFileStub.should.have.been.called;
             writeFileStub.should.have.been.calledWith(url, JSON.stringify(req.list));
             what.should.be.equal("My first arg is: ./public/scripts/gpiodetails.txt");
-            res.status.should.have.been.calledWith(201);
-            res.json.should.have.been.calledWith(list);
+            spy.called.should.be.true;
+            //res.json.should.have.been.calledWith(list);
             fs.writeFile.restore();
+            done();
         });
 
 
-        it("2. Test writeList with nothing in req", () => {
+        it("2. Test writeList with nothing in req", (done) => {
             const req = mockRequest(
                 null,
                 null,
@@ -167,21 +166,25 @@ describe("Visit and update hourcontrols", function() {
             );
 
             const res = mockResponse();
+            const spy = sinon.spy();
 
             writeFileStub = sinon.stub(fs, 'writeFile')
                 .returns("I am a fake call!");
-
             writeFileStub.yields( new Error("Testfel här"));
-            updateGpio.writeList(req, res);
+            //updateGpio.writeList(req, res);
+            pf.printFile(req, res, spy, './public/scripts/gpiodetails.txt', 'newlist');
 
             writeFileStub.should.have.been.called;
+            spy.called.should.be.true;
             fs.writeFile.restore();
+            writeFileStub.restore();
+            done();
         });
     });
 
 
     describe("Functions with filereadStub", () => {
-        it("1. Test readList with error", (done) => {
+        it("1. Test readFile with error", (done) => {
             const req = mockRequest(
                 {},
                 list,
@@ -194,37 +197,54 @@ describe("Visit and update hourcontrols", function() {
             let readFileStub = sinon.stub(fs, 'readFile');
 
             readFileStub.yields( new Error("Testfel här"));
-            updateGpio.readList(req, res, spy, "gpiodetails.txt");
+            rf.getFile(req, res, spy, "./public/scripts/gpiodetails.txt");
 
             readFileStub.should.have.been.called;
             spy.called.should.be.false;
             fs.readFile.restore();
+            readFileStub.restore();
             done();
         });
-    });
 
+        it("2. Test updateList", (done) => {
+            const req = mockRequest(
+                {},
+                list,
+                list
+            );
 
-    describe("Functions with no req, res", () => {
-        it("1. Test updateList", () => {
+            const res = mockResponse();
             const item = {"gpio": 5, "mode": "out", "status": 0};
-            let test = updateGpio.updateList(item, smlist);
+
+            req.updated = item;
+            const spy = sinon.spy();
+            let test = updateGpio.updateList(req, res, spy, 'updated', 'list');
 
             test.should.be.an("array");
             test[1].should.be.equal(item);
+            done();
         });
 
 
-        it("2. Test updateList empty list with catch", () => {
+        it("3. Test updateList empty list with catch", (done) => {
             let empty = null;
+            const req = mockRequest(
+                {},
+                null,
+                null
+            );
+
+            const res = mockResponse();
+            const spy = sinon.spy();
 
             sinon.spy(updateGpio, "updateList");
 
             try {
-                updateGpio.updateList(content, empty);
-                //test.should.throws(() => x.y.z, TypeError);
+                updateGpio.updateList(req, res, spy, content, empty);
             } catch (err) {
                 err.should.include(new TypeError("Cannot read property 'forEach' of null"));
             }
+            done();
         });
     });
 });

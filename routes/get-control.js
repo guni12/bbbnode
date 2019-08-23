@@ -1,9 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const show = require('../public/javascripts/showSpot.js');
+const rf= require('../public/javascripts/readFile.js');
+const show = require('../public/javascripts/show.js');
+const where = './public/array.txt';
 
 router.get("/",
-    (req, res) => show.spotdata(req, res)
+    (req, res, next) => rf.getFile(req, res, next, where),
+    (req, res) => show.show(req, res, 'content')
 );
 
 module.exports = router;

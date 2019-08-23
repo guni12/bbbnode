@@ -10,7 +10,8 @@ const sinon = require("sinon");
 const sinonChai = require('sinon-chai');
 const rpio = require('rpio');
 const controls = require('../../../public/javascripts/controls');
-const hourcontrol = require('../../../public/javascripts/hour-control');
+//const hourcontrol = require('../../../public/javascripts/hour-control');
+const show = require('../../../public/javascripts/show');
 
 rpio.init({mock: 'raspi-3'});
 
@@ -23,6 +24,9 @@ describe("Test controls", function() {
         const mockRequest = (f, lt) => ({
             file: f,
             printobj: lt,
+            content: lt,
+            gpiodetails: lt,
+            prep_gpiodetails: lt
         });
 
         const mockResponse = () => {
@@ -94,7 +98,7 @@ describe("Test controls", function() {
                 []
             );
 
-            hourcontrol.show(req, res);
+            show.show(req, res, 'printobj');
             res.json.should.have.been.called;
         });
 

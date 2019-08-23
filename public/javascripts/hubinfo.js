@@ -1,16 +1,24 @@
 const fs = require('fs');
 const csv = require('fast-csv');
 const spotcal = require('./spotcal');
+const headers = require('./headers');
 
 module.exports = (function () {
     function hubinfo(req, res, next) {
         let d = new Date();
         let hour = d.getHours();
+        let hs = headers.list;
+        let area = req.settings.area;
+        let currency = req.settings.currency;
 
-        if (req.params.id === 'control') {
+        console.log("req.settings, req.content", req.settings, req.content);
+
+
+        if (req.params && req.params.id === 'control') {
             spotcal.tocontrol(req, res, next);
         } else {
-            let day = req.params.id === '2' && hour > 16 ? 'spotprice2.txt' : 'spotprice.txt';
+            let f1 = 'spotprice2.txt';
+            let day = req.params && req.params.id === '2' && hour > 16 ? f1 : 'spotprice.txt';
             let myfile = __dirname + '/../scripts/spot/' + day;
             let chosen = "";
             let arr = [];
@@ -20,42 +28,7 @@ module.exports = (function () {
                 comment: '#',
                 strictColumnHandling: false,
                 renameHeaders: false,
-                headers: [
-                    'Data type(PR)',
-                    'Code(SO,SF)',
-                    'Year',
-                    'Week',
-                    'Day of week',
-                    'Date(dd.mm.yyyy)',
-                    'Area',
-                    'Currency',
-                    'Hour1',
-                    'Hour2',
-                    'Hour3A',
-                    'Hour3B',
-                    'Hour4',
-                    'Hour5',
-                    'Hour6',
-                    'Hour7',
-                    'Hour8',
-                    'Hour9',
-                    'Hour10',
-                    'Hour11',
-                    'Hour12',
-                    'Hour13',
-                    'Hour14',
-                    'Hour15',
-                    'Hour16',
-                    'Hour17',
-                    'Hour18',
-                    'Hour19',
-                    'Hour20',
-                    'Hour21',
-                    'Hour22',
-                    'Hour23',
-                    'Hour24',
-                    'Average'
-                ],
+                headers: hs,
                 delimiter: ';'
             });
 
@@ -66,13 +39,10 @@ module.exports = (function () {
                     arr.push(data);
                 })
                 .on('end', (rowCount) => {
-                    let area = req.settings.area;
-                    let currency = req.settings.currency;
-
                     chosen = arr.find(
                         (im) => im.Area === area && im.Currency === currency
                     );
-                    console.log(rowCount, "rader hittade.");
+                    console.log(rowCount, "rader för area och currency:", area, currency);
                     req.chosen = chosen;
                     next();
                 });

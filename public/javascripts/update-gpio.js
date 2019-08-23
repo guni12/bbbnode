@@ -1,5 +1,4 @@
 const rpio = require('rpio');
-const fs = require('fs');
 const reg = require('./status.js');
 
 module.exports = (function () {
@@ -20,7 +19,7 @@ module.exports = (function () {
                 next();
             } else {
                 let text = "gpio out kunde inte läsas av";
-                let obj = reg.reterror(500, "/hourcontrol", text, updated);
+                let obj = reg.reterror(500, "/", text, updated);
 
                 return res.status(500).json(obj);
             }
@@ -35,51 +34,29 @@ module.exports = (function () {
                 next();
             } else {
                 let text = "gpio in kunde inte läsas av";
-                let obj = reg.reterror(500, "/hourcontrol", text, inupdated);
+                let obj = reg.reterror(500, "/", text, inupdated);
 
                 return res.status(500).json(obj);
             }
         }
     }
 
-    function updateList(item, list) {
-        list.forEach((one, index) => {
-            if (one.gpio === item.gpio) {
-                list[index] = item;
+    function updateList(req, res, next, item, list) {
+        let lst = req[list];
+        let itm = req[item];
+
+        lst.forEach((one, index) => {
+            if (one.gpio === itm.gpio) {
+                lst[index] = itm;
             }
         });
-        return list;
+        req.newlist = lst;
+        return lst;
     }
 
-    function writeList(req, res) {
-        let list = req.newlist;
-
-        fs.writeFile('./public/scripts/gpiodetails.txt', JSON.stringify(list), err => {
-            if (err) {
-                let obj = reg.reterror(500, "/hourcontrol", "listan kunde inte skrivas in", err);
-
-                return res.status(500).json(obj);
-            }
-        });
-        return res.status(201).json(list);
-    }
-
-    function readList(req, res, next, file, what) {
-        fs.readFile('./public/scripts/' + file, (err, data) => {
-            if (err) {
-                let obj = reg.reterror(500, "/hourcontrol", "listan kunde inte läsas av", err);
-
-                return res.status(500).json(obj);
-            }
-            req[what] = JSON.parse(data);
-            next();
-        });
-    }
 
     return {
         update: update,
-        updateList: updateList,
-        writeList: writeList,
-        readList: readList
+        updateList: updateList
     };
 }());

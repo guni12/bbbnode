@@ -18,7 +18,7 @@
 
 Mjukvaran för styrsystemet är byggt med Node.js, Express, React och Sqlite3.
 
-### Gör så här
+## Gör så här
 
 -   Konfigurera sd-kortet, installera raspbian och konfigurera till svenska förhållanden.
 -   `https://www.raspberrypi.org/documentation/installation/noobs.md`
@@ -64,7 +64,7 @@ npm start
 python3 /home/pi/bbbnode/public/scripts/spot/checkfile.py
 ```
 -   `http://localhost:1337/tempupdate`
--  `http://localhost:1337/hourcontrol`
+-   `http://localhost:1337/hourcontrol`
 -   öppna ny terminal:
 ```sh
 sudo crontab -l -u root |  cat /home/pi/bbbnode/scripts/cron.txt | sudo crontab -u root -

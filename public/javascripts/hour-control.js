@@ -44,12 +44,7 @@ module.exports = (function () {
         return temp;
     }
 
-    function show(req, res, what) {
-        res.json(req[what]);
-    }
-
     return {
-        update: update,
-        show: show
+        update: update
     };
 }());

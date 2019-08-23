@@ -1,16 +1,21 @@
 const express = require('express');
 const router = express.Router();
-
+const pins = require('../public/javascripts/initPins.js');
 const zones = require('../public/javascripts/find-sensors.js');
+const pf = require('../public/javascripts/printFile.js');
+const show = require('../public/javascripts/show.js');
+const gpio = './public/scripts/gpiodetails.txt';
+const sd = './public/scripts/sensordetails.txt';
+const s = './public/scripts/sensors.txt';
 
 router.get("/",
-    (req, res, next) => zones.initPins(req, res, next),
-    (req, res, next) => zones.printFile(req, res, next, 'gpiodetails.txt', 'printPins'),
+    (req, res, next) => pins.initPins(req, res, next),
+    (req, res, next) => pf.printFile(req, res, next, gpio, 'printPins'),
     (req, res, next) => zones.initSensors(req, res, next),
-    (req, res, next) => zones.printFile(req, res, next, 'sensors.txt', 'printSensors'),
+    (req, res, next) => pf.printFile(req, res, next, s, 'printSensors'),
     (req, res, next) => zones.sensorsWithTime(req, res, next),
-    (req, res, next) => zones.printFile(req, res, next, 'sensordetails.txt', 'printSwt'),
-    (req, res) => zones.show(req, res)
+    (req, res, next) => pf.printFile(req, res, next, sd, 'printSwt'),
+    (req, res) => show.show(req, res, 'printobj')
 );
 
 module.exports = router;

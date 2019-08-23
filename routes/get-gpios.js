@@ -1,9 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const gpios = require('../public/javascripts/get-gpios.js');
+const rf = require('../public/javascripts/readFile.js');
+const show = require('../public/javascripts/show.js');
+const where = './public/scripts/gpiodetails.txt';
 
 router.get("/",
-    (req, res) => gpios.getall(req, res)
+    (req, res, next) => rf.getFile(req, res, next, where),
+    (req, res) => show.show(req, res, 'content')
 );
 
 module.exports = router;

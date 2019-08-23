@@ -14,6 +14,8 @@ const sensor = require('ds18b20-raspi');
 let writeFileStub;
 let sensorStub;
 const findSensors = require('../../../public/javascripts/find-sensors');
+const pf = require('../../../public/javascripts/printFile');
+const show = require('../../../public/javascripts/show');
 
 rpio.init({mock: 'raspi-3'});
 
@@ -21,9 +23,11 @@ chai.use(chaiHttp);
 chai.use(sinonChai);
 chai.should();
 
-const mockRequest = (f, lt) => ({
+const mockRequest = (f, lt, id=null, c=null) => ({
     file: f,
-    printPins: lt
+    printPins: lt,
+    params: id,
+    controls: c
 });
 
 let gpiolist = [
@@ -96,7 +100,8 @@ describe("Find and store all sensors", function() {
         });
     });
 
-    describe("Test functions with stubs", () => {
+
+    describe("Test function with writefileStub", () => {
         it("1. Test printFile", () => {
             const req = mockRequest(
                 "gpiodetails.txt",
@@ -107,16 +112,16 @@ describe("Find and store all sensors", function() {
             const url = "./public/scripts/gpiodetails.txt";
             const res = mockResponse();
 
-            writeFileStub = sinon.stub(fs, 'writeFile')
-                .returns("I am a fake call!");
-
             const spy = sinon.spy();
 
+            writeFileStub = sinon.stub(fs, 'writeFile')
+                .returns("I am a fake call!");
             writeFileStub.callsFake((firstArg) => {
                 what = 'My first arg is: ' + firstArg;
+                //console.log(what);
             });
 
-            findSensors.printFile(req, res, spy, 'gpiodetails.txt', 'printPins');
+            pf.printFile(req, res, spy, './public/scripts/gpiodetails.txt', 'printPins');
 
             writeFileStub.should.have.been.called;
             writeFileStub.should.have.been.calledWith(url, JSON.stringify(gpiolist));
@@ -124,9 +129,12 @@ describe("Find and store all sensors", function() {
             spy.called.should.be.true;
             fs.writeFile.restore();
         });
+    });
 
 
-        it("2. Test initSensors can't be done on windows", () => {
+
+    describe("Test functions with stubs", () => {
+        it("1. Test initSensors can't be done on windows", () => {
             sensorStub = sinon.stub(sensor, 'list');
             const spy = sinon.spy();
             const res = mockResponse();
@@ -147,7 +155,7 @@ describe("Find and store all sensors", function() {
         });
 
 
-        it("3. Test sensorsWithTime cant be done on windows", () => {
+        it("2. Test sensorsWithTime cant be done on windows", () => {
             sensorStub = sinon.stub(sensor, 'readAllC');
             const spy = sinon.spy();
             const res = mockResponse();
@@ -176,7 +184,22 @@ describe("Find and store all sensors", function() {
                 sensorlist
             );
 
-            findSensors.show(req, res);
+            show.show(req, res, 'gpiodetails');
+            res.json.should.have.been.called;
+        });
+
+
+        it("2. Test show with id control", () => {
+            const res = mockResponse();
+            const req = mockRequest(
+                "",
+                sensorlist,
+            );
+
+            req.params = { id: 'control'};
+            req.controls = [1, 0, 1, 0];
+
+            show.show(req, res, 'controls');
             res.json.should.have.been.called;
         });
     });
