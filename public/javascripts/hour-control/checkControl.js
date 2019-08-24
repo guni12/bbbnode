@@ -7,7 +7,19 @@ module.exports = (function () {
         return list;
     }
 
+    function isFalse(control, temp, i) {
+        if (control === 1) {
+            temp = checkControl(temp, i);
+            return true;
+        }
+    }
+
+    function isTrue(control) {
+        return control === 0 ? false : true;
+    }
+
     return {
-        checkControl: checkControl
+        isFalse: isFalse,
+        isTrue: isTrue
     };
 }());

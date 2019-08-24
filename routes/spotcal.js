@@ -6,7 +6,7 @@ const hub = require('../public/javascripts/hubinfo.js');
 const pf = require('../public/javascripts/printFile.js');
 const show = require('../public/javascripts/show.js');
 const where = './public/array.txt';
-const params = { where: where };
+const params = { where: where, what: 'content' };
 const params1 = { where: where, what: 'chosen' };
 
 router.get("/:id?",

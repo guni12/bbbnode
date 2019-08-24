@@ -1,26 +1,22 @@
 module.exports = (function () {
     function c0(item) {
-        let status = item.tempis < item.should ? 1 : 0;
-
-        return status;
+        return oneOrZero(item.tempis, item.should);
     }
 
     function c1(item) {
-        let status = item.tempis < item.min ? 1 : 0;
-
-        return status;
+        return oneOrZero(item.tempis, item.min);
     }
 
     function c2(item) {
-        let status = item.tempis < item.max ? 1 : 0;
-
-        return status;
+        return oneOrZero(item.tempis, item.max);
     }
 
     function c3(item) {
-        let status = item.tempis < item.away ? 1 : 0;
+        return oneOrZero(item.tempis, item.away);
+    }
 
-        return status;
+    function oneOrZero(c1, c2) {
+        return c1 < c2 ? 1 : 0;
     }
 
 

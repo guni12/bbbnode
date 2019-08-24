@@ -11,8 +11,9 @@ module.exports = (function () {
 
         if (req.params.id) {
             let status = m[key](req.zones);
+            let params = { status: status, list: list };
 
-            list = updl.updateList(req, res, req.zones, [status, list]);
+            list = updl.updateList(req, res, req.zones, params);
         } else {
             req.zones.map((item) => {
                 let status = m[key](item);

@@ -5,7 +5,8 @@ module.exports = (function () {
     function extractControls(data, settings, isaway) {
         let avg = parseFloat((data['Average'])) / 10;
         let marker = (settings.percent/10)+1;
-        let temp = makelist.hourList(data, marker, avg);
+        let params = { marker: marker, avg: avg };
+        let temp = makelist.hourList(data, params);
 
         temp = adh.addHeat(temp);
 

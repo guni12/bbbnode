@@ -22,7 +22,7 @@ describe("Visit and update settings", function() {
                 value: "EUR",
             };
 
-            let check = 'Innehåll currency updaterat med: EUR';
+            let check = 'currency updaterat med: EUR';
 
             chai.request(server)
                 .post("/editsettings")

@@ -4,7 +4,7 @@ const rf= require('../public/javascripts/readFile.js');
 const init = require('../public/javascripts/init-zones.js');
 const insert = require('../public/javascripts/insert-zones.js');
 const where = './public/scripts/sensordetails.txt';
-const params = { where: where };
+const params = { where: where, what: 'content' };
 
 router.get("/",
     (req, res, next) => rf.getFile(req, res, next, params),

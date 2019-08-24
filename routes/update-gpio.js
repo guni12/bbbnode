@@ -6,7 +6,7 @@ const updl = require('../public/javascripts/gpio/upd-gpio-list.js');
 const pf = require('../public/javascripts/printFile.js');
 const show = require('../public/javascripts/show.js');
 const where = './public/scripts/gpiodetails.txt';
-const params = { where: where };
+const params = { where: where, what: 'content' };
 const params1 = { where: where, what: 'newlist' };
 
 router.post("/",

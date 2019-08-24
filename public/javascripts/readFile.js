@@ -2,7 +2,6 @@ const fs = require('fs');
 const reg = require('./status.js');
 
 module.exports = (function () {
-    //where, what=null
     function getFile(req, res, next, params) {
         fs.readFile(params.where, (err, data) => {
             if (err) {
@@ -10,9 +9,7 @@ module.exports = (function () {
 
                 return res.status(500).json(obj);
             }
-            let what = params.what ? params.what : 'content';
-
-            req[what] = JSON.parse(data);
+            req[params.what] = JSON.parse(data);
             next();
         });
     }

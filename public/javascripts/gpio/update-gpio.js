@@ -1,6 +1,5 @@
-const rpio = require('rpio');
-const reg = require('../status');
 const ugo = require('./upd-gpio-out');
+const ugi = require('./upd-gpio-in');
 
 module.exports = (function () {
     function update(req, res, next) {
@@ -11,19 +10,7 @@ module.exports = (function () {
         if (mode === "out") {
             ugo.updOut(req, res, next, { gpio: gpio, status: stat, mode: mode });
         } else {
-            rpio.open(gpio, rpio.INPUT);
-            stat = rpio.read(gpio);
-
-            if (stat) {
-                req.updated = { gpio: gpio, status: stat, mode: mode };
-
-                next();
-            } else {
-                let text = "gpio in kunde inte läsas av";
-                let obj = reg.reterror(500, "/", text);
-
-                return res.status(500).json(obj);
-            }
+            ugi.updIn(req, res, next, { gpio: gpio, status: stat, mode: mode });
         }
     }
 
