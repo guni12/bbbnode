@@ -1,5 +1,5 @@
 const rpio = require('rpio');
-const reg = require('./status');
+const reg = require('../status');
 
 module.exports = (function () {
     function updOut(req, res, next, obj) {

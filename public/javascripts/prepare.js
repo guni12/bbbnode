@@ -1,10 +1,10 @@
 const reg = require('./status.js');
 
 module.exports = (function () {
-    function hascred(req, res, next, where, text) {
+    function hascred(req, res, next, params) {
         //if (!req.body.email || !req.body.password) {
         if (!req.body.column || !req.body.value) {
-            let obj = reg.reterror(401, where, text);
+            let obj = reg.reterror(401, params.where, params.text);
 
             return res.status(401).json(obj);
         }

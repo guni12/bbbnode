@@ -9,12 +9,12 @@ module.exports = (function () {
 
             if (i === 3) {
                 key = 'Hour' + i + 'A';
-                temp = ish.isHigh(temp, data, key, marker, avg);
+                temp = ish.isHigh(temp, data, key, [marker, avg]);
             } else if (i === 4) {
                 key = 'Hour' + (i-1) + 'B';
-                temp = ish.isHigh(temp, data, key, marker, avg);
+                temp = ish.isHigh(temp, data, key, [marker, avg]);
             } else {
-                temp = ish.isHigh(temp, data, key, marker, avg);
+                temp = ish.isHigh(temp, data, key, [marker, avg]);
             }
         }
         return temp;

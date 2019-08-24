@@ -3,9 +3,10 @@ const router = express.Router();
 const rf= require('../public/javascripts/readFile.js');
 const show = require('../public/javascripts/show.js');
 const where = './public/array.txt';
+const params = { where: where };
 
 router.get("/",
-    (req, res, next) => rf.getFile(req, res, next, where),
+    (req, res, next) => rf.getFile(req, res, next, params),
     (req, res) => show.show(req, res, 'content')
 );
 

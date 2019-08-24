@@ -84,13 +84,14 @@ describe("Visit sensors and update temperatures", function() {
             );
             const res = mockResponse();
             const spy = sinon.spy();
+            const params = { where: './public/scripts/gpiodetails.txt', what: 'printPins' };
 
             writeFileStub = sinon.stub(fs, 'writeFile')
                 .returns("I am a fake call!");
 
             writeFileStub.yields( new Error("Testfel här"));
 
-            pf.printFile(req, res, spy);
+            pf.printFile(req, res, spy, params);
             writeFileStub.should.have.been.called;
             fs.writeFile.restore();
             writeFileStub.restore();

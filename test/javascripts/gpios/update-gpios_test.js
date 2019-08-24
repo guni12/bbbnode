@@ -13,7 +13,10 @@ const fs = require('fs');
 //let nock = require('nock');
 const rpio = require('rpio');
 let writeFileStub;
-const updl = require('../../../public/javascripts/upd-gpio-list');
+const updl = require('../../../public/javascripts/gpio/upd-gpio-list');
+const ul = require('../../../public/javascripts/hour-control/update-gpio-list');
+const extract = require('../../../public/javascripts/hour-control/extractControls');
+const cal = require('../../../public/javascripts/hour-control/spotcal');
 const pf = require('../../../public/javascripts/printFile');
 const rf = require('../../../public/javascripts/readFile');
 
@@ -57,14 +60,59 @@ let mockRequest = (upd, lt, gt=null) => ({
     updated: upd,
     list: lt,
     newlist: lt,
-    gpiodetails: gt,
-    content: lt
+    gpiodetails: lt,
+    content: lt,
+    settings: gt
 });
 
 let content = {
     gpio: 5,
     status: 1,
     mode: "out"
+};
+
+
+let data = {
+    "Year": "2019",
+    "Date(dd.mm.yyyy)": "21.08.2019",
+    "Area": "SE1",
+    "Currency": "SEK",
+    "Hour1": "356,24",
+    "Hour2": "286,67",
+    "Hour3A": "284,82",
+    "Hour3B": "",
+    "Hour4": "286,42",
+    "Hour5": "303,96",
+    "Hour6": "315,93",
+    "Hour7": "403,20",
+    "Hour8": "411,50",
+    "Hour9": "424,21",
+    "Hour10": "420,98",
+    "Hour11": "409,34",
+    "Hour12": "401,80",
+    "Hour13": "394,26",
+    "Hour14": "388,23",
+    "Hour15": "386,18",
+    "Hour16": "384,46",
+    "Hour17": "387,48",
+    "Hour18": "294,71",
+    "Hour19": "298,36",
+    "Hour20": "298,36",
+    "Hour21": "398,14",
+    "Hour22": "416,99",
+    "Hour23": "393,94",
+    "Hour24": "386,40",
+    "Average": "388,02"
+};
+let settings = {
+    "id": 1,
+    "area": "SE1",
+    "currency": "SEK",
+    "dsmon": 0,
+    "percenton": 0,
+    "percent": 2,
+    "awayfrom": null,
+    "awayto": null
 };
 
 
@@ -131,12 +179,13 @@ describe("Visit and update hourcontrols", function() {
             const req = mockRequest(
                 {},
                 list,
-                list
+                settings
             );
 
             let what = "";
             let url = "./public/scripts/gpiodetails.txt";
             const res = mockResponse();
+            const params = { where: './public/scripts/gpiodetails.txt', what: 'newlist' };
 
             writeFileStub = sinon.stub(fs, 'writeFile')
                 .returns("I am a fake call!");
@@ -146,7 +195,7 @@ describe("Visit and update hourcontrols", function() {
 
             const spy = sinon.spy();
 
-            pf.printFile(req, res, spy, './public/scripts/gpiodetails.txt', 'newlist');
+            pf.printFile(req, res, spy, params);
 
             writeFileStub.should.have.been.called;
             writeFileStub.should.have.been.calledWith(url, JSON.stringify(req.list));
@@ -167,12 +216,13 @@ describe("Visit and update hourcontrols", function() {
 
             const res = mockResponse();
             const spy = sinon.spy();
+            const params = { where: './public/scripts/gpiodetails.txt', what: 'newlist' };
 
             writeFileStub = sinon.stub(fs, 'writeFile')
                 .returns("I am a fake call!");
             writeFileStub.yields( new Error("Testfel här"));
             //updateGpio.writeList(req, res);
-            pf.printFile(req, res, spy, './public/scripts/gpiodetails.txt', 'newlist');
+            pf.printFile(req, res, spy, params);
 
             writeFileStub.should.have.been.called;
             spy.called.should.be.true;
@@ -188,16 +238,17 @@ describe("Visit and update hourcontrols", function() {
             const req = mockRequest(
                 {},
                 list,
-                list
+                settings
             );
 
             const res = mockResponse();
             const spy = sinon.spy();
 
             let readFileStub = sinon.stub(fs, 'readFile');
+            let params = { where: "./public/scripts/gpiodetails.txt" };
 
             readFileStub.yields( new Error("Testfel här"));
-            rf.getFile(req, res, spy, "./public/scripts/gpiodetails.txt");
+            rf.getFile(req, res, spy, params);
 
             readFileStub.should.have.been.called;
             spy.called.should.be.false;
@@ -210,7 +261,7 @@ describe("Visit and update hourcontrols", function() {
             const req = mockRequest(
                 {},
                 list,
-                list
+                settings
             );
 
             const res = mockResponse();
@@ -218,10 +269,10 @@ describe("Visit and update hourcontrols", function() {
 
             req.updated = item;
             const spy = sinon.spy();
-            let test = updl.updateList(req, res, spy, 'updated', 'list');
 
-            test.should.be.an("array");
-            test[1].should.be.equal(item);
+            updl.updateList(req, res, spy, ['updated', 'list']);
+
+            spy.called.should.be.true;
             done();
         });
 
@@ -244,6 +295,53 @@ describe("Visit and update hourcontrols", function() {
             } catch (err) {
                 err.should.include(new TypeError("Cannot read property 'forEach' of null"));
             }
+            done();
+        });
+
+
+        it("4. Test updateList with return", (done) => {
+            const item = {"gpio": 5, "mode": "out", "status": 0};
+            let res = ul.updateList(list, item);
+
+            res.should.be.an("array");
+            done();
+        });
+
+
+        it("5. Extract Controls list where no control", (done) => {
+            let res = extract.extractControls(data, settings, false);
+
+            res.should.be.an("array");
+            res[10].should.be.equal(0);
+            done();
+        });
+
+
+        it("6. Extract Controls list when away", (done) => {
+            settings.percenton = 1;
+            let res = extract.extractControls(data, settings, true);
+
+            res.should.be.an("array");
+            res[10].should.be.equal(3);
+            done();
+        });
+
+
+        it("7. Make control when away", (done) => {
+            const req = mockRequest(
+                {},
+                list,
+                settings
+            );
+            const res = mockResponse();
+            const spy = sinon.spy();
+
+            req.settings.awayfrom = "2";
+            req.settings.awayto = "4";
+
+            cal.tocontrol(req, res, spy);
+
+            spy.called.should.be.true;
             done();
         });
     });

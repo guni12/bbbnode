@@ -1,5 +1,5 @@
 const rpio = require('rpio');
-const reg = require('./status');
+const reg = require('../status');
 const ugo = require('./upd-gpio-out');
 
 module.exports = (function () {

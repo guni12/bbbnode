@@ -1,26 +1,23 @@
 const m = require('./controls');
-const updl = require('./update-gpio-list');
+const updl = require('./update-pins');
 
 module.exports = (function () {
     function update(req, res, next) {
-        let zones = req.zones;
-        let controls = req.controls;
-
         let d = new Date();
         let hour = d.getHours();
-        let control = controls[hour-1];
+        let control = req.controls[hour-1];
         let key = 'c' + control;
         let list = req.prep_gpiodetails;
 
         if (req.params.id) {
-            let status = m[key](zones);
+            let status = m[key](req.zones);
 
-            list = updl.updateList(req, res, zones, status, list);
+            list = updl.updateList(req, res, req.zones, [status, list]);
         } else {
-            zones.map((item) => {
+            req.zones.map((item) => {
                 let status = m[key](item);
 
-                list = updl.updateList(req, res, item, status, list);
+                list = updl.updateList(req, res, item, [status, list]);
             });
         }
         req.gpiodetails = list;

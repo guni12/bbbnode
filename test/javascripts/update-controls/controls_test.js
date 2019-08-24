@@ -9,7 +9,7 @@ const server = require("../../../app");
 const sinon = require("sinon");
 const sinonChai = require('sinon-chai');
 const rpio = require('rpio');
-const controls = require('../../../public/javascripts/controls');
+const controls = require('../../../public/javascripts/hour-control/controls');
 //const hourcontrol = require('../../../public/javascripts/hour-control');
 const show = require('../../../public/javascripts/show');
 

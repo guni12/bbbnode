@@ -112,6 +112,7 @@ describe("Find and store all sensors", function() {
             let what = "";
             const url = "./public/scripts/gpiodetails.txt";
             const res = mockResponse();
+            const params = { where: './public/scripts/gpiodetails.txt', what: 'printPins' };
 
             const spy = sinon.spy();
 
@@ -122,7 +123,7 @@ describe("Find and store all sensors", function() {
                 //console.log(what);
             });
 
-            pf.printFile(req, res, spy, './public/scripts/gpiodetails.txt', 'printPins');
+            pf.printFile(req, res, spy, params);
 
             writeFileStub.should.have.been.called;
             writeFileStub.should.have.been.calledWith(url, JSON.stringify(gpiolist));

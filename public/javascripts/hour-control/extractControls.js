@@ -3,7 +3,7 @@ const adh = require('./addHeat');
 
 module.exports = (function () {
     function extractControls(data, settings, isaway) {
-        let avg = parseFloat(data['Average']) / 10;
+        let avg = parseFloat((data['Average'])) / 10;
         let marker = (settings.percent/10)+1;
         let temp = makelist.hourList(data, marker, avg);
 

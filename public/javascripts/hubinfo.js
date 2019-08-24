@@ -1,5 +1,5 @@
 const fs = require('fs');
-const spotcal = require('./spotcal');
+const spotcal = require('./hour-control/spotcal');
 const ps = require('./parser');
 
 module.exports = (function () {

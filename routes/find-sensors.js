@@ -8,14 +8,17 @@ const show = require('../public/javascripts/show.js');
 const gpio = './public/scripts/gpiodetails.txt';
 const sd = './public/scripts/sensordetails.txt';
 const s = './public/scripts/sensors.txt';
+const params = { where: gpio, what: 'printPins' };
+const params1 = { where: s, what: 'printSensors' };
+const params2 = { where: sd, what: 'printSwt' };
 
 router.get("/",
     (req, res, next) => pins.initPins(req, res, next),
-    (req, res, next) => pf.printFile(req, res, next, gpio, 'printPins'),
+    (req, res, next) => pf.printFile(req, res, next, params),
     (req, res, next) => zones.initSensors(req, res, next),
-    (req, res, next) => pf.printFile(req, res, next, s, 'printSensors'),
+    (req, res, next) => pf.printFile(req, res, next, params1),
     (req, res, next) => swt.sensorsWithTime(req, res, next),
-    (req, res, next) => pf.printFile(req, res, next, sd, 'printSwt'),
+    (req, res, next) => pf.printFile(req, res, next, params2),
     (req, res) => show.show(req, res, 'printobj')
 );
 
