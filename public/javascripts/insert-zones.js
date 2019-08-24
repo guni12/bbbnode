@@ -1,12 +1,13 @@
 const reg = require('./status');
 const db = require('../../db/database');
 const par = require('./zone-params');
+const wv = require('./whenVar');
 
 module.exports = (function () {
     function insert(req, res) {
         let len = req.content.length;
         let nr = 1;
-        let when = req.content[len-1].date  + " " + req.content[len-1].time;
+        let when = wv.whenVar(req.content[len-1]);
         let cols = "(sensorid, zone, gpio, away, dsm, tempis, isoff, ison,";
 
         cols += " max, min, should, name, measured)";

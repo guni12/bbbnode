@@ -162,7 +162,7 @@ describe("Visit and update hourcontrols", function() {
                     if (err) {
                         done(err);
                     }
-                    console.log(res.body);
+                    //console.log(res.body);
                     res.should.have.status(500);
                     res.headers['content-type'].should.contain('application/json');
                     res.body.should.be.an("object");

@@ -1,4 +1,4 @@
-const db = require('../../db/database.js');
+const db = require('../../db/database');
 
 module.exports = (function () {
     function check(req, res, next) {

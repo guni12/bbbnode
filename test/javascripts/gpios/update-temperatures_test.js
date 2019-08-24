@@ -21,7 +21,7 @@ chai.should();
 describe("Visit sensors and update temperatures", function() {
     describe("GET /tempupdate", () => {
         const mockRequest = (list, m=null) => ({
-            sensors: list,
+            content: list,
             message: m
         });
 

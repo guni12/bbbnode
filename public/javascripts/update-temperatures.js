@@ -17,7 +17,7 @@ module.exports = (function () {
                 let item = {time: time, date: date};
 
                 temps.push(item);
-                req.sensors = temps;
+                req.content = temps;
                 next();
             }
         });

@@ -16,7 +16,7 @@ chai.use(chaiHttp);
 
 describe("Visit and update settings", function() {
     describe("POST /editsettings", () => {
-        it("1. should get 201 for successful update.", (done) => {
+        it("1. should get 200 for successful update.", (done) => {
             let content = {
                 column: "currency",
                 value: "EUR",
@@ -29,10 +29,10 @@ describe("Visit and update settings", function() {
                 .set('content-type', 'application/x-www-form-urlencoded')
                 .send(content)
                 .end((err, res) => {
-                    //console.log(res.body);
-                    res.should.have.status(201);
+                    console.log("res.body", res.body);
+                    res.should.have.status(200);
                     res.body.should.be.an("object");
-                    res.body.data.message.should.be.equal(check);
+                    res.body.message.should.be.equal(check);
 
                     done();
                 });
@@ -52,7 +52,7 @@ describe("Visit and update settings", function() {
                 .set('content-type', 'application/x-www-form-urlencoded')
                 .send(content)
                 .end((err, res) => {
-                    //console.log(res.body);
+                    console.log("2. res.body", res.body);
                     res.should.have.status(500);
                     res.body.should.be.an("object");
                     res.body.errors.title.should.be.equal(check);

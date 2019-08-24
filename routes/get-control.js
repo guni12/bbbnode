@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const rf= require('../public/javascripts/readFile.js');
+const rf = require('../public/javascripts/readFile.js');
 const show = require('../public/javascripts/show.js');
-const where = './public/array.txt';
+const where = './public/scripts/array.txt';
 const params = { where: where, what: 'content' };
 
 router.get("/",

@@ -1,5 +1,5 @@
-const db = require('../../db/database.js');
-const reg = require('./status.js');
+const db = require('../../db/database');
+const reg = require('./status');
 
 module.exports = (function () {
     function asksqlite(req, res, next) {

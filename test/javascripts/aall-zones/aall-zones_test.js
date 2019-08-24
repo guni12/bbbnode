@@ -16,7 +16,7 @@ describe("Visit and get zones", function() {
             chai.request(server)
                 .get("/zones")
                 .end((err, res) => {
-                    console.log("1. res.body", res.body);
+                    //console.log("1. res.body", res.body);
                     res.should.have.status(200);
                     res.body.should.be.an("array");
                     res.body.should.have.lengthOf(0);

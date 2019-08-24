@@ -1,16 +1,18 @@
 const express = require('express');
 const router = express.Router();
-const codes = require('../public/javascripts/get-settings.js');
+//const codes = require('../public/javascripts/get-settings.js');
+const settings = require('../public/javascripts/getOneRow.js');
 const rf = require('../public/javascripts/readFile.js');
 const hub = require('../public/javascripts/hubinfo.js');
 const pf = require('../public/javascripts/printFile.js');
 const show = require('../public/javascripts/show.js');
-const where = './public/array.txt';
+const where = './public/scripts/array.txt';
 const params = { where: where, what: 'content' };
 const params1 = { where: where, what: 'chosen' };
+const settingsparams = { table: 'settings', where: './settings', what: 'settings' };
 
 router.get("/:id?",
-    (req, res, next) => codes.asksqlite(req, res, next, '/spotcal'),
+    (req, res, next) => settings.getOne(req, res, next, settingsparams),
     (req, res, next) => rf.getFile(req, res, next, params),
     (req, res, next) => hub.hubinfo(req, res, next),
     (req, res, next) => pf.printFile(req, res, next, params1),
