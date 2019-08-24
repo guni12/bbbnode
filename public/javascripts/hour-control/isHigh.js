@@ -5,12 +5,14 @@ module.exports = (function () {
         let avg = arr[1];
         let price = data[key] === "" ? null : parseFloat(data[key]) / 10;
 
-        if (price && ((price * marker) > avg)) {
-            tl.push(1);
-        } else if (price) {
-            tl.push(0);
+        if (price) {
+            tl.push(oneOrZero(price, marker, avg));
         }
         return tl;
+    }
+
+    function oneOrZero(price, marker, avg) {
+        return price * marker > avg ? 1 : 0;
     }
 
     return {

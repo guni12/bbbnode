@@ -1,5 +1,3 @@
-const rpio = require('rpio');
-
 module.exports = (function () {
     function c0(item) {
         let status = item.tempis < item.should ? 1 : 0;
@@ -25,20 +23,11 @@ module.exports = (function () {
         return status;
     }
 
-    function updatePin(gpio, status) {
-        rpio.open(gpio, rpio.OUTPUT, status);
-        rpio.write(gpio, status);
-        status = rpio.read(gpio);
-        let updated = { gpio: gpio, status: status, mode: 'out' };
-
-        return updated;
-    }
 
     return {
         c0: c0,
         c1: c1,
         c2: c2,
-        c3: c3,
-        updatePin: updatePin
+        c3: c3
     };
 }());

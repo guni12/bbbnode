@@ -1,4 +1,4 @@
-const m = require('./controls');
+const m = require('./updatePin');
 const reg = require('../status');
 const gpioupdate = require('./update-gpio-list');
 
