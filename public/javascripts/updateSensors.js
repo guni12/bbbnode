@@ -1,5 +1,5 @@
 const wv = require('./whenVar');
-const as = require('./sqliteAsync');
+const ar = require('./sqliteAsyncRun');
 
 module.exports = (function () {
     async function updateSensors(req, res, next) {
@@ -11,7 +11,7 @@ module.exports = (function () {
                 let sql = "UPDATE zones SET tempis = " + req.content[i].t;
 
                 sql += ", measured = '" + when + "' WHERE sensorid = '" + req.content[i].id + "';";
-                await as.runAsync(sql);
+                await ar.runAsync(sql);
             }
             req.show = {"message": "Klart"};
         } catch (err) {

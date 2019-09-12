@@ -1,5 +1,6 @@
 const ish = require('./isHigh');
-const ch = require('./controlsHelper');
+const gk = require('./getKey');
+const cl = require('./checkLast');
 
 module.exports = (function () {
     async function hourList(req, res, next, params) {
@@ -19,7 +20,7 @@ module.exports = (function () {
             return el != null;
         });
 
-        return ch.checkLast(filtered, params);
+        return cl.checkLast(filtered, params);
     }
 
 
@@ -27,7 +28,7 @@ module.exports = (function () {
         let keyList = new Array(25).fill(0);
 
         return Promise.all(keyList.map(function (one, index) {
-            one = ch.getKey(index+1);
+            one = gk.getKey(index+1);
             return temp[index] = ish.isHigh(one, params, next);
         }));
     }

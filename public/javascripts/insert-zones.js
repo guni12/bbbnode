@@ -1,6 +1,6 @@
 const par = require('./zone-params');
 const wv = require('./whenVar');
-const as = require('./sqliteAsync');
+const ar = require('./sqliteAsyncRun');
 
 module.exports = (function () {
     async function insert(req, res, next) {
@@ -18,7 +18,7 @@ module.exports = (function () {
                 let params = par.params(content, zone, when, i);
                 let sql = "INSERT INTO zones " + cols + " VALUES ( " + params + " );";
 
-                await as.runAsync(sql);
+                await ar.runAsync(sql);
                 nr += 1;
             }
             return {"message": "Klart"};

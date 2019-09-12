@@ -1,5 +1,5 @@
 const sensor = require('ds18b20-raspi');
-const reg = require('./status.js');
+const th = require('./throw');
 const ct = require('./currtime.js');
 
 module.exports = (function () {
@@ -17,7 +17,7 @@ module.exports = (function () {
                 req.printSwt = list;
             } else {
                 let text = "ds18b20-raspi kan inte nå sensorerna";
-                let obj = reg.throwerror("Error", 500, "sensorsWithTime", text);
+                let obj = th.throwerror("Error", 500, "sensorsWithTime", text);
 
                 throw { obj, error: new Error() };
             }

@@ -1,5 +1,5 @@
 const fs = require('fs').promises;
-const reg = require('./status');
+const th = require('./throw');
 
 module.exports = (function () {
     async function printFile(req, res, next, params) {
@@ -9,7 +9,7 @@ module.exports = (function () {
                 //console.info("Filen '" + params.where + "' sparades med fs.promises");
             } else {
                 let text = 'Inget innehåll att spara till fil';
-                let obj = reg.throwerror("Bad request", 400, "printFile", text);
+                let obj = th.throwerror("Bad request", 400, "printFile", text);
 
                 throw { obj, error: new Error() };
             }

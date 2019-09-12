@@ -1,5 +1,5 @@
 const fs = require('fs').promises;
-const reg = require('./status');
+const th = require('./throw');
 
 module.exports = (function () {
     async function getFile(req, res, next, params) {
@@ -8,7 +8,7 @@ module.exports = (function () {
                 req[params.what] = await fs.readFile(params.where, 'utf-8');
             } else {
                 let text = 'Fil eller parameter saknas.';
-                let obj = reg.throwerror("Error", 400, "readFile", text);
+                let obj = th.throwerror("Error", 400, "readFile", text);
 
                 throw { obj, error: new Error() };
             }

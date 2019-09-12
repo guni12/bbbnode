@@ -1,6 +1,6 @@
 const sensor = require('ds18b20-raspi');
 const ct = require('./currtime.js');
-const reg = require('./status');
+const th = require('./throw');
 
 module.exports = (function () {
     async function initSensors(req, res, next) {
@@ -16,7 +16,7 @@ module.exports = (function () {
                 req.printSensors = list;
             } else {
                 let text = "Could not find any 1-Wire sensors to list";
-                let obj = reg.throwerror("Error", 500, "find-sensors", text);
+                let obj = th.throwerror("Error", 500, "find-sensors", text);
 
                 throw { obj, error: new Error() };
             }

@@ -1,5 +1,5 @@
 const rpio = require('rpio');
-const reg = require('../status');
+const th = require('../throw');
 
 module.exports = (function () {
     async function updIn(req, res, next, obj) {
@@ -11,7 +11,7 @@ module.exports = (function () {
                     req.updated = { gpio: obj.gpio, status: stat, mode: obj.mode };
                 } else {
                     let text = "Gpio pinne kunde ej kontaktas";
-                    let obj = reg.throwerror("Error", 500, "/upd-gpio-in", text);
+                    let obj = th.throwerror("Error", 500, "/upd-gpio-in", text);
 
                     throw { obj, error: new Error() };
                 }

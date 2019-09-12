@@ -4,14 +4,12 @@ const ps = require('./parser');
 module.exports = (function () {
     async function collectInfo(file, req) {
         let arr = [];
-        const area = req.settings.area;
-        const currency = req.settings.currency;
-        const parser = ps.makeparser();
+        const set = req.settings;
         const fileStream = fs.createReadStream(file);
 
         return new Promise( (resolve, reject) => {
             fileStream
-                .pipe(parser)
+                .pipe(ps.makeparser())
                 .on('error', error => {
                     reject(error);
                 })
@@ -20,7 +18,7 @@ module.exports = (function () {
                 })
                 .on('end', () => {
                     let result = arr.find(
-                        (im) => im.Area === area && im.Currency === currency
+                        (im) => im.Area === set.area && im.Currency === set.currency
                     );
 
                     resolve(result);

@@ -1,4 +1,5 @@
-const reg = require('../status');
+const th = require('../throw');
+const ci = require('./changeItem');
 
 module.exports = (function () {
     async function updateList(req, res, next, params) {
@@ -9,10 +10,10 @@ module.exports = (function () {
                 list = JSON.parse(req[params.list]);
                 item = req[params.item];
 
-                await changeItem(list, item, req);
+                await ci.changeItem(list, item, req);
             } else {
                 let text = 'Lista eller gpio-data saknas';
-                let obj = reg.throwerror("SyntaxError", 400, "gpio/upd-gpio-list", text, params);
+                let obj = th.throwerror("SyntaxError", 400, "gpio/upd-gpio-list", text, params);
 
                 throw { obj, error: new Error() };
             }
@@ -20,20 +21,10 @@ module.exports = (function () {
             next(err);
             //console.error('Invalid JSON', er);
             let text = 'Invalid JSON';
-            let obj = reg.throwerror("SyntaxError", 400, "gpio/upd-gpio-list", text, params);
+            let obj = th.throwerror("SyntaxError", 400, "gpio/upd-gpio-list", text, params);
 
             throw { obj, error: new Error() };
         }
-    }
-
-    async function changeItem(list, item, req) {
-        return Promise.all(list.map(async (one, index) => {
-            if (item.gpio && one.gpio === item.gpio) {
-                //console.log("Ja changeItem", one);
-                list[index] = item;
-                req.newlist = list;
-            }
-        }));
     }
 
 

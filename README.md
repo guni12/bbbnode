@@ -52,15 +52,15 @@ sqlite3 texts.sqlite
 .read migrate.sql
 .exit
 ```
--   Skapa ditt användarkonto via terminalen, ändra *du@du.se* och *hemlig* till dina val:
-```sh
-curl -d "column=du@du.se&value=hemlig" -X POST http://localhost:1337/register
-```
 -   Gå tillbaka:
 -   `cd ..`
 -   Öppna en terminal och kör igång servern (den ska alltid rulla):
 ```sh
 npm run production
+```
+-   Skapa ditt användarkonto via terminalen, ändra *du@du.se* och *hemlig* till dina val:
+```sh
+curl -d "column=du@du.se&value=hemlig" -X POST http://localhost:1337/register
 ```
 -   Installera sensorer:
 -   Gå in i webbläsaren med `http://localhost/find`

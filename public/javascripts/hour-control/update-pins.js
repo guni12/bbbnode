@@ -1,6 +1,6 @@
 const m = require('./updatePin');
 const gpioupdate = require('./update-gpio-list');
-const reg = require('../status');
+const th = require('../throw');
 
 module.exports = (function () {
     async function updateList(req, res, next, params) {
@@ -11,7 +11,7 @@ module.exports = (function () {
 
             if (params.gpio === null || params.gpio === 0) {
                 let text = "Gpio pinne måste knytas till varje zon";
-                let obj = reg.throwerror("Error", 500, "/update-pins", text);
+                let obj = th.throwerror("Error", 500, "/update-pins", text);
 
                 throw { obj, error: new Error() };
             } else {

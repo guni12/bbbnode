@@ -1,4 +1,4 @@
-const as = require('./sqliteAsync');
+const ar = require('./sqliteAsyncRun');
 
 module.exports = (function () {
     async function insert(req, res, next) {
@@ -10,7 +10,7 @@ module.exports = (function () {
             let sql = "INSERT INTO zones " + cols + " VALUES (" + params + ");";
 
             try {
-                await as.runAsync(sql);
+                await ar.runAsync(sql);
                 let message = "Inlagt " + params;
 
                 res.status(201).json({

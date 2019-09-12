@@ -1,5 +1,5 @@
 const si = require('./spotinfo');
-const reg = require('./status');
+const th = require('./throw');
 
 module.exports = (function () {
     async function makeSpotInfo(req) {
@@ -7,10 +7,8 @@ module.exports = (function () {
         let hour = d.getHours();
         let day = 'spotprice.txt';
 
-        if (req.params) {
-            if (req.params.id === '2' && hour > 16) {
-                day = 'spotprice2.txt';
-            }
+        if (req.params && req.params.id === '2' && hour > 16) {
+            day = 'spotprice2.txt';
         }
         let file = __dirname + '/../scripts/spot/' + day;
 
@@ -18,7 +16,7 @@ module.exports = (function () {
             await si.collectInfo(file, req);
         } catch (err) {
             let text = "Problem att utvinna spotpriserna";
-            let obj = reg.throwerror("Error", 500, "makeSpotinfo", text, err);
+            let obj = th.throwerror("Error", 500, "makeSpotinfo", text, err);
 
             throw { obj, error: new Error() };
         }

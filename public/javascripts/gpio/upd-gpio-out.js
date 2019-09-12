@@ -1,22 +1,16 @@
 const rpio = require('rpio');
-const reg = require('../status');
+const th = require('../throw');
 
 module.exports = (function () {
     function updOut(req, res, next, obj) {
         try {
-            let stat = contactRpio(obj);
+            if (contactRpio(obj)) {
+                req.updated = { gpio: obj.gpio, status: contactRpio(obj), mode: obj.mode };
+            } else {
+                let text = "Gpio pinne kunde ej kontaktas";
+                let obj = th.throwerror("Error", 500, "upd-gpio-out", text);
 
-            try {
-                if (stat) {
-                    req.updated = { gpio: obj.gpio, status: stat, mode: obj.mode };
-                } else {
-                    let text = "Gpio pinne kunde ej kontaktas";
-                    let obj = reg.throwerror("Error", 500, "/upd-gpio-out", text);
-
-                    throw { obj, error: new Error() };
-                }
-            } catch (err) {
-                next(err);
+                throw { obj, error: new Error() };
             }
         } catch (err) {
             next(err);
