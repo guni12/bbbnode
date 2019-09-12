@@ -2,7 +2,7 @@
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/guni12/bbbnode/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/guni12/bbbnode/?branch=master) 
 [![Build Status](https://scrutinizer-ci.com/g/guni12/bbbnode/badges/build.png?b=master)](https://scrutinizer-ci.com/g/guni12/bbbnode/build-status/master) 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/b293df61900a45f5afae54b63d759876)](https://www.codacy.com/app/guni12/bbbnode?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=guni12/bbbnode&amp;utm_campaign=Badge_Grade) 
-[![Coverage Status](https://coveralls.io/repos/github/guni12/bbbnode/badge.svg?branch=master)](https://coveralls.io/github/guni12/bbbnode?branch=master) 
+[![Coverage Status](https://coveralls.io/repos/github/guni12/bbbnode/badge.png?branch=master)](https://coveralls.io/github/guni12/bbbnode?branch=master) 
 [![Maintainability](https://api.codeclimate.com/v1/badges/d358e99378a19a9ec839/maintainability)](https://codeclimate.com/github/guni12/bbbnode/maintainability)
 
 # BehovsBoBoxen är ett styrsystem för smarta hem baserad på Raspberry Pi
@@ -52,11 +52,15 @@ sqlite3 texts.sqlite
 .read migrate.sql
 .exit
 ```
+-   Skapa ditt användarkonto via terminalen, ändra *du@du.se* och *hemlig* till dina val:
+```sh
+curl -d "column=du@du.se&value=hemlig" -X POST http://localhost:1337/register
+```
 -   Gå tillbaka:
 -   `cd ..`
--   Öppna en terminal och kör igång servern:
+-   Öppna en terminal och kör igång servern (den ska alltid rulla):
 ```sh
-npm start
+npm run production
 ```
 -   Installera sensorer:
 -   Gå in i webbläsaren med `http://localhost/find`
@@ -104,6 +108,7 @@ ds18b20 -a -d 2
 | /zones         | Visar info om zonerna                                 |
 | /zones/id(int) | Visar info om zon (id)                                |
 | /controlupdate | Räknar ut styrning enligt spotpris                    |
+| /control       | Visar kontroll-inställningarna                        |
 | /hourcontrol   | Ställer in styrning, inställd att köras var 10e minut |
 | /tempupdate    | Läser av gpio-sensorerna och uppdaterar zonerna       |
 | (POST)         |                                                       |
