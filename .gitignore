@@ -89,6 +89,8 @@ typings/
 
 howto.txt
 torasp.txt
+tmux.txt
+withAuth.jsjs
 *.sqlite
 .coveralls.yml
 

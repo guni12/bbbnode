@@ -1,4 +1,3 @@
-/* global describe it */
 process.env.NODE_ENV = "test";
 
 const chai = require("chai");
@@ -6,9 +5,6 @@ const chaiHttp = require("chai-http");
 const server = require("../../../app.js");
 
 chai.should();
-
-//var path = require("path");
-//const db = require(path.resolve(__dirname, "../../../db/database.js"));
 
 chai.use(chaiHttp);
 
@@ -27,8 +23,6 @@ describe("Register and login user", function() {
     describe("POST /register", () => {
         it("1. should get 401 as we do not provide valid password", (done) => {
             let user = {
-                //email: "testing@example.com",
-                //password: "",
                 column: "testing@example.com",
                 value: "",
             };
@@ -48,8 +42,6 @@ describe("Register and login user", function() {
 
         it("2a. should get 201", (done) => {
             let user = {
-                //email: "test@example.com",
-                //password: "123test",
                 column: "test@example.com",
                 value: "123test",
             };
@@ -73,8 +65,6 @@ describe("Register and login user", function() {
 
         it("2b. should get 500 unique email constraint", (done) => {
             let user = {
-                //email: "test@example.com",
-                //password: "123test",
                 column: "test@example.com",
                 value: "123test",
             };
@@ -84,12 +74,11 @@ describe("Register and login user", function() {
                 .send(user)
                 .end((err, res) => {
                     res.should.have.status(500);
-                    //console.log(res.body);
                     res.body.should.be.an("object");
                     res.body.should.have.property("errors");
                     var tx = "SQLITE_CONSTRAINT: UNIQUE constraint failed: users.email";
 
-                    res.body.errors.detail.should.be.equal(tx);
+                    res.body.errors.message.should.be.equal(tx);
                     done();
                 });
         });
@@ -99,8 +88,6 @@ describe("Register and login user", function() {
             let pre = makeid();
             let unique = pre + "@example.com";
             let user = {
-                //email: unique,
-                //password: "1235test",
                 column: unique,
                 value: "1235test",
             };
@@ -110,7 +97,6 @@ describe("Register and login user", function() {
                 .send(user)
                 .end((err, res) => {
                     res.should.have.status(201);
-                    //console.log(res.body);
                     res.body.should.be.an("object");
                     res.body.should.have.property("data");
                     res.body.data.should.have.property("message");
@@ -126,8 +112,6 @@ describe("Register and login user", function() {
     describe("POST /login", () => {
         it('4. should get 401 as we do not provide valid password', (done) => {
             let user = {
-                email: "test@example.com",
-                //password: "123test",
                 column: "test@example.com",
             };
 
@@ -138,7 +122,7 @@ describe("Register and login user", function() {
                     res.should.have.status(401);
                     res.body.should.be.an("object");
                     res.body.errors.status.should.be.equal(401);
-                    res.body.errors.title.should.be.equal("Email eller lösenord saknas");
+                    res.body.errors.message.should.be.equal("Email eller lösenord saknas");
 
                     done();
                 });
@@ -147,8 +131,6 @@ describe("Register and login user", function() {
 
         it("5. should get 401 as we do not provide valid email", (done) => {
             let user = {
-                //email: "test@example.com",
-                //password: "123test",
                 value: "123test",
             };
 
@@ -159,7 +141,7 @@ describe("Register and login user", function() {
                     res.should.have.status(401);
                     res.body.should.be.an("object");
                     res.body.errors.status.should.be.equal(401);
-                    res.body.errors.title.should.be.equal("Email eller lösenord saknas");
+                    res.body.errors.message.should.be.equal("Email eller lösenord saknas");
 
                     done();
                 });
@@ -168,8 +150,6 @@ describe("Register and login user", function() {
 
         it("6. should get 401 as we provide wrong email", (done) => {
             let user = {
-                //email: "testing@example.com",
-                //password: "123test",
                 column: "testing@example.com",
                 value: "123test",
             };
@@ -181,7 +161,7 @@ describe("Register and login user", function() {
                     res.should.have.status(401);
                     res.body.should.be.an("object");
                     res.body.errors.status.should.be.equal(401);
-                    res.body.errors.title.should.be.equal("User with provided email not found.");
+                    res.body.errors.message.should.be.equal("Detta email finns inte.");
 
                     done();
                 });
@@ -190,8 +170,6 @@ describe("Register and login user", function() {
 
         it("7. should get 401 as we provide wrong password", (done) => {
             let user = {
-                //email: "test@example.com",
-                //password: "1234test",
                 column: "test@example.com",
                 value: "1234test",
             };
@@ -203,19 +181,16 @@ describe("Register and login user", function() {
                     res.should.have.status(401);
                     res.body.should.be.an("object");
                     res.body.errors.status.should.be.equal(401);
-                    res.body.errors.title.should.be.equal("Password is incorrect.");
+                    res.body.errors.message.should.be.equal("Fel lösenord.");
 
                     done();
                 });
         });
 
 
-        it("8. should get 201 as we do provide correct keys", (done) => {
+        it("8. should get 200 as we do provide correct keys", (done) => {
             process.env.JWT_SECRET = "secret";
-            //console.log("jwt", process.env.JWT_SECRET);
             let user = {
-                //email: "test@example.com",
-                //password: "123test",
                 column: "test@example.com",
                 value: "123test",
             };
@@ -225,11 +200,10 @@ describe("Register and login user", function() {
                 .send(user)
                 .end((err, res) => {
                     res.should.have.status(200);
-                    //console.log(res.body);
                     res.body.should.be.an("object");
                     res.body.should.have.property("data");
                     res.body.data.should.have.property("message");
-                    res.body.data.message.should.be.equal("User logged in");
+                    res.body.data.message.should.be.equal("Medlem 1 loggade in");
                     done();
                 });
         });

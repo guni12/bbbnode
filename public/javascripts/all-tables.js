@@ -1,31 +1,29 @@
-const db = require('../../db/database');
-const reg = require('./status');
 const one = require('./getOneRow');
+const asyn = require('./sqliteAsync');
 
 module.exports = (function () {
-    function getAll(req, res, next, params) {
-        if (req.params.id) {
-            one.getOne(req, res, next, params);
-        } else {
-            getAllRows(req, res, next, params);
+    async function getAll(req, res, next, params) {
+        try {
+            if (req.params.id) {
+                await one.getOne(req, res, next, params);
+            } else {
+                await getAllRows(req, res, next, params);
+            }
+        } catch (err) {
+            next(err);
         }
     }
 
-    function getAllRows(req, res, next, params) {
+    async function getAllRows(req, res, next, params) {
         let sql = "SELECT * FROM " + params.table + ";";
 
-        db.all(sql,
-            (err, rows) => {
-                if (rows) {
-                    req[params.what] = rows;
-                    next();
-                } else {
-                    let obj = reg.reterror(500, params.where, err.message);
-
-                    return res.status(500).json(obj);
-                }
-            }
-        );
+        await asyn.allAsync(sql)
+            .then((data) => {
+                req[params.what] = data;
+            })
+            .catch(er => {
+                next(er);
+            });
     }
 
 
@@ -34,3 +32,4 @@ module.exports = (function () {
         getAll: getAll
     };
 }());
+

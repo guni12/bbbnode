@@ -1,6 +1,5 @@
 "use strict";
 
-/* global describe it */
 process.env.NODE_ENV = "test";
 
 const chai = require("chai");
@@ -8,7 +7,7 @@ const chaiHttp = require("chai-http");
 const server = require("../../../app.js");
 const sinon = require("sinon");
 const sinonChai = require('sinon-chai');
-const fs = require('fs');
+const fs = require('fs').promises;
 const rpio = require('rpio');
 const sensor = require('ds18b20-raspi');
 let writeFileStub;
@@ -16,7 +15,6 @@ let sensorStub;
 const findSensors = require('../../../public/javascripts/find-sensors');
 const swt = require('../../../public/javascripts/sensorsWithTime');
 const pf = require('../../../public/javascripts/printFile');
-const show = require('../../../public/javascripts/show');
 
 rpio.init({mock: 'raspi-3'});
 
@@ -24,11 +22,20 @@ chai.use(chaiHttp);
 chai.use(sinonChai);
 chai.should();
 
+let mochaAsync = (fn) => {
+    return done => {
+        fn.call().then(done, err => {
+            done(err);
+        });
+    };
+};
+
 const mockRequest = (f, lt, id=null, c=null) => ({
     file: f,
     printPins: lt,
     params: id,
-    controls: c
+    controls: c,
+    show: c
 });
 
 let gpiolist = [
@@ -70,6 +77,17 @@ const sensorlist = [
     "28-031466ba20ff",
     "28-031466c1e7ff"];
 
+let swtlist = [
+    {"id": "28-021466fea4ff", "t": 21.25},
+    {"id": "28-0214671137ff", "t": 21.5},
+    {"id": "28-0214671226ff", "t": 21.44},
+    {"id": "28-0214672d0cff", "t": 21.19},
+    {"id": "28-02146745baff", "t": 21.44},
+    {"id": "28-031466aef3ff", "t": 21.44},
+    {"id": "28-031466ba20ff", "t": 21.56},
+    {"id": "28-031466c1e7ff", "t": 21.38},
+    {"time": "09:30:01", "date": "2019-08-10"}];
+
 const err = new Error('something weird');
 
 const mockResponse = () => {
@@ -80,10 +98,11 @@ const mockResponse = () => {
     return res;
 };
 
+
 describe("Find and store all sensors", function() {
     describe("GET /find", () => {
         it("1. 500 rpio can't reach pins", (done) => {
-            let check = "Error: Could not find any 1-Wire sensors to list";
+            let check = "Could not find any 1-Wire sensors to list";
 
             chai.request(server)
                 .get("/find")
@@ -95,7 +114,7 @@ describe("Find and store all sensors", function() {
                     res.should.have.status(500);
                     res.headers['content-type'].should.contain('application/json');
                     res.body.should.be.an("object");
-                    res.body.errors.title.should.equal(check);
+                    res.body.errors[0].message.should.equal(check);
                     done();
                 });
         });
@@ -103,7 +122,7 @@ describe("Find and store all sensors", function() {
 
 
     describe("Test function with writefileStub", () => {
-        it("1. Test printFile", () => {
+        it("1. Test writeFile", mochaAsync(async () => {
             const req = mockRequest(
                 "gpiodetails.txt",
                 gpiolist
@@ -123,20 +142,20 @@ describe("Find and store all sensors", function() {
                 //console.log(what);
             });
 
-            pf.printFile(req, res, spy, params);
+            await pf.printFile(req, res, spy, params).catch(error => console.error(error));
 
             writeFileStub.should.have.been.called;
             writeFileStub.should.have.been.calledWith(url, JSON.stringify(gpiolist));
             what.should.be.equal("My first arg is: " + url);
-            spy.called.should.be.true;
+            spy.called.should.be.false;
             fs.writeFile.restore();
-        });
+        }));
     });
 
 
 
     describe("Test functions with stubs", () => {
-        it("1. Test initSensors can't be done on windows", () => {
+        it("1. Test initSensors can't be done on windows", (done) => {
             sensorStub = sinon.stub(sensor, 'list');
             const spy = sinon.spy();
             const res = mockResponse();
@@ -152,12 +171,53 @@ describe("Find and store all sensors", function() {
 
             sensorStub.should.have.been.called;
             sensorStub.should.have.been.calledWith(err, sensorlist);
-            spy.called.should.be.false;
+            spy.called.should.be.true;
             sensor.list.restore();
+            done();
         });
 
 
-        it("2. Test sensorsWithTime cant be done on windows", () => {
+        it("2. Test initSensors with stub and list", (done) => {
+            sensorStub = sinon.stub(sensor, 'list');
+            sensorStub.returns(sensorlist);
+            const spy = sinon.spy();
+            const res = mockResponse();
+            const req = mockRequest(
+                "",
+                []
+            );
+
+            findSensors.initSensors(req, res, spy);
+
+            sensorStub.should.have.been.called;
+            spy.called.should.be.false;
+            req.printSensors.should.be.an("array");
+            sensor.list.restore();
+            sensorStub.restore();
+            done();
+        });
+
+
+        it("3. Test initSensors with stub and list", (done) => {
+            sensorStub = sinon.stub(sensor, 'list');
+            sensorStub.returns([]);
+            const spy = sinon.spy();
+            const res = mockResponse();
+            const req = mockRequest(
+                "",
+                []
+            );
+
+            findSensors.initSensors(req, res, spy);
+
+            sensorStub.should.have.been.called;
+            spy.called.should.be.true;
+            sensor.list.restore();
+            done();
+        });
+
+
+        it("4. Test sensorsWithTime cant be done on windows", mochaAsync(async () => {
             sensorStub = sinon.stub(sensor, 'readAllC');
             const spy = sinon.spy();
             const res = mockResponse();
@@ -168,41 +228,53 @@ describe("Find and store all sensors", function() {
 
             sensor.readAllC(2, (err, sensorlist));
 
-            swt.sensorsWithTime(req, res, spy);
+            await swt.sensorsWithTime(req, res, spy);
 
             sensorStub.should.have.been.called;
             sensorStub.should.have.been.calledWith(2, (err, sensorlist));
             spy.called.should.be.true;
             sensor.readAllC.restore();
-        });
-    });
+        }));
 
 
-    describe("Test function can be called", () => {
-        it("1. Test show with simple content", () => {
+        it("5. Test sensorsWithTime with stubbed values", mochaAsync(async () => {
+            sensorStub = sinon.stub(sensor, 'readAllC');
+            sensorStub.withArgs(2).returns(swtlist);
+            const spy = sinon.spy();
             const res = mockResponse();
             const req = mockRequest(
                 "",
-                sensorlist
+                []
             );
 
-            show.show(req, res, 'gpiodetails');
-            res.json.should.have.been.called;
-        });
+            sensor.readAllC(2, (err, sensorlist));
+
+            await swt.sensorsWithTime(req, res, spy);
+
+            sensorStub.should.have.been.called;
+            req.printSwt.should.be.an("array");
+            spy.called.should.be.false;
+            sensor.readAllC.restore();
+        }));
 
 
-        it("2. Test show with id control", () => {
+        it("6. Test sensorsWithTime with flawed stubbed values", mochaAsync(async () => {
+            sensorStub = sinon.stub(sensor, 'readAllC');
+            sensorStub.withArgs(2).returns([]);
+            const spy = sinon.spy();
             const res = mockResponse();
             const req = mockRequest(
                 "",
-                sensorlist,
+                []
             );
 
-            req.params = { id: 'control'};
-            req.controls = [1, 0, 1, 0];
+            sensor.readAllC(2, (err, sensorlist));
 
-            show.show(req, res, 'controls');
-            res.json.should.have.been.called;
-        });
+            await swt.sensorsWithTime(req, res, spy);
+
+            sensorStub.should.have.been.called;
+            spy.called.should.be.true;
+            sensor.readAllC.restore();
+        }));
     });
 });

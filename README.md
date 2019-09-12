@@ -49,7 +49,7 @@ sudo sh /home/pi/bbbnode/scripts/install.sh
 npm install
 cd db
 sqlite3 texts.sqlite
-.read migrate.sqlite
+.read migrate.sql
 .exit
 ```
 -   Gå tillbaka:
@@ -83,3 +83,33 @@ sudo lsof -i -P -n | grep LISTEN
 sudo fuser -k 1337/tcp
 ```
 -   port forwarding...
+
+-   för att läsa temperaturerna direkt
+```sh
+sud npm install -g ds18b20-raspi
+ds18b20 -a -d 2
+```
+# API
+
+
+| Sökväg         | Uträttar                                              |
+|----------------|-------------------------------------------------------|
+| (GET)          |                                                       |
+| /find          | Hittar gpio-sensorerna                                |
+| /init          | Initierar gpio-sensorerna                             |
+| /gpios         | Info om gpio-sensorerna                               |
+| /settings      | Visar inställda värden                                |
+| /spotcal       | Plockar ut dagens spotpriser enligt settings          |
+| /today         | Visar dagens utvunna spotprislista enligt settings    |
+| /zones         | Visar info om zonerna                                 |
+| /zones/id(int) | Visar info om zon (id)                                |
+| /controlupdate | Räknar ut styrning enligt spotpris                    |
+| /hourcontrol   | Ställer in styrning, inställd att köras var 10e minut |
+| /tempupdate    | Läser av gpio-sensorerna och uppdaterar zonerna       |
+| (POST)         |                                                       |
+| /login         | Inloggning som skapar en tidsbegränsad token          |
+| /register      | Skapa ny medlem                                       |
+| /editzone      | Uppdatera zon med ett nytt värde                      |
+| /rpio          | Uppdatera gpio-sensor med inställning                 |
+| /addzone       | Lägga till zon (görs i /init)                         |
+| /editsettings  | Uppdatera settings med ett nytt värde                 |

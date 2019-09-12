@@ -6,6 +6,6 @@ const params = { where: '/addzone', text: "Data saknas" };
 
 router.post("/",
     (req, res, next) => prep.hascred(req, res, next, params),
-    (req, res) => insert.insert(req, res));
+    (req, res, next) => insert.insert(req, res, next));
 
 module.exports = router;

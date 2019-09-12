@@ -1,13 +1,22 @@
 const rpio = require('rpio');
 
 module.exports = (function () {
-    function updatePin(gpio, status) {
-        rpio.open(gpio, rpio.OUTPUT, status);
-        rpio.write(gpio, status);
-        status = rpio.read(gpio);
-        let updated = { gpio: gpio, status: status, mode: 'out' };
+    async function updatePin(req, res, next, par) {
+        try {
+            if (par.gpio === 0) {
+                req.error = "Gpio pinne måste knytas till varje zon";
+            } else {
+                rpio.open(par.gpio, rpio.OUTPUT, par.status);
+                rpio.write(par.gpio, par.status);
+                let stat = rpio.read(par.gpio);
+                let what = 'gpio' + par.gpio;
 
-        return updated;
+                req[what] = { gpio: par.gpio, status: stat, mode: 'out' };
+            }
+        } catch (err) {
+            //console.log(err);
+            next(err);
+        }
     }
 
     return {

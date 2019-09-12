@@ -1,6 +1,5 @@
 "use strict";
 
-/* global describe it */
 process.env.NODE_ENV = "test";
 
 const chai = require("chai");
@@ -12,6 +11,23 @@ chai.should();
 
 describe("Visit and get spotcal", function() {
     describe("GET /spotcal", () => {
+        const RealDate = Date;
+        const constantDate = new Date('2018-01-01T17:00:00');
+
+        beforeEach(() => {
+            global.Date = class extends Date {
+                constructor() {
+                    super();
+                    return constantDate;
+                }
+            };
+        });
+
+        afterEach(() => {
+            global.Date = RealDate;
+        });
+
+
         it("1. should get 200 for successful fetch.", (done) => {
             let check = '2019';
 
@@ -38,17 +54,7 @@ describe("Visit and get spotcal", function() {
                 });
         });
 
-        it("3. should get 200 for successful fetch.", (done) => {
-            chai.request(server)
-                .get("/spotcal/control")
-                .end((err, res) => {
-                    res.should.have.status(200);
-                    res.body.should.be.an("array");
-                    done();
-                });
-        });
-
-        it("4. should get 200 for successful fetch.", (done) => {
+        it("3. should get 200 for handled id.", (done) => {
             chai.request(server)
                 .get("/spotcal/4")
                 .end((err, res) => {

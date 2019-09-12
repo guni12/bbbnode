@@ -6,23 +6,28 @@ module.exports = (function () {
     let time = ct.time;
     let date = ct.date;
 
-    function sensorsWithTime(req, res, next) {
+    async function sensorsWithTime(req, res, next) {
         let item = {time: time, date: date};
 
-        sensor.readAllC(2, (err, temps) => {
-            if (err) {
-                let obj = reg.reterror(500, './find', err, item);
+        try {
+            let list = sensor.readAllC(2);
 
-                return res.status(500).json(obj);
+            if (list.length > 0) {
+                list.push(item);
+                req.printSwt = list;
             } else {
-                temps.push(item);
-                req.printSwt= temps;
+                let text = "ds18b20-raspi kan inte nå sensorerna";
+                let obj = reg.throwerror("Error", 500, "sensorsWithTime", text);
+
+                throw { obj, error: new Error() };
             }
-        });
-        next();
+        } catch (err) {
+            next(err);
+        }
     }
 
     return {
         sensorsWithTime: sensorsWithTime
     };
 }());
+

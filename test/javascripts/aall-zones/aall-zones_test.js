@@ -1,6 +1,5 @@
 "use strict";
 
-/* global describe it */
 process.env.NODE_ENV = "test";
 
 const chai = require("chai");
@@ -24,15 +23,15 @@ describe("Visit and get zones", function() {
                 });
         });
 
-        it("2. 500 HAPPY PATH", (done) => {
-            let title = "Detta id finns inte";
+        it("2. 400 Bad Request", (done) => {
+            let message = "Detta id finns inte";
 
             chai.request(server)
                 .get("/zones/11")
                 .end((err, res) => {
                     //console.log("2. res.body", res.body);
-                    res.should.have.status(500);
-                    res.body.errors.title.should.be.equal(title);
+                    res.should.have.status(400);
+                    res.body.errors[0].message.should.be.equal(message);
                     done();
                 });
         });

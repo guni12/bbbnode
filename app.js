@@ -20,8 +20,10 @@ const findSensorsRouter = require("./routes/find-sensors");
 const updateTempRouter = require("./routes/update-temperatures");
 const changeGpioRouter = require("./routes/update-gpio");
 const getGpiosRouter = require("./routes/get-gpios");
-const getControlDataRouter = require("./routes/get-control");
+const getTodayDataRouter = require("./routes/get-today");
+const getControlDataRouter = require("./routes/get-controls");
 const hourControlRouter = require("./routes/hour-control");
+const updateControls = require("./routes/control-update");
 
 const app = express();
 
@@ -33,6 +35,9 @@ if (process.env.NODE_ENV !== "test") {
     // use morgan to log at command line
     app.use(logger("combined")); // 'combined' outputs the Apache style LOGs
 }
+
+app.disable('etag');
+
 
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
@@ -55,8 +60,10 @@ app.use('/find', findSensorsRouter);
 app.use('/tempupdate', updateTempRouter);
 app.use('/rpio', changeGpioRouter);
 app.use('/gpios', getGpiosRouter);
-app.use('/control', getControlDataRouter);
 app.use('/hourcontrol', hourControlRouter);
+app.use('/today', getTodayDataRouter);
+app.use('/control', getControlDataRouter);
+app.use('/controlupdate', updateControls);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -64,6 +71,9 @@ app.use(function(req, res, next) {
 });
 
 app.use((err, req, res, next) => {
+    //console.log("Err i app", err, typeof(err), err.type);
+
+    err = err.obj ? err.obj : err;
     if (res.headersSent) {
         return next(err);
     }
@@ -71,13 +81,17 @@ app.use((err, req, res, next) => {
     res.status(err.status || 500).json({
         "errors": [
             {
+                "type": err.type,
+                "error": err.name,
                 "status": err.status,
-                "title":  err.message,
-                "detail": err.message
+                "source": err.source,
+                "message": err.message,
+                "extra": err.extra
             }
         ]
     });
 });
+
 
 const debug = require("debug")("express:*");
 const http = require("http");

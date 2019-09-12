@@ -1,28 +1,23 @@
-const m = require('./controls');
-const updl = require('./update-pins');
+const one = require('./updateOne');
+const all = require('./updateAll');
 
 module.exports = (function () {
-    function update(req, res, next) {
+    async function update(req, res, next, params) {
         let d = new Date();
         let hour = d.getHours();
-        let control = req.controls[hour-1];
+        let control = JSON.parse(req.controls)[(hour-1)];
         let key = 'c' + control;
-        let list = req.prep_gpiodetails;
+        let par = { params: params, key: key };
+        //console.log(hour, req.controls, control, key);
 
-        if (req.params.id) {
-            let status = m[key](req.zones);
-            let params = { status: status, list: list };
-
-            list = updl.updateList(req, res, req.zones, params);
-        } else {
-            req.zones.map((item) => {
-                let status = m[key](item);
-
-                list = updl.updateList(req, res, item, [status, list]);
-            });
+        try {
+            req.params.id ?
+                await one.updateOne(req, res, next, par) :
+                await all.updateAll(req, res, next, par);
+        } catch (err) {
+            console.log("I hour-control, err");
+            next(err);
         }
-        req.gpiodetails = list;
-        next();
     }
 
 
@@ -30,3 +25,4 @@ module.exports = (function () {
         update: update
     };
 }());
+

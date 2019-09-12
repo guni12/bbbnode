@@ -5,11 +5,18 @@ const init = require('../public/javascripts/init-zones.js');
 const insert = require('../public/javascripts/insert-zones.js');
 const where = './public/scripts/sensordetails.txt';
 const params = { where: where, what: 'content' };
+const ah = require('./asynchandler');
 
 router.get("/",
-    (req, res, next) => rf.getFile(req, res, next, params),
-    (req, res, next) => init.check(req, res, next),
-    (req, res) => insert.insert(req, res)
+    ah.asyncHandler(async (req, res, next) => {
+        await rf.getFile(req, res, next, params);
+        let check = await init.check(req, res, next);
+        let last = check === undefined ?
+            await insert.insert(req, res, next) :
+            {"message": "Redan initierat"};
+
+        res.json(last);
+    }),
 );
 
 module.exports = router;

@@ -1,1 +1,1 @@
-echo 'export JWT_SECRET=LååångtLösenord' | sudo tee -a /home/pi/.profile > /dev/null
+echo 'export JWT_SECRET="LååångtLösenord"' | sudo tee -a /home/pi/.profile > /dev/null

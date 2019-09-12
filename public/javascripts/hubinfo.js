@@ -1,12 +1,12 @@
-const spotcal = require('./hour-control/spotcal');
 const spi = require('./makeSpotInfo');
 
 module.exports = (function () {
-    function hubinfo(req, res, next) {
-        if (req.params && req.params.id === 'control') {
-            spotcal.tocontrol(req, res, next);
-        } else {
-            spi.makeSpotInfo(req, res, next);
+    async function hubinfo(req, res, next) {
+        try {
+            await spi.makeSpotInfo(req);
+        } catch (err) {
+            //console.log("Error i hubinfo", err);
+            next(err);
         }
     }
 

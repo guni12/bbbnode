@@ -1,25 +1,27 @@
-const db = require('../../db/database.js');
-const reg = require('./status.js');
+const asyn = require('./sqliteAsync');
+const reg = require('./status');
 
 module.exports = (function () {
-    function getOne(req, res, next, params) {
-        let id = params.table === 'settings' ? 1 : parseInt(req.params.id);
-        let sql = "SELECT * FROM " + params.table + " WHERE id = ?;";
+    async function getOne(req, res, next, params) {
+        let id = params.table === "settings" ? 1 : parseInt(req.params.id);
+        let sql = "SELECT * FROM " + params.table + " WHERE id = " + id + ";";
 
-        db.get(sql,
-            id, (err, row) => {
-                if (row) {
-                    req[params.what] = row;
+        await asyn.getAsync(sql)
+            .then((data) => {
+                //console.log("Row", data);
+                if (!data) {
+                    let text = 'Detta id finns inte';
+                    let obj = reg.throwerror("Bad Request", 400, "getOneRow", text);
 
-                    next();
+                    throw { obj, error: new Error() };
                 } else {
-                    let message = err === null ? "Detta id finns inte" : err.message;
-                    let obj = reg.reterror(500, params.where, message, id);
-
-                    return res.status(500).json(obj);
+                    req[params.what] = data;
+                    return data;
                 }
-            }
-        );
+            })
+            .catch(er => {
+                next(er);
+            });
     }
 
 

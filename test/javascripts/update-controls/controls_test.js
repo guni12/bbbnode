@@ -1,6 +1,5 @@
 "use strict";
 
-/* global describe it */
 process.env.NODE_ENV = "test";
 
 const chai = require("chai");
@@ -11,7 +10,27 @@ const sinonChai = require('sinon-chai');
 const rpio = require('rpio');
 const controls = require('../../../public/javascripts/hour-control/controls');
 //const hourcontrol = require('../../../public/javascripts/hour-control');
-const show = require('../../../public/javascripts/show');
+const adh = require('../../../public/javascripts/hour-control/addHeat');
+const up = require('../../../public/javascripts/hour-control/update-pins');
+const hp = require('../../helper.js');
+const fs = require('fs').promises;
+
+
+let mochaAsync = (fn) => {
+    return done => {
+        fn.call().then(done, err => {
+            done(err);
+        });
+    };
+};
+
+const mockRequest = (f, lt) => ({
+    file: f,
+    printobj: lt,
+    content: lt,
+    gpiodetails: lt,
+    prep_gpiodetails: lt
+});
 
 rpio.init({mock: 'raspi-3'});
 
@@ -21,24 +40,18 @@ chai.should();
 
 describe("Test controls", function() {
     describe("GET /hourcontrol", () => {
-        const mockRequest = (f, lt) => ({
-            file: f,
-            printobj: lt,
-            content: lt,
-            gpiodetails: lt,
-            prep_gpiodetails: lt
+        let writeFileStub;
+
+        beforeEach(function () {
+            writeFileStub = sinon.stub(fs, 'writeFile');
         });
 
-        const mockResponse = () => {
-            const res = {};
-
-            res.status = sinon.stub().returns(res);
-            res.json = sinon.stub().returns(res);
-            return res;
-        };
+        afterEach(function () {
+            writeFileStub.restore();
+        });
 
         it("1. 500 rpio can't reach pins", (done) => {
-            let check = "Gpio pinne kunde ej läsas.";
+            let check = "Gpio pinne måste knytas till varje zon";
 
             chai.request(server)
                 .get("/hourcontrol")
@@ -49,14 +62,14 @@ describe("Test controls", function() {
                     res.should.have.status(500);
                     res.headers['content-type'].should.contain('application/json');
                     res.body.should.be.an("object");
-                    res.body.errors.title.should.equal(check);
+                    res.body.errors[0].message.should.equal(check);
                     done();
                 });
         });
 
 
-        it("2. 500 rpio can't reach pins - with id", (done) => {
-            let check = "Gpio pinne kunde ej läsas.";
+        it("2. 500 rpio can't reach pins - though correct id", (done) => {
+            let check = "Gpio pinne måste knytas till varje zon";
 
             chai.request(server)
                 .get("/hourcontrol/3")
@@ -64,16 +77,17 @@ describe("Test controls", function() {
                     if (err) {
                         done(err);
                     }
-                    //console.log(res.body);
+                    //console.log("2. 500 rpio", res.body.errors[0].message);
                     res.should.have.status(500);
                     res.headers['content-type'].should.contain('application/json');
                     res.body.should.be.an("object");
-                    res.body.errors.title.should.equal(check);
+                    res.body.errors[0].message.should.equal(check);
                     done();
                 });
         });
 
-        it("3. 500 rpio can't reach pins - with wrong id", (done) => {
+
+        it("3. 400 rpio can't reach pins - with wrong id", (done) => {
             let check = "Detta id finns inte";
 
             chai.request(server)
@@ -83,26 +97,30 @@ describe("Test controls", function() {
                         done(err);
                     }
                     //console.log(res.body);
-                    res.should.have.status(500);
+                    res.should.have.status(400);
                     res.headers['content-type'].should.contain('application/json');
                     res.body.should.be.an("object");
-                    res.body.errors.title.should.equal(check);
+                    res.body.errors[0].message.should.equal(check);
                     done();
                 });
         });
 
-        it("4. Test show with simple content", () => {
-            const res = mockResponse();
-            const req = mockRequest(
-                "",
-                []
-            );
 
-            show.show(req, res, 'printobj');
-            res.json.should.have.been.called;
-        });
+        it("4. update-pins with stub", hp.mochaAsync(async () => {
+            const req = hp.mockRequest();
+            const res = hp.mockResponse();
+            const spy = sinon.spy();
+            let list = hp.gpiolist();
+            let params = {what: 'det', gpio: 5, status: 1, list: list};
 
-        it("5. Test first control", () => {
+            await up.updateList(req, res, spy, params);
+            spy.called.should.be.false;
+        }));
+    });
+
+
+    describe("Individual functions", () => {
+        it("1. Test first control", () => {
             let item = {
                 gpio: 5,
                 should: 19,
@@ -115,7 +133,8 @@ describe("Test controls", function() {
             answer.should.be.equal(check);
         });
 
-        it("6. Test second control", () => {
+
+        it("2. Test second control", () => {
             let item = {
                 gpio: 5,
                 min: 14,
@@ -128,7 +147,8 @@ describe("Test controls", function() {
             answer.should.be.equal(check);
         });
 
-        it("7. Test third control", () => {
+
+        it("3. Test third control", () => {
             let item = {
                 gpio: 5,
                 max: 25,
@@ -141,7 +161,8 @@ describe("Test controls", function() {
             answer.should.be.equal(check);
         });
 
-        it("8. Test fourth control", () => {
+
+        it("4. Test fourth control", () => {
             let item = {
                 gpio: 5,
                 away: 19,
@@ -153,5 +174,49 @@ describe("Test controls", function() {
             answer.should.be.a("number");
             answer.should.be.equal(check);
         });
+    });
+
+
+    describe("GET /controlupdate tests", () => {
+        let writeFileStub;
+
+        beforeEach(function () {
+            writeFileStub = sinon.stub(fs, 'writeFile');
+        });
+
+        afterEach(function () {
+            writeFileStub.restore();
+        });
+
+        it("1. 200 HAPPY PATH", (done) => {
+            chai.request(server)
+                .get("/controlupdate")
+                .end((err, res) => {
+                    if (err) {
+                        done(err);
+                    }
+                    res.should.have.status(200);
+                    res.headers['content-type'].should.contain('application/json');
+                    res.body.should.be.an("string");
+                    done();
+                });
+        });
+    });
+
+
+
+    describe("Test affecting controls", () => {
+        it("1. Test addHeat with controls", mochaAsync(async () => {
+            const req = mockRequest(
+                "",
+                []
+            );
+            const con = [0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0];
+            const spy = sinon.spy();
+
+            await adh.addHeat(con, req, spy);
+            req.controls.should.be.an("array");
+            spy.called.should.be.false;
+        }));
     });
 });

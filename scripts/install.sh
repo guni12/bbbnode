@@ -24,9 +24,11 @@ sudo apt-get install unattended-upgrades -y
 sudo apt-get install sqlite3 -y
 sudo apt-get install libsqlite3-dev
 
+sudo apt install build-essential -y
+
 #Fixa att läsa in migrate
 
-sudo apt-get install lsof
+sudo apt-get install lsof -y
 
 sudo apt-get install nginx -y
 

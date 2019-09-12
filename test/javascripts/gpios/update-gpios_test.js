@@ -1,6 +1,5 @@
 "use strict";
 
-/* global describe it */
 process.env.NODE_ENV = "test";
 
 const chai = require("chai");
@@ -9,16 +8,18 @@ const chaiHttp = require("chai-http");
 const server = require("../../../app.js");
 const sinon = require("sinon");
 const sinonChai = require('sinon-chai');
-const fs = require('fs');
+const fs = require('fs').promises;
 //let nock = require('nock');
 const rpio = require('rpio');
-let writeFileStub;
 const updl = require('../../../public/javascripts/gpio/upd-gpio-list');
 const ul = require('../../../public/javascripts/hour-control/update-gpio-list');
 const extract = require('../../../public/javascripts/hour-control/extractControls');
 const cal = require('../../../public/javascripts/hour-control/spotcal');
 const pf = require('../../../public/javascripts/printFile');
 const rf = require('../../../public/javascripts/readFile');
+const updin = require('../../../public/javascripts/gpio/upd-gpio-in');
+const updout = require('../../../public/javascripts/gpio/upd-gpio-out');
+let readFileStub;
 
 rpio.init({mock: 'raspi-3'});
 
@@ -55,6 +56,25 @@ let list = [
     {"gpio": 40, "mode": "out", "status": 0}
 ];
 
+let jsonlist = '[{"gpio":3,"status":0,"mode":"out"},{"gpio":5,"status":0,';
+
+jsonlist += '"mode":"out"},{"gpio":7,"status":0,"mode":"out"},{"gpio":8,';
+jsonlist += '"status":0,"mode":"out"},{"gpio":10,"status":0,"mode":"out"},';
+jsonlist += '{"gpio":11,"status":0,"mode":"out"},{"gpio":12,"status":0,';
+jsonlist += '"mode":"out"},{"gpio":13,"status":0,"mode":"out"},{"gpio":15,';
+jsonlist += '"status":0,"mode":"out"},{"gpio":16,"status":0,"mode":"out"},';
+jsonlist += '{"gpio":18,"status":0,"mode":"out"},{"gpio":19,"status":0,"mode":';
+jsonlist += '"out"},{"gpio":21,"status":0,"mode":"out"},{"gpio":22,"status"';
+jsonlist += ':0,"mode":"out"},{"gpio":23,"status":0,"mode":"out"},{"gpio":24,';
+jsonlist += '"status":0,"mode":"out"},{"gpio":26,"status":0,"mode":"out"},';
+jsonlist += '{"gpio":29,"status":0,"mode":"out"},{"gpio":31,"status":0,"mode"';
+jsonlist += ':"out"},{"gpio":32,"status":0,"mode":"out"},{"gpio":33,"status"';
+jsonlist += ':0,"mode":"out"},{"gpio":35,"status":0,"mode":"out"},{"gpio"';
+jsonlist += ':36,"status":0,"mode":"out"},{"gpio":37,"status":0,"mode"';
+jsonlist += ':"out"},{"gpio":38,"status":0,"mode":"out"},{"gpio":40,';
+jsonlist += '"status":0,"mode":"out"}]';
+
+
 let mockRequest = (upd, lt, gt=null) => ({
     body: upd,
     updated: upd,
@@ -62,7 +82,9 @@ let mockRequest = (upd, lt, gt=null) => ({
     newlist: lt,
     gpiodetails: lt,
     content: lt,
-    settings: gt
+    settings: gt,
+    gpio5: {"gpio": 5, "mode": "out", "status": 0},
+    gpio40: {"gpio": 40, "mode": "out", "status": 1}
 });
 
 let content = {
@@ -124,10 +146,28 @@ const mockResponse = () => {
     return res;
 };
 
+let mochaAsync = (fn) => {
+    return done => {
+        fn.call().then(done, err => {
+            done(err);
+        });
+    };
+};
+
 describe("Visit and update hourcontrols", function() {
     describe("GET /hourcontrol", () => {
+        let writeFileStub;
+
+        beforeEach(function () {
+            writeFileStub = sinon.stub(fs, 'writeFile');
+        });
+
+        afterEach(function () {
+            writeFileStub.restore();
+        });
+
         it("1. 500 rpio can't reach pins", (done) => {
-            let check = "gpio out kunde inte läsas av";
+            let check = "Gpio pinne kunde ej kontaktas";
 
             chai.request(server)
                 .post("/rpio")
@@ -137,22 +177,23 @@ describe("Visit and update hourcontrols", function() {
                     if (err) {
                         done(err);
                     }
-                    //console.log(res.body);
+                    //console.log("1. 500 rpio", res.body);
                     res.should.have.status(500);
                     res.headers['content-type'].should.contain('application/json');
                     res.body.should.be.an("object");
-                    res.body.errors.title.should.equal(check);
+                    res.body.errors[0].message.should.equal(check);
                     done();
                 });
         });
 
         it("2. 500 rpio can't reach pins with mode in", (done) => {
-            let check = "gpio in kunde inte läsas av";
+            let check = "Gpio pinne kunde ej kontaktas";
             let incontent = {
                 gpio: 11,
                 status: 0,
                 mode: "in"
             };
+
 
             chai.request(server)
                 .post("/rpio")
@@ -166,8 +207,8 @@ describe("Visit and update hourcontrols", function() {
                     res.should.have.status(500);
                     res.headers['content-type'].should.contain('application/json');
                     res.body.should.be.an("object");
-                    res.body.errors.detail.should.be.an("string");
-                    res.body.errors.title.should.equal(check);
+                    res.body.errors[0].message.should.be.an("string");
+                    res.body.errors[0].message.should.equal(check);
                     done();
                 });
         });
@@ -175,7 +216,17 @@ describe("Visit and update hourcontrols", function() {
 
 
     describe("Functions with filewriteStub", () => {
-        it("1. Test WriteList", (done) => {
+        let writeFileStub;
+
+        beforeEach(function () {
+            writeFileStub = sinon.stub(fs, 'writeFile');
+        });
+
+        afterEach(function () {
+            writeFileStub.restore();
+        });
+
+        it("1. Test WriteList", mochaAsync(async () => {
             const req = mockRequest(
                 {},
                 list,
@@ -186,28 +237,22 @@ describe("Visit and update hourcontrols", function() {
             let url = "./public/scripts/gpiodetails.txt";
             const res = mockResponse();
             const params = { where: './public/scripts/gpiodetails.txt', what: 'newlist' };
+            const spy = sinon.spy();
 
-            writeFileStub = sinon.stub(fs, 'writeFile')
-                .returns("I am a fake call!");
             writeFileStub.callsFake((firstArg) => {
                 what = 'My first arg is: ' + firstArg;
             });
 
-            const spy = sinon.spy();
-
-            pf.printFile(req, res, spy, params);
+            await pf.printFile(req, res, spy, params);
 
             writeFileStub.should.have.been.called;
             writeFileStub.should.have.been.calledWith(url, JSON.stringify(req.list));
             what.should.be.equal("My first arg is: ./public/scripts/gpiodetails.txt");
-            spy.called.should.be.true;
-            //res.json.should.have.been.calledWith(list);
-            fs.writeFile.restore();
-            done();
-        });
+            spy.called.should.be.false;
+        }));
 
 
-        it("2. Test writeList with nothing in req", (done) => {
+        it("2. Test writeList with nothing in req", mochaAsync(async () => {
             const req = mockRequest(
                 null,
                 null,
@@ -218,23 +263,18 @@ describe("Visit and update hourcontrols", function() {
             const spy = sinon.spy();
             const params = { where: './public/scripts/gpiodetails.txt', what: 'newlist' };
 
-            writeFileStub = sinon.stub(fs, 'writeFile')
-                .returns("I am a fake call!");
-            writeFileStub.yields( new Error("Testfel här"));
-            //updateGpio.writeList(req, res);
-            pf.printFile(req, res, spy, params);
+            //writeFileStub.yields( new Error("Testfel här"));
+            await pf.printFile(req, res, spy, params);
 
-            writeFileStub.should.have.been.called;
+            writeFileStub.should.not.have.been.called;
             spy.called.should.be.true;
-            fs.writeFile.restore();
             writeFileStub.restore();
-            done();
-        });
+        }));
     });
 
 
     describe("Functions with filereadStub", () => {
-        it("1. Test readFile with error", (done) => {
+        it("1. Test readFile with error", mochaAsync(async () => {
             const req = mockRequest(
                 {},
                 list,
@@ -244,41 +284,34 @@ describe("Visit and update hourcontrols", function() {
             const res = mockResponse();
             const spy = sinon.spy();
 
-            let readFileStub = sinon.stub(fs, 'readFile');
-            let params = { where: "./public/scripts/gpiodetails.txt" };
+            readFileStub = sinon.stub(fs, 'readFile');
+            let params = { where: "./public/scripts/gpiodetailss.txt" };
 
-            readFileStub.yields( new Error("Testfel här"));
+            //readFileStub.yields( new Error("Testfel här"));
             rf.getFile(req, res, spy, params);
 
-            readFileStub.should.have.been.called;
-            spy.called.should.be.false;
+            readFileStub.should.not.have.been.called;
+            spy.called.should.be.true;
             fs.readFile.restore();
             readFileStub.restore();
-            done();
-        });
+        }));
 
-        it("2. Test updateList", (done) => {
+        it("2. Test updateList i gpio", mochaAsync(async () => {
             const req = mockRequest(
-                {},
-                list,
-                settings
+                content,
+                jsonlist
             );
-
             const res = mockResponse();
-            const item = {"gpio": 5, "mode": "out", "status": 0};
-
-            req.updated = item;
             const spy = sinon.spy();
+            const updateParams = { item: 'updated', list: 'content' };
 
-            updl.updateList(req, res, spy, ['updated', 'list']);
+            await updl.updateList(req, res, spy, updateParams);
 
-            spy.called.should.be.true;
-            done();
-        });
+            spy.called.should.be.false;
+        }));
 
 
-        it("3. Test updateList empty list with catch", (done) => {
-            let empty = null;
+        it("3. Test updateList empty list with catch", mochaAsync(async () => {
             const req = mockRequest(
                 {},
                 null,
@@ -289,45 +322,101 @@ describe("Visit and update hourcontrols", function() {
             const spy = sinon.spy();
 
             sinon.spy(updl, "updateList");
+            let params = {item: '', list: ''};
 
             try {
-                updl.updateList(req, res, spy, content, empty);
+                updl.updateList(req, res, spy, params);
             } catch (err) {
                 err.should.include(new TypeError("Cannot read property 'forEach' of null"));
             }
-            done();
-        });
+        }));
 
 
-        it("4. Test updateList with return", (done) => {
-            const item = {"gpio": 5, "mode": "out", "status": 0};
-            let res = ul.updateList(list, item);
+        it("4. Test updateList i hour-control", mochaAsync(async () => {
+            const req = mockRequest(
+                {},
+                list,
+                settings
+            );
 
-            res.should.be.an("array");
-            done();
-        });
+            const spy = sinon.spy();
+            const par = {"toupdate": 'gpio5' };
 
+            ul.updateList(req, spy, list, par);
 
-        it("5. Extract Controls list where no control", (done) => {
-            let res = extract.extractControls(data, settings, false);
-
-            res.should.be.an("array");
-            res[10].should.be.equal(0);
-            done();
-        });
+            spy.called.should.be.false;
+        }));
 
 
-        it("6. Extract Controls list when away", (done) => {
+        it("5. Test updateList i hour-control, last item", mochaAsync(async () => {
+            const req = mockRequest(
+                {},
+                list,
+                settings
+            );
+
+            const spy = sinon.spy();
+            const par = {"toupdate": 'gpio40', what: 'newlist' };
+
+            ul.updateList(req, spy, list, par);
+            req.list[25].status.should.eql(1);
+            req.list[25].gpio.should.eql(40);
+            spy.called.should.be.false;
+        }));
+
+
+        it("6. Test updateList i hour-control, no list", mochaAsync(async () => {
+            const req = mockRequest(
+                {},
+                []
+            );
+
+            const spy = sinon.spy();
+            const par = { what: 'newlist' };
+
+            ul.updateList(req, spy, list, par);
+            console.log(req);
+            spy.called.should.be.true;
+        }));
+
+
+        it("7. Extract Controls list where no control", mochaAsync(async () => {
+            const spy = sinon.spy();
+
+            const req = mockRequest(
+                {},
+                JSON.stringify(data),
+                settings
+            );
+            const res = mockResponse();
+
+            await extract.extractControls(req, res, spy, false);
+            req.controls.should.be.an("array");
+            req.controls[10].should.be.equal(0);
+            spy.called.should.be.false;
+        }));
+
+
+        it("8. Extract Controls list when away", mochaAsync(async () => {
             settings.percenton = 1;
-            let res = extract.extractControls(data, settings, true);
+            const spy = sinon.spy();
 
-            res.should.be.an("array");
-            res[10].should.be.equal(3);
-            done();
-        });
+            const req = mockRequest(
+                {},
+                JSON.stringify(data),
+                settings
+            );
+            const res = mockResponse();
+
+            await extract.extractControls(req, res, spy, true);
+
+            req.controls.should.be.an("array");
+            req.controls[10].should.be.equal(3);
+            spy.called.should.be.false;
+        }));
 
 
-        it("7. Make control when away", (done) => {
+        it("9. Make control when away", mochaAsync(async () => {
             const req = mockRequest(
                 {},
                 list,
@@ -341,8 +430,45 @@ describe("Visit and update hourcontrols", function() {
 
             cal.tocontrol(req, res, spy);
 
-            spy.called.should.be.true;
-            done();
+            spy.called.should.be.false;
+        }));
+    });
+
+    describe("Functions with rpioStub", () => {
+        let rpioOpenStub, rpioReadStub;
+
+        beforeEach(function () {
+            rpioOpenStub = sinon.stub(rpio, 'open');
+            rpioReadStub = sinon.stub(rpio, 'read');
+            rpioReadStub.withArgs(5).returns(content);
         });
+
+        afterEach(function () {
+            rpioOpenStub.restore();
+            rpioReadStub.restore();
+        });
+
+        it("1. Test gpio-in with stub", mochaAsync(async () => {
+            const req = mockRequest(
+            );
+            const res = mockResponse();
+            const spy = sinon.spy();
+
+            await updin.updIn(req, res, spy, content);
+
+            spy.called.should.be.false;
+        }));
+
+
+        it("2. Test gpio-out with stub", mochaAsync(async () => {
+            const req = mockRequest(
+            );
+            const res = mockResponse();
+            const spy = sinon.spy();
+
+            await updout.updOut(req, res, spy, content);
+
+            spy.called.should.be.false;
+        }));
     });
 });

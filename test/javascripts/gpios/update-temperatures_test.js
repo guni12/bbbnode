@@ -1,6 +1,5 @@
 "use strict";
 
-/* global describe it */
 process.env.NODE_ENV = "test";
 
 const chai = require("chai");
@@ -8,15 +7,20 @@ const chaiHttp = require("chai-http");
 const server = require("../../../app");
 const sinon = require("sinon");
 const sinonChai = require('sinon-chai');
-const fs = require('fs');
-let writeFileStub;
-//const updateTemp = require('../../../public/javascripts/update-temperatures');
-const pf = require('../../../public/javascripts/printFile');
 const update = require('../../../public/javascripts/updateSensors');
+//const updtemp = require('../../../public/javascripts/update-temperatures');
 
 chai.use(chaiHttp);
 chai.use(sinonChai);
 chai.should();
+
+let mochaAsync = (fn) => {
+    return done => {
+        fn.call().then(done, err => {
+            done(err);
+        });
+    };
+};
 
 describe("Visit sensors and update temperatures", function() {
     describe("GET /tempupdate", () => {
@@ -36,6 +40,17 @@ describe("Visit sensors and update temperatures", function() {
             {"id": "28-031466c1e7ff", "t": 21.38},
             {"time": "09:30:01", "date": "2019-08-10"}];
 
+        let flawed = [
+            {"id": "28-021466fea4ff"},
+            {"id": "28-0214671137ff"},
+            {"id": "28-0214671226ff"},
+            {"id": "28-0214672d0cff"},
+            {"id": "28-02146745baff"},
+            {"id": "28-031466aef3ff"},
+            {"id": "28-031466ba20ff"},
+            {"id": "28-031466c1e7ff"},
+            {"time": "09:30:01", "date": "2019-08-10"}];
+
 
         const mockResponse = () => {
             const res = {};
@@ -47,7 +62,7 @@ describe("Visit sensors and update temperatures", function() {
 
 
         it("1. 500 ds18b20-raspi can't reach sensors", (done) => {
-            let check = "Error: Could not list 1-Wire sensors";
+            let check = "ds18b20-raspi kan inte nå sensorerna";
 
             chai.request(server)
                 .get("/tempupdate")
@@ -55,29 +70,40 @@ describe("Visit sensors and update temperatures", function() {
                     if (err) {
                         done(err);
                     }
-                    //console.log(res.body);
                     res.should.have.status(500);
                     res.headers['content-type'].should.contain('application/json');
                     res.body.should.be.an("object");
-                    res.body.errors.title.should.equal(check);
+                    res.body.errors[0].message.should.equal(check);
                     done();
                 });
         });
 
 
-        it("2. Test updateSensors", () => {
-            const req = mockRequest(
-                temps
-            );
+        it("2. Test updateSensors", mochaAsync(async () => {
+            const req = mockRequest(temps);
+            const res = mockResponse();
+            const spy = sinon.spy();
+            const check = {"message": "Klart"};
 
+            await update.updateSensors(req, res, spy);
+            req.show.should.eql(check);
+            spy.called.should.be.false;
+        }));
+
+
+        it("3. Test updateSensors with error", mochaAsync(async () => {
+            const req = mockRequest(flawed);
             const res = mockResponse();
             const spy = sinon.spy();
 
-            update.updateSensors(req, res, spy);
+            await update.updateSensors(req, res, spy);
             spy.called.should.be.true;
-        });
+        }));
 
 
+
+
+        /*
         it("3. Test printFile with error", () => {
             const req = mockRequest(
                 temps
@@ -95,6 +121,6 @@ describe("Visit sensors and update temperatures", function() {
             writeFileStub.should.have.been.called;
             fs.writeFile.restore();
             writeFileStub.restore();
-        });
+        });*/
     });
 });

@@ -3,7 +3,6 @@
  */
 "use strict";
 
-/* global describe it */
 const me = require("../../../public/javascripts/index");
 var assert = require("assert");
 

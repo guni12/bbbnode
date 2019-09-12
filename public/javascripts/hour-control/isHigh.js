@@ -1,16 +1,24 @@
 const oz = require('./oneOrZero');
 
 module.exports = (function () {
-    function isHigh(list, data, key, params) {
-        let price = data[key] === "" ? null : parseFloat(data[key]) / 10;
+    function isHigh(key, params, next) {
+        let data = params.data;
 
-        if (price) {
-            list.push(oz.oneOrZero(price, params.marker, params.avg));
+        try {
+            let price = data[key] === "" ? null : parseFloat(data[key]) / 10;
+
+            if (price) {
+                return oz.oneOrZero(price, params.marker, params.avg);
+            } else {
+                return undefined;
+            }
+        } catch (err) {
+            next(err);
         }
-        return list;
     }
 
     return {
         isHigh: isHigh
     };
 }());
+

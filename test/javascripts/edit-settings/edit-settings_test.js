@@ -3,7 +3,6 @@
  */
 "use strict";
 
-/* global describe it */
 process.env.NODE_ENV = "test";
 
 const chai = require("chai");
@@ -29,7 +28,7 @@ describe("Visit and update settings", function() {
                 .set('content-type', 'application/x-www-form-urlencoded')
                 .send(content)
                 .end((err, res) => {
-                    console.log("res.body", res.body);
+                    //console.log("res.body", res.body);
                     res.should.have.status(200);
                     res.body.should.be.an("object");
                     res.body.message.should.be.equal(check);
@@ -52,10 +51,10 @@ describe("Visit and update settings", function() {
                 .set('content-type', 'application/x-www-form-urlencoded')
                 .send(content)
                 .end((err, res) => {
-                    console.log("2. res.body", res.body);
+                    //console.log("2. res.body", res.body);
                     res.should.have.status(500);
                     res.body.should.be.an("object");
-                    res.body.errors.title.should.be.equal(check);
+                    res.body.errors.message.should.be.equal(check);
 
                     done();
                 });
@@ -76,7 +75,7 @@ describe("Visit and update settings", function() {
                     //console.log(res.body);
                     res.should.have.status(401);
                     res.body.should.be.an("object");
-                    res.body.errors.title.should.be.equal(check);
+                    res.body.errors.message.should.be.equal(check);
 
                     done();
                 });

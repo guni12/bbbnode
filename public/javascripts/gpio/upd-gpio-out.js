@@ -3,22 +3,30 @@ const reg = require('../status');
 
 module.exports = (function () {
     function updOut(req, res, next, obj) {
+        try {
+            let stat = contactRpio(obj);
+
+            try {
+                if (stat) {
+                    req.updated = { gpio: obj.gpio, status: stat, mode: obj.mode };
+                } else {
+                    let text = "Gpio pinne kunde ej kontaktas";
+                    let obj = reg.throwerror("Error", 500, "/upd-gpio-out", text);
+
+                    throw { obj, error: new Error() };
+                }
+            } catch (err) {
+                next(err);
+            }
+        } catch (err) {
+            next(err);
+        }
+    }
+
+    function contactRpio(obj) {
         rpio.open(obj.gpio, rpio.OUTPUT, obj.status);
         rpio.write(obj.gpio, obj.status);
-        let stat = rpio.read(obj.gpio);
-
-        let updated = { gpio: obj.gpio, status: stat, mode: obj.mode };
-
-        if (stat === 0 || stat === 1) {
-            req.updated = updated;
-
-            next();
-        } else {
-            let text = "gpio out kunde inte läsas av";
-            let ret = reg.reterror(500, "/", text, updated);
-
-            return res.status(500).json(ret);
-        }
+        return rpio.read(obj.gpio);
     }
 
 

@@ -1,18 +1,28 @@
 const m = require('./updatePin');
-const reg = require('../status');
 const gpioupdate = require('./update-gpio-list');
+const reg = require('../status');
 
 module.exports = (function () {
-    function updateList(req, res, item, params) {
+    async function updateList(req, res, next, params) {
         try {
-            let updated = m.updatePin(item.gpio, params.status);
+            let par1 = { gpio: params.gpio, status: params.status };
 
-            return gpioupdate.updateList(updated, params.list);
+            console.log(params, "params");
+
+            if (params.gpio === null || params.gpio === 0) {
+                let text = "Gpio pinne måste knytas till varje zon";
+                let obj = reg.throwerror("Error", 500, "/update-pins", text);
+
+                throw { obj, error: new Error() };
+            } else {
+                await m.updatePin(req, res, next, par1);
+                let par2 = { what: params.what, toupdate: 'gpio'+ params.gpio};
+
+                await gpioupdate.updateList(req, next, params.list, par2);
+            }
         } catch (err) {
-            let message = "Gpio pinne kunde ej läsas.";
-            let obj = reg.reterror(500, "/hourcontrol", message, err);
-
-            return res.status(500).json(obj);
+            console.log("I update-pins err", err);
+            next(err);
         }
     }
 

@@ -1,21 +1,17 @@
-const db = require('../../db/database');
+const as = require('./sqliteAsync');
 
 module.exports = (function () {
-    function check(req, res, next) {
+    async function check(req, res, next) {
         let sql = "SELECT * FROM zones";
 
-        db.get(sql,
-            (err, row) => {
-                if (row) {
-                    let message = {"message": "Redan initierat"};
+        try {
+            const exist = await as.getAsync(sql);
 
-                    res.json(message);
-                } else {
-                    console.log(err);
-                    next();
-                }
-            }
-        );
+            return exist;
+        } catch (err) {
+            //console.log(err);
+            return next(err);
+        }
     }
 
 

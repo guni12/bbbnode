@@ -1,25 +1,26 @@
-const fs = require('fs');
-const reg = require('./status.js');
+const fs = require('fs').promises;
+const reg = require('./status');
 
 module.exports = (function () {
-    function printFile(req, res, next, params) {
-        if (req.params && req.params.id === 'control') {
-            next();
-        } else {
-            let toPrint = req[params.what];
+    async function printFile(req, res, next, params) {
+        try {
+            if (req[params.what]) {
+                await fs.writeFile(params.where, JSON.stringify(req[params.what]));
+                //console.info("Filen '" + params.where + "' sparades med fs.promises");
+            } else {
+                let text = 'Inget innehåll att spara till fil';
+                let obj = reg.throwerror("Bad request", 400, "printFile", text);
 
-            fs.writeFile(params.where, JSON.stringify(toPrint), (err) => {
-                if (err) {
-                    let obj = reg.reterror(500, "/", "listan kunde inte skrivas in", err);
-
-                    return res.status(500).json(obj);
-                }
-            });
+                throw { obj, error: new Error() };
+            }
+        } catch (err) {
+            //console.error(err);
+            next(err);
         }
-        next();
     }
 
     return {
         printFile: printFile
     };
 }());
+

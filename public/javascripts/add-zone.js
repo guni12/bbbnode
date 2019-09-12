@@ -1,31 +1,29 @@
-const reg = require('./status.js');
-const db = require('../../db/database.js');
+const as = require('./sqliteAsync');
 
 module.exports = (function () {
-    function insert(req, res) {
-        //let params = JSON.parse(req.body.data);
-        let params = JSON.parse(req.body.value);
-        let cols = "(sensorid, zone, gpio, away, dsm, tempis, isoff, ison,";
+    async function insert(req, res, next) {
+        try {
+            let params = JSON.parse(req.body.value);
+            let cols = "(sensorid, zone, away, dsm, tempis,";
 
-        cols += " max, min, should, name, measured)";
-        let sql = "INSERT INTO zones " + cols + " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            cols += " max, min, should, name, measured)";
+            let sql = "INSERT INTO zones " + cols + " VALUES (" + params + ");";
 
-        db.run(sql,
-            params, (err) => {
-                if (err) {
-                    let obj = reg.reterror(500, "/addzone", err.message, params);
+            try {
+                await as.runAsync(sql);
+                let message = "Inlagt " + params;
 
-                    return res.status(500).json(obj);
-                } else {
-                    let message = "Inlagt " + params;
-
-                    res.status(201).json({
-                        data: {
-                            message: message
-                        }
-                    });
-                }
-            });
+                res.status(201).json({
+                    data: {
+                        message: message
+                    }
+                });
+            } catch (err) {
+                next(err);
+            }
+        } catch (err) {
+            next(err);
+        }
     }
 
     return {

@@ -1,17 +1,20 @@
-const fs = require('fs');
-const reg = require('./status.js');
+const fs = require('fs').promises;
+const reg = require('./status');
 
 module.exports = (function () {
-    function getFile(req, res, next, params) {
-        fs.readFile(params.where, (err, data) => {
-            if (err) {
-                let obj = reg.reterror(500, "/hourcontrol", "listan kunde inte läsas av", err);
+    async function getFile(req, res, next, params) {
+        try {
+            if (params.what && params.where) {
+                req[params.what] = await fs.readFile(params.where, 'utf-8');
+            } else {
+                let text = 'Fil eller parameter saknas.';
+                let obj = reg.throwerror("Error", 400, "readFile", text);
 
-                return res.status(500).json(obj);
+                throw { obj, error: new Error() };
             }
-            req[params.what] = JSON.parse(data);
-            next();
-        });
+        } catch (err) {
+            next(err);
+        }
     }
 
     return {

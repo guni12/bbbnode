@@ -1,26 +1,39 @@
 const ish = require('./isHigh');
+const ch = require('./controlsHelper');
 
 module.exports = (function () {
-    function hourList(data, params) {
+    async function hourList(req, res, next, params) {
         let temp = [];
-        let key;
 
-        for (let i = 1; i < 3; i++) {
-            key = 'Hour' + i;
-            temp = ish.isHigh(temp, data, key, params);
+        try {
+            temp = await getList(temp, params, next);
+            return await finishOff(temp, params);
+        } catch (err) {
+            //console.log.bind(console);
+            next(err);
         }
-        key = 'Hour3A';
-        temp = ish.isHigh(temp, data, key, params);
-        key = 'Hour3B';
-        temp = ish.isHigh(temp, data, key, params);
-        for (let i = 5; i < 26; i++) {
-            key = 'Hour' + (i-1);
-            temp = ish.isHigh(temp, data, key, params);
-        }
-        return temp;
+    }
+
+    async function finishOff(temp, params) {
+        let filtered = temp.filter(function (el) {
+            return el != null;
+        });
+
+        return ch.checkLast(filtered, params);
+    }
+
+
+    async function getList(temp, params, next) {
+        let keyList = new Array(25).fill(0);
+
+        return Promise.all(keyList.map(function (one, index) {
+            one = ch.getKey(index+1);
+            return temp[index] = ish.isHigh(one, params, next);
+        }));
     }
 
     return {
         hourList: hourList
     };
 }());
+

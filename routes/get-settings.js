@@ -1,12 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const settings = require('../public/javascripts/getOneRow.js');
-const show = require('../public/javascripts/show.js');
-const params = {table: "settings", where: './settings', what: 'settings'};
+const settingsParams = {table: "settings", what: 'settings'};
+const ah = require('./asynchandler');
 
 router.get("/",
-    (req, res, next) => settings.getOne(req, res, next, params),
-    (req, res) => show.show(req, res, 'settings')
+    ah.asyncHandler(async (req, res, next) => {
+        await settings.getOne(req, res, next, settingsParams);
+        res.json(req.settings);
+    })
 );
 
 module.exports = router;

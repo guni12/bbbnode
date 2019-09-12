@@ -2,24 +2,27 @@ const makelist = require('./hourList');
 const adh = require('./addHeat');
 
 module.exports = (function () {
-    function extractControls(data, settings, isaway) {
-        let avg = parseFloat((data['Average'])) / 10;
-        let marker = (settings.percent/10)+1;
-        let params = { marker: marker, avg: avg };
-        let temp = makelist.hourList(data, params);
+    async function extractControls(req, res, next, isaway) {
+        let content = JSON.parse(req.content);
+        let avg = content['Average'].replace(",", ".");
 
-        temp = adh.addHeat(temp);
+        avg = Math.round(avg * 10) / 100;
+        let marker = (req.settings.percent/100)+1;
+        let percon = req.settings.percenton === 0 ? true : false;
+        let params = { data: content, marker: marker, avg: avg, isaway: isaway, percon: percon };
 
-        if (isaway) {
-            temp.fill(3);
+        try {
+            let temp = await makelist.hourList(req, res, next, params);
+
+            await adh.addHeat(temp, req, next);
+            //console.log("I extractC efter heat", temp);
+        } catch (err) {
+            next(err);
         }
-        if (settings.percenton === 0) {
-            temp.fill(0);
-        }
-        return temp;
     }
 
     return {
         extractControls: extractControls
     };
 }());
+

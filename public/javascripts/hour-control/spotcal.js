@@ -1,18 +1,26 @@
 const extract = require('./extractControls');
+const ct = require('../currtime');
 
 module.exports = (function () {
-    function tocontrol(req, res, next) {
-        let isaway = false;
+    async function tocontrol(req, res, next) {
+        try {
+            let isaway = false;
+            let date = ct.date;
 
-        if (req.settings.awayfrom !== null && req.settings.awayto !== null) {
-            isaway = true;
+            if (req.settings.awayfrom !== null &&
+                req.settings.awayto !== null
+                && req.settings.awayto > date) {
+                isaway = true;
+            }
+            await extract.extractControls(req, res, next, isaway);
+        } catch (err) {
+            //console.log.bind(console);
+            next(err);
         }
-        req.controls = extract.extractControls(req.content, req.settings, isaway);
-
-        next();
     }
 
     return {
         tocontrol: tocontrol
     };
 }());
+

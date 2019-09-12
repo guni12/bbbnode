@@ -1,19 +1,28 @@
 const cc = require('./checkControl');
 
 module.exports = (function () {
-    function isFalse(control, temp, i) {
-        if (control === 1) {
-            temp = cc.checkControl(temp, i);
-            return true;
+    async function isFalse(temp, i, next) {
+        try {
+            return await cc.checkControl(temp, i, next);
+        } catch (err) {
+            next(err);
         }
     }
 
-    function isTrue(control) {
-        return control === 0 ? false : true;
+    async function checkControl(control, next) {
+        try {
+            if (control === 1) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (err) {
+            next(err);
+        }
     }
 
     return {
         isFalse: isFalse,
-        isTrue: isTrue
+        checkControl: checkControl
     };
 }());

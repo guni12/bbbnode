@@ -1,25 +1,28 @@
 const sensor = require('ds18b20-raspi');
-const reg = require('./status.js');
 const ct = require('./currtime.js');
+const reg = require('./status');
 
 module.exports = (function () {
-    let time = ct.time;
-    let date = ct.date;
+    async function initSensors(req, res, next) {
+        let time = ct.time;
+        let date = ct.date;
 
-    function initSensors(req, res, next) {
-        sensor.list((err, deviceIds) => {
-            if (err) {
-                let obj = reg.reterror(500, './find', err);
+        try {
+            const list = sensor.list();
 
-                return res.status(500).json(obj);
+            if (list.length > 0) {
+                list.push(time);
+                list.push(date);
+                req.printSensors = list;
             } else {
-                deviceIds.push(time);
-                deviceIds.push(date);
-                req.printSensors = deviceIds;
-                req.file = 'sensors.txt';
-                next();
+                let text = "Could not find any 1-Wire sensors to list";
+                let obj = reg.throwerror("Error", 500, "find-sensors", text);
+
+                throw { obj, error: new Error() };
             }
-        });
+        } catch (err) {
+            next(err);
+        }
     }
 
 
@@ -27,3 +30,4 @@ module.exports = (function () {
         initSensors: initSensors
     };
 }());
+
