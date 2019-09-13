@@ -58,7 +58,7 @@ sqlite3 texts.sqlite
 ```sh
 npm run production
 ```
--   Skapa ditt användarkonto via terminalen, ändra *du@du.se* och *hemlig* till dina val:
+-   Skapa ditt användarkonto via terminalen, ändra *din@email.se* och *hemlig* till dina val:
 ```sh
 curl -d "column=din@email.se&value=hemlig" -X POST http://localhost:1337/register
 ```
@@ -68,13 +68,14 @@ curl -d "column=din@email.se&value=hemlig" -X POST http://localhost:1337/registe
 -   sedan `http://ditt.ip.n.r:8787/zones`
 -   Bestäm namn på zonerna
 -   Koppla aktiva relän till zonerna via `http://ip.nr:8787/rpio`
--   hämta spotpriser genom ett pythonscript
+-   hämta spotpriser genom följande pythonscript
 ```sh
 python3 /home/pi/bbbnode/public/scripts/spot/checkfile.py
 ```
+-   För att uppdatera temperaturerna och skapa en fil för timstyrning kör:
 -   `http://localhost:1337/tempupdate`
 -   `http://localhost:1337/hourcontrol`
--   öppna ny terminal:
+-   Men vi vill att detta sker automatiskt och det fixar vi med cron, skriv in följande kommando i en terminal:
 ```sh
 sudo crontab -l -u root |  cat /home/pi/bbbnode/scripts/cron.txt | sudo crontab -u root -
 ```
@@ -82,9 +83,10 @@ sudo crontab -l -u root |  cat /home/pi/bbbnode/scripts/cron.txt | sudo crontab 
 ```sh
 sudo lsof -i -P -n | grep LISTEN
 ```
--   för att släcka server-process och göra omstart:
+-   för att släcka server-process och därefter starta om node.js:
 ```sh
 sudo fuser -k 1337/tcp
+npm run production
 ```
 -   port forwarding...
 
