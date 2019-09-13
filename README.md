@@ -35,8 +35,8 @@ Mjukvaran för styrsystemet är byggt med Node.js, Express, React och Sqlite3.
 ```sh
 git clone https://github.com/guni12/bbbnode
 ```
--   Öppna `/home/pi/bbbnode/scripts/pass.txt` och ändra lösenordet till ditt eget val
--   Kopiera hela ovan kommando och kör det i en terminal
+-   Öppna filen `/home/pi/bbbnode/scripts/pass.txt` och ändra lösenordet till ditt eget val
+-   Därefter kopiera den ändrade raden (kommandot) och kör det i en terminal
 -   Kör sedan
 ```sh
 sudo sh /home/pi/bbbnode/scripts/install.sh
@@ -60,7 +60,7 @@ npm run production
 ```
 -   Skapa ditt användarkonto via terminalen, ändra *du@du.se* och *hemlig* till dina val:
 ```sh
-curl -d "column=du@du.se&value=hemlig" -X POST http://localhost:1337/register
+curl -d "column=din@email.se&value=hemlig" -X POST http://localhost:1337/register
 ```
 -   Installera sensorer:
 -   Gå in i webbläsaren med `http://localhost/find`
@@ -90,7 +90,7 @@ sudo fuser -k 1337/tcp
 
 -   för att läsa temperaturerna direkt
 ```sh
-sud npm install -g ds18b20-raspi
+sudo npm install -g ds18b20-raspi
 ds18b20 -a -d 2
 ```
 # API

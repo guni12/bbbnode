@@ -1,14 +1,12 @@
-module.exports = (function () {
-    function throwerror(type, stat, where, text) {
-        return {
-            type: type,
-            status: stat,
-            source: where,
-            message: text
-        };
-    }
-
+function throwerror(type, stat, where, text) {
     return {
-        throwerror: throwerror
+        type: type,
+        status: stat,
+        source: where,
+        message: text
     };
-}());
+}
+
+module.exports = {
+    throwerror: throwerror
+};

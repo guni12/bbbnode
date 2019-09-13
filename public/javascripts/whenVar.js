@@ -1,9 +1,7 @@
-module.exports = (function () {
-    function whenVar(obj) {
-        return obj.date + " " + obj.time;
-    }
+function whenVar(obj) {
+    return obj.date + " " + obj.time;
+}
 
-    return {
-        whenVar: whenVar
-    };
-}());
+module.exports = {
+    whenVar: whenVar
+};

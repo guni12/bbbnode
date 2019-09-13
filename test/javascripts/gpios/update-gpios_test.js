@@ -325,7 +325,7 @@ describe("Visit and update hourcontrols", function() {
             let params = {item: '', list: ''};
 
             try {
-                updl.updateList(req, res, spy, params);
+                await updl.updateList(req, res, spy, params);
             } catch (err) {
                 err.should.include(new TypeError("Cannot read property 'forEach' of null"));
             }
@@ -342,7 +342,12 @@ describe("Visit and update hourcontrols", function() {
             const spy = sinon.spy();
             const par = {"toupdate": 'gpio5' };
 
-            ul.updateList(req, spy, list, par);
+            try {
+                await ul.updateList(req, spy, list, par);
+            } catch (err) {
+                //err.should.include(new TypeError("Cannot read property 'forEach' of null"));
+                console.log(err);
+            }
 
             spy.called.should.be.false;
         }));
@@ -358,7 +363,7 @@ describe("Visit and update hourcontrols", function() {
             const spy = sinon.spy();
             const par = {"toupdate": 'gpio40', what: 'newlist' };
 
-            ul.updateList(req, spy, list, par);
+            await ul.updateList(req, spy, list, par);
             req.list[25].status.should.eql(1);
             req.list[25].gpio.should.eql(40);
             spy.called.should.be.false;
@@ -374,8 +379,7 @@ describe("Visit and update hourcontrols", function() {
             const spy = sinon.spy();
             const par = { what: 'newlist' };
 
-            ul.updateList(req, spy, list, par);
-            console.log(req);
+            await ul.updateList(req, spy, list, par);
             spy.called.should.be.true;
         }));
 
@@ -419,16 +423,26 @@ describe("Visit and update hourcontrols", function() {
         it("9. Make control when away", mochaAsync(async () => {
             const req = mockRequest(
                 {},
-                list,
+                JSON.stringify(data),
                 settings
             );
             const res = mockResponse();
             const spy = sinon.spy();
+            let options = {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit'
+            };
+
+            let d = new Date();
+
+            d.setDate(d.getDate() + 1);
+            let date = d.toLocaleDateString('sv-SE', options);
 
             req.settings.awayfrom = "2";
-            req.settings.awayto = "4";
+            req.settings.awayto = date;
 
-            cal.tocontrol(req, res, spy);
+            await cal.tocontrol(req, res, spy);
 
             spy.called.should.be.false;
         }));

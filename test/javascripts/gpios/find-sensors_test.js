@@ -252,7 +252,7 @@ describe("Find and store all sensors", function() {
             await swt.sensorsWithTime(req, res, spy);
 
             sensorStub.should.have.been.called;
-            req.printSwt.should.be.an("array");
+            req.content.should.be.an("array");
             spy.called.should.be.false;
             sensor.readAllC.restore();
         }));

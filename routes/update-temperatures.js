@@ -10,7 +10,7 @@ const ah = require('./asynchandler');
 router.get("/",
     ah.asyncHandler(async (req, res, next) => {
         await swt.sensorsWithTime(req, res, next);
-        if (req.printSwt) {
+        if (req.content) {
             await pf.printFile(req, res, next, params);
             await update.updateSensors(req, res, next);
             res.json(req.show);
