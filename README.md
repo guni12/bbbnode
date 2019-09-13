@@ -63,10 +63,10 @@ npm run production
 curl -d "column=din@email.se&value=hemlig" -X POST http://localhost:1337/register
 ```
 -   Installera sensorer:
--   Gå in i webbläsaren med `http://localhost/find`
--   sedan `http://localhost/init`
+-   Gå in i webbläsaren med `http://localhost:1337/find`
+-   sedan `http://localhost:1337/init`
 -   sedan `http://ditt.ip.n.r:8787/zones`
--   Bestäm namn på zonerna
+-   Ändra namn på zonerna (bara att skriva, sparas efter 1.5 sek)
 -   Koppla aktiva relän till zonerna via `http://ip.nr:8787/rpio`
 -   hämta spotpriser genom följande pythonscript
 ```sh
