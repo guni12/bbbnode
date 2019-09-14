@@ -2,8 +2,8 @@ const ugo = require('./upd-gpio-out');
 const ugi = require('./upd-gpio-in');
 
 async function update(req, res, next) {
-    let gpio = parseInt(req.body.gpio);
-    let stat = parseInt(req.body.status);
+    let gpio = parseInt(req.body.gpio, 10);
+    let stat = parseInt(req.body.status, 10);
     let mode = req.body.mode;
 
     try {

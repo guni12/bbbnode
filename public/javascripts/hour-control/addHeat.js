@@ -6,7 +6,7 @@ async function addHeat(temp, req, next) {
     let place, second, again;
 
     try {
-        checks = await cl.checkList(temp, next);
+        checks = await cl.checkList(temp);
 
         place = checks.indexOf(true);
         checks[place] = "Here";

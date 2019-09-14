@@ -5,21 +5,22 @@
 [![Coverage Status](https://coveralls.io/repos/github/guni12/bbbnode/badge.png?branch=master)](https://coveralls.io/github/guni12/bbbnode?branch=master) 
 [![Maintainability](https://api.codeclimate.com/v1/badges/d358e99378a19a9ec839/maintainability)](https://codeclimate.com/github/guni12/bbbnode/maintainability)
 
-# BehovsBoBoxen är ett styrsystem för smarta hem baserad på Raspberry Pi
+# BehovsBoBoxen
+### ett styrsystem för att spara energi (effekt) i hemmet, genom att balansera energitunga apparater, baserad på Raspberry Pi
 
 ![detta behöver du](http://www.behovsbo.se/themes/images/bbbmaterial.jpg)
 
-| Bom | Antal | Materiallista                     |
-| --- | ------|---------------------------------- |
-| 1   | 1     | Raspberry pi 3 modell B           |
-| 2   | 9     | ds18b20 (1-wire eller dallas)     |
-| 3   | 1     | micro SD kort, gärna minst 32GB   |
-| 4   | 1     | reläkort med 8 relän              |
-| 5   | 1     | 5V 2,1A USB laddare               |
-| 6   | 1     | kopplingsdäck                     |
-| 7   | 1     | knippe kopplingssladdar hane-hane |
-| 8   | 1     | knippe kopplingssladdar hona-hona |
-| 9   | 1     | Ethernetsladd                     |
+| Bom | Antal   | Materiallista                     |
+| --- | --------|---------------------------------- |
+| 1   | 1       | Raspberry pi 3 modell B           |
+| 2   | &#8805;2| ds18b20 (1-wire eller dallas)     |
+| 3   | 1       | micro SD kort, gärna minst 32GB   |
+| 4   | 1       | reläkort med 8 relän              |
+| 5   | 1       | 5V 2,1A USB laddare               |
+| 6   | 1       | kopplingsdäck                     |
+| 7   | 1       | knippe kopplingssladdar hane-hane |
+| 8   | 1       | knippe kopplingssladdar hona-hona |
+| 9   | 1       | Ethernetsladd                     |
 
 Mjukvaran för styrsystemet är byggt med Node.js, Express, React och Sqlite3.
 
@@ -58,7 +59,7 @@ sqlite3 texts.sqlite
 ```sh
 npm run production
 ```
--   Skapa ditt användarkonto via terminalen, ändra *din@email.se* och *hemlig* till dina val:
+-   Skapa ditt användarkonto via en ny terminal, ändra *din@email.se* och *hemlig* till dina val:
 ```sh
 curl -d "column=din@email.se&value=hemlig" -X POST http://localhost:1337/register
 ```
@@ -75,7 +76,7 @@ python3 /home/pi/bbbnode/public/scripts/spot/checkfile.py
 -   För att uppdatera temperaturerna och skapa en fil för timstyrning kör:
 -   `http://localhost:1337/tempupdate`
 -   `http://localhost:1337/hourcontrol`
--   Men vi vill att detta sker automatiskt och det fixar vi med cron, skriv in följande kommando i en terminal:
+-   Vi vill att detta sker automatiskt och det löser vi med cron, skriv in följande kommando i en terminal:
 ```sh
 sudo crontab -l -u root |  cat /home/pi/bbbnode/scripts/cron.txt | sudo crontab -u root -
 ```
@@ -89,13 +90,15 @@ sudo fuser -k 1337/tcp
 npm run production
 ```
 -   port forwarding...
-
--   för att läsa temperaturerna direkt
+-   för att läsa temperaturerna direkt installera
 ```sh
 sudo npm install -g ds18b20-raspi
+```
+-   och kör därefter
+```sh
 ds18b20 -a -d 2
 ```
-# API
+## API
 
 
 | Sökväg         | Uträttar                                              |

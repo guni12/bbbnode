@@ -2,7 +2,7 @@ const asyn = require('./sqliteAsync');
 const th = require('./throw');
 
 async function getOne(req, res, next, params) {
-    let id = params.table === "settings" ? 1 : parseInt(req.params.id);
+    let id = params.table === "settings" ? 1 : parseInt(req.params.id, 10);
     let sql = "SELECT * FROM " + params.table + " WHERE id = " + id + ";";
 
     await asyn.Async(sql, 'get')

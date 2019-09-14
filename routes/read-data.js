@@ -7,9 +7,7 @@ const ah = require('./asynchandler');
 
 router.get("/",
     ah.asyncHandler(async (req, res, next) => {
-        console.log(req.originalUrl);
-        params.where += req.originalUrl + '.txt';
-        console.log(where, params.where);
+        params.where = where + req.originalUrl + '.txt';
         await rf.getFile(req, res, next, params);
         res.status(200).json(JSON.parse(req.content));
     })

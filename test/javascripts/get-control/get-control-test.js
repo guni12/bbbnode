@@ -13,7 +13,7 @@ describe("Get todays control-values for each hour from file", function() {
     describe("GET /control", () => {
         it("1. 200 HAPPY PATH", (done) => {
             chai.request(server)
-                .get("/control")
+                .get("/controls")
                 .end((err, res) => {
                     //console.log(res.body);
                     res.should.have.status(200);

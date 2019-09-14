@@ -8,6 +8,7 @@ async function insert(req, res, next) {
     let nr = 1;
     let when = wv.whenVar(content[len]);
     let cols = "(sensorid, zone, gpio, away, dsm, tempis,";
+    let message = {"message": "Klart"};
 
     cols += " max, min, should, name, measured)";
     try {
@@ -19,7 +20,7 @@ async function insert(req, res, next) {
             await asyn.Async(sql, 'run');
             nr += 1;
         }
-        return {"message": "Klart"};
+        return message;
     } catch (err) {
         //console.log(err, "I insert-zones");
         next(err);

@@ -10,14 +10,12 @@ async function extractControls(req, res, next, isaway) {
     let percon = req.settings.percenton === 0 ? true : false;
     let params = { data: content, marker: marker, avg: avg, isaway: isaway, percon: percon };
 
-    console.log("I extractC före heat", content, avg);
     try {
         let temp = await makelist.hourList(req, res, next, params);
 
         await adh.addHeat(temp, req, next);
-        console.log("I extractC efter heat", temp);
     } catch (err) {
-        console.log("I extractC efter heat", err);
+        //console.log("I extractC efter heat", err);
         next(err);
     }
 }

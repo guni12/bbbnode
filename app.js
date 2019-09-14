@@ -20,8 +20,7 @@ const findSensorsRouter = require("./routes/find-sensors");
 const updateTempRouter = require("./routes/update-temperatures");
 const changeGpioRouter = require("./routes/update-gpio");
 const getGpiosRouter = require("./routes/get-gpios");
-const getTodayDataRouter = require("./routes/get-today");
-const getControlDataRouter = require("./routes/get-controls");
+const getReadDataRouter = require("./routes/read-data");
 const hourControlRouter = require("./routes/hour-control");
 const updateControls = require("./routes/control-update");
 
@@ -61,8 +60,8 @@ app.use('/tempupdate', updateTempRouter);
 app.use('/rpio', changeGpioRouter);
 app.use('/gpios', getGpiosRouter);
 app.use('/hourcontrol', hourControlRouter);
-app.use('/today', getTodayDataRouter);
-app.use('/control', getControlDataRouter);
+app.use('/today', getReadDataRouter);
+app.use('/controls', getReadDataRouter);
 app.use('/controlupdate', updateControls);
 
 // catch 404 and forward to error handler
