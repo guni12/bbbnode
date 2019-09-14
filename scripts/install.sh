@@ -32,9 +32,7 @@ sudo apt-get install lsof -y
 
 sudo apt-get install nginx -y
 
-sudo cp /home/pi/bbbnode/scripts/etc/nginx/sites-available/bbb /etc/nginx/sites-available/
 sudo cp /home/pi/bbbnode/scripts/etc/nginx/sites-available/react /etc/nginx/sites-available/
-sudo ln -s /etc/nginx/sites-available/bbb /etc/nginx/sites-enabled/bbb
 sudo ln -s /etc/nginx/sites-available/react /etc/nginx/sites-enabled/react
 
 #Gå in i /etc/apt/sources.list.d/raspi.list och avkommentera sista raden
@@ -49,6 +47,15 @@ sudo mkdir /var/www/react
 sudo cp -R /home/pi/bbbnode/scripts/var/www/react/html /var/www/react
 
 sudo nginx
+
+echo 'export JWT_SECRET="LååångtLösenord"' | sudo tee -a /home/pi/.profile > /dev/null
+
+sudo npm install –g pm2
+sudo npm install -g ds18b20-raspi
+
+sudo crontab -l -u root |  cat /home/pi/bbbnode/scripts/cron.txt | sudo crontab -u root -
+
+sudo python3 /home/pi/bbbnode/public/scripts/spot/checkfile.py
 
 echo "installation ok, the system will restart" | sudo tee -a /boot/config.txt
 sudo reboot

@@ -36,8 +36,7 @@ Mjukvaran för styrsystemet är byggt med Node.js, Express, React och Sqlite3.
 ```sh
 git clone https://github.com/guni12/bbbnode
 ```
--   Öppna filen `/home/pi/bbbnode/scripts/pass.txt` och ändra lösenordet till ditt eget val
--   Därefter kopiera den ändrade raden (kommandot) och kör det i en terminal
+-   Öppna filen `/home/pi/bbbnode/scripts/install.sh` och ändra *LååångtLösenord* till ditt eget val (ca rad 50)
 -   Kör sedan
 ```sh
 sudo sh /home/pi/bbbnode/scripts/install.sh

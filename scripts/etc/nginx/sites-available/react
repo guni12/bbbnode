@@ -2,10 +2,6 @@ server {
     listen 8787 default_server;
     listen [::]:8787 default_server;
 
-    #listen [::]:444 ssl;
-    #ssl_certificate      /etc/nginx/democert.pem;
-    #ssl_certificate_key  /etc/nginx/democert.key;
-
     server_name react;
 
     root /var/www/react/html;

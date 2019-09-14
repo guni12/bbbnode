@@ -94,3 +94,4 @@ withAuth.jsjs
 *.sqlite
 .coveralls.yml
 
+scripts/etc/nginx/sites-available/react_evok

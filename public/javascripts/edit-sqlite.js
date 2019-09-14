@@ -16,11 +16,11 @@ function update(req, res, next, par) {
                 let obj = reg.reterror(500, par.where, err.message);
 
                 return res.status(500).json(obj);
-            } else {
-                message.message = col + " updaterat med: " + val;
-                req.content = message;
-                next();
             }
+            message.message = col + " updaterat med: " + val;
+            req.content = message;
+            next();
+            return undefined;
         });
 }
 

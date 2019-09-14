@@ -9,7 +9,7 @@ const sd = './public/scripts/sensordetails.txt';
 const s = './public/scripts/sensors.txt';
 const params = { where: gpio, what: 'printPins' };
 const params1 = { where: s, what: 'printSensors' };
-const params2 = { where: sd, what: 'printSwt' };
+const params2 = { where: sd, what: 'content' };
 const ah = require('./asynchandler');
 
 router.get("/",
@@ -21,9 +21,9 @@ router.get("/",
             await pf.printFile(req, res, next, params1);
             await swt.sensorsWithTime(req, res, next);
 
-            if (req.printSwt) {
+            if (req.content) {
                 await pf.printFile(req, res, next, params2);
-                res.json(req.printSwt);
+                res.json(req.content);
             }
         }
     }),

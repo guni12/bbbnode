@@ -2,7 +2,7 @@ const fh = require('./fixHeat');
 const cl = require('./checkList');
 
 async function addHeat(temp, req, next) {
-    let checks, newtemp = [];
+    let checks;
     let place, second, again;
 
     try {
@@ -14,7 +14,8 @@ async function addHeat(temp, req, next) {
         again = checks.indexOf(true, second);
         checks[again] = "Here";
 
-        newtemp = await fh.fixHeat(checks, temp);
+        let newtemp = await fh.fixHeat(checks, temp);
+
         req.controls = newtemp[newtemp.length-1];
     } catch (err) {
         next(err);
