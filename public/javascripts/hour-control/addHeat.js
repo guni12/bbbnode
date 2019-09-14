@@ -14,7 +14,7 @@ async function addHeat(temp, req, next) {
         again = checks.indexOf(true, second);
         checks[again] = "Here";
 
-        newtemp = await fh.fixHeat(checks, temp, next);
+        newtemp = await fh.fixHeat(checks, temp);
         req.controls = newtemp[newtemp.length-1];
     } catch (err) {
         next(err);

@@ -2,19 +2,15 @@ const rpio = require('rpio');
 const th = require('../throw');
 
 async function updIn(req, res, next, obj) {
-    try {
-        let stat = contactRpio(obj);
+    let stat = contactRpio(obj);
 
-        if (stat) {
-            req.updated = { gpio: obj.gpio, status: stat, mode: obj.mode };
-        } else {
-            let text = "Gpio pinne kunde ej kontaktas";
-            let obj = th.throwerror("Error", 500, "/upd-gpio-in", text);
+    if (stat) {
+        req.updated = { gpio: obj.gpio, status: stat, mode: obj.mode };
+    } else {
+        let text = "Gpio pinne kunde ej kontaktas";
+        let obj = th.throwerror("Error", 500, "/upd-gpio-in", text);
 
-            throw { obj, error: new Error() };
-        }
-    } catch (err) {
-        next(err);
+        throw { obj, error: new Error() };
     }
 }
 

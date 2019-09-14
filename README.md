@@ -6,21 +6,21 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/d358e99378a19a9ec839/maintainability)](https://codeclimate.com/github/guni12/bbbnode/maintainability)
 
 # BehovsBoBoxen
-### ett styrsystem för att spara energi (effekt) i hemmet, genom att balansera energitunga apparater, baserad på Raspberry Pi
+## Ett styrsystem för att spara energi (effekt) i hemmet
 
 ![detta behöver du](http://www.behovsbo.se/themes/images/bbbmaterial.jpg)
 
-| Bom | Antal   | Materiallista                     |
-| --- | --------|---------------------------------- |
-| 1   | 1       | Raspberry pi 3 modell B           |
-| 2   | &#8805;2| ds18b20 (1-wire eller dallas)     |
-| 3   | 1       | micro SD kort, gärna minst 32GB   |
-| 4   | 1       | reläkort med 8 relän              |
-| 5   | 1       | 5V 2,1A USB laddare               |
-| 6   | 1       | kopplingsdäck                     |
-| 7   | 1       | knippe kopplingssladdar hane-hane |
-| 8   | 1       | knippe kopplingssladdar hona-hona |
-| 9   | 1       | Ethernetsladd                     |
+| Bom | Antal    | Materiallista                     |
+| --- | ---------|---------------------------------- |
+| 1   | 1        | Raspberry pi 3 modell B           |
+| 2   | &#8805;2 | ds18b20 (1-wire eller dallas)     |
+| 3   | 1        | micro SD kort, gärna minst 32GB   |
+| 4   | 1        | reläkort med 8 relän              |
+| 5   | 1        | 5V 2,1A USB laddare               |
+| 6   | 1        | kopplingsdäck                     |
+| 7   | 1        | knippe kopplingssladdar hane-hane |
+| 8   | 1        | knippe kopplingssladdar hona-hona |
+| 9   | 1        | Ethernetsladd                     |
 
 Mjukvaran för styrsystemet är byggt med Node.js, Express, React och Sqlite3.
 
@@ -113,7 +113,7 @@ ds18b20 -a -d 2
 | /zones         | Visar info om zonerna                                 |
 | /zones/id(int) | Visar info om zon (id)                                |
 | /controlupdate | Räknar ut styrning enligt spotpris                    |
-| /control       | Visar kontroll-inställningarna                        |
+| /controls      | Visar kontroll-inställningarna                        |
 | /hourcontrol   | Ställer in styrning, inställd att köras var 10e minut |
 | /tempupdate    | Läser av gpio-sensorerna och uppdaterar zonerna       |
 | (POST)         |                                                       |
