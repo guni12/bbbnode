@@ -49,6 +49,7 @@ sudo cp -R /home/pi/bbbnode/scripts/var/www/react/html /var/www/react
 sudo nginx
 
 echo 'export JWT_SECRET="LååångtLösenord"' | sudo tee -a /home/pi/.profile > /dev/null
+#curl -d "column=din@email.se&value=hemlig" -X POST http://localhost:1337/register
 
 sudo npm install –g pm2
 sudo env PATH=$PATH:/usr/local/bin /usr/local/lib/node_modules/pm2/bin/pm2 startup systemd -u pi --hp /home/pi

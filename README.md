@@ -37,11 +37,11 @@ Mjukvaran för styrsystemet är byggt med Node.js, Express, React och Sqlite3.
 git clone https://github.com/guni12/bbbnode
 ```
 -   Öppna filen `/home/pi/bbbnode/scripts/install.sh` och ändra *LååångtLösenord* till ditt eget val (ca rad 50)
--   Kör sedan
+-   Öppna en treminal och kör:
 ```sh
 sudo sh /home/pi/bbbnode/scripts/install.sh
 ```
--   Efter reboot gå till boxens katalog:
+-   Efter reboot gå till bbbnode katalogen:
 -   `cd bbbnode`
 -   Kör följande kommandon:
 
@@ -52,7 +52,7 @@ sqlite3 texts.sqlite
 .read migrate.sql
 .exit
 ```
--   Gå tillbaka:
+-   Gå tillbaka till bbbnode:
 -   `cd ..`
 -   Öppna en terminal och kör igång servern (den ska alltid rulla):
 ```sh
@@ -62,17 +62,17 @@ npm run production
 ```sh
 curl -d "column=din@email.se&value=hemlig" -X POST http://localhost:1337/register
 ```
--   Installera sensorer:
+-   Installera sensorer, mer info följer om detta...
+-   När det finns installerade sensorer:
 -   Gå in i webbläsaren med `http://localhost:1337/find`
 -   sedan `http://localhost:1337/init`
--   sedan `http://ditt.ip.n.r:8787/zones`
--   Ändra namn på zonerna (bara att skriva, sparas efter 1.5 sek)
--   Koppla aktiva relän till zonerna via `http://ip.nr:8787/rpio`
--   hämta spotpriser genom följande pythonscript
+-   hämta spotpriser genom följande pythonscript (via en terminal)
 ```sh
 sudo python3 /home/pi/bbbnode/public/scripts/spot/checkfile.py
+sudo python3 /home/pi/bbbnode/public/scripts/spot/movefiles.py
 ```
--   För att uppdatera temperaturerna och skapa en fil för timstyrning kör:
+-   Kör följande kommandon:
+-   `http://localhost:1337/spotcal`
 -   `http://localhost:1337/tempupdate`
 -   `http://localhost:1337/controlupdate`
 -   `http://localhost:1337/hourcontrol`
@@ -80,18 +80,24 @@ sudo python3 /home/pi/bbbnode/public/scripts/spot/checkfile.py
 ```sh
 sudo crontab -l
 ```
+-   Gå till hemsidan `http://ditt.ip.n.r:8787`
+-   Klicka på fliken 'Zoner'
+-   Ändra namn på zonerna (bara att skriva, sparas efter 1.5 sek)
+-   Klicka på filen 'Rpio'
+-   Koppla aktiva relän till respektive zon, via dropdown-listan
 
--   om du vill se vilka processer som är aktiva:
+
+-   Om du vill se vilka processer som är aktiva och lyssnar till viss port:
 ```sh
 sudo lsof -i -P -n | grep LISTEN
 ```
--   för att släcka server-process och därefter starta om node.js:
+-   För att släcka server-process med porten 1337 och därefter starta om node.js:
 ```sh
 sudo fuser -k 1337/tcp
 npm run production
 ```
 -   port forwarding...
--   för att läsa temperaturerna direkt kör i terminalen:
+-   För att läsa temperaturerna direkt i terminalen:
 ```sh
 ds18b20 -a -d 2
 ```
