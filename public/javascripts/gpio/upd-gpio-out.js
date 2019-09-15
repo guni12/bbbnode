@@ -3,7 +3,9 @@ const th = require('../throw');
 
 function updOut(req, res, next, obj) {
     try {
-        if (contactRpio(obj)) {
+        let stat = contactRpio(obj);
+
+        if (stat) {
             req.updated = { gpio: obj.gpio, status: contactRpio(obj), mode: obj.mode };
         } else {
             let text = "Gpio pinne kunde ej kontaktas";

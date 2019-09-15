@@ -70,15 +70,17 @@ curl -d "column=din@email.se&value=hemlig" -X POST http://localhost:1337/registe
 -   Koppla aktiva relän till zonerna via `http://ip.nr:8787/rpio`
 -   hämta spotpriser genom följande pythonscript
 ```sh
-python3 /home/pi/bbbnode/public/scripts/spot/checkfile.py
+sudo python3 /home/pi/bbbnode/public/scripts/spot/checkfile.py
 ```
 -   För att uppdatera temperaturerna och skapa en fil för timstyrning kör:
 -   `http://localhost:1337/tempupdate`
+-   `http://localhost:1337/controlupdate`
 -   `http://localhost:1337/hourcontrol`
--   Vi vill att detta sker automatiskt och det löser vi med cron, skriv in följande kommando i en terminal:
+-   Detta sker automatiskt också med hjälp av crontab, se:
 ```sh
-sudo crontab -l -u root |  cat /home/pi/bbbnode/scripts/cron.txt | sudo crontab -u root -
+sudo crontab -l
 ```
+
 -   om du vill se vilka processer som är aktiva:
 ```sh
 sudo lsof -i -P -n | grep LISTEN
@@ -89,11 +91,7 @@ sudo fuser -k 1337/tcp
 npm run production
 ```
 -   port forwarding...
--   för att läsa temperaturerna direkt installera
-```sh
-sudo npm install -g ds18b20-raspi
-```
--   och kör därefter
+-   för att läsa temperaturerna direkt kör i terminalen:
 ```sh
 ds18b20 -a -d 2
 ```
