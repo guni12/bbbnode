@@ -44,7 +44,7 @@ git clone https://github.com/guni12/bbbnode
 sudo sh /home/pi/bbbnode/scripts/install.sh
 ```
 -   När det finns installerade sensorer:
--   Gå till hemsidan `http://ditt.ip.n.r:8787`
+-   Gå till hemsidan `http://ditt.ip.n.r`
 -   Klicka på fliken 'Zoner'
 -   Ändra namn på zonerna (bara att skriva, sparas efter 1.5 sek)
 -   Klicka på filen 'Rpio'
