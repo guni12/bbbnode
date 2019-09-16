@@ -58,7 +58,7 @@ describe("Visit and get zones", function() {
             chai.request(server)
                 .get("/init")
                 .end((err, res) => {
-                    //console.log("res.body", res.body);
+                    console.log("res.body", res.body);
                     res.should.have.status(200);
                     res.body.should.be.an("object");
                     res.body.should.have.property("message");
@@ -73,8 +73,8 @@ describe("Visit and get zones", function() {
             chai.request(server)
                 .get("/zones")
                 .end((err, res) => {
-                    //console.log("5. res.body", res.body);
-                    //console.log("One", res.body[0]);
+                    console.log("5. res.body", res.body);
+                    console.log("One", res.body[0]);
 
                     res.should.have.status(200);
                     res.body.should.be.an("array");

@@ -1,5 +1,5 @@
 const asyn = require('./sqliteAsync');
-const th = require('./throw');
+const th = require('../throw');
 
 async function getOne(req, res, next, params) {
     let id = params.table === "settings" ? 1 : parseInt(req.params.id, 10);

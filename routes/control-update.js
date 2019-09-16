@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const settings = require('../public/javascripts/getOneRow.js');
+const settings = require('../public/javascripts/db/getOneRow.js');
 const rf = require('../public/javascripts/readFile.js');
 const where = './public/scripts/today.txt';
 const spotParams = { where: where, what: 'content' };

@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const zones = require('../public/javascripts/all-tables.js');
+const zones = require('../public/javascripts/db/all-tables.js');
 const ah = require('./asynchandler');
 const zonesParams = {table: "zones", what: 'zones'};
 

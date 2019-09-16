@@ -1,5 +1,5 @@
-const db = require('../../db/database.js');
-const th = require('./throw');
+const db = require('../../../db/database.js');
+const th = require('../throw');
 
 async function Async(sql, how) {//console.log("Är i allAsync");
     return new Promise(function (resolve, reject) {

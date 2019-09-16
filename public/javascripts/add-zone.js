@@ -1,4 +1,4 @@
-const asyn = require('./sqliteAsync');
+const asyn = require('./db/sqliteAsync');
 
 async function insert(req, res, next) {
     let params = JSON.parse(req.body.value);

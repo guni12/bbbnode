@@ -1,5 +1,5 @@
 const wv = require('./whenVar');
-const asyn = require('./sqliteAsync');
+const asyn = require('./db/sqliteAsync');
 
 async function updateSensors(req, res, next) {
     let len = req.content.length;

@@ -1,6 +1,6 @@
 const par = require('./zone-params');
 const wv = require('./whenVar');
-const asyn = require('./sqliteAsync');
+const asyn = require('./db/sqliteAsync');
 
 async function insert(req, res, next) {
     let content = JSON.parse(req.content);

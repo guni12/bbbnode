@@ -96,4 +96,3 @@ withAuth.jsjs
 
 scripts/etc/nginx/sites-available/react_evok
 scripts/etc/nginx/sites-available/react_old
-save/

@@ -1,6 +1,6 @@
-const reg = require('./status');
-const db = require('../../db/database');
-const exv = require('./extractValue');
+const reg = require('../status');
+const db = require('../../../db/database');
+const exv = require('../extractValue');
 
 function update(req, res, next, par) {
     let col = req.body.column;
