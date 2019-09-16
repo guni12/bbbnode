@@ -32,54 +32,18 @@ Mjukvaran för styrsystemet är byggt med Node.js, Express, React och Sqlite3.
 -   Byt lösenord!!!
 -   Aktivera 1-Wire
 -   Aktivera spi
+-   Installera sensorer, mer info följer om detta...
 -   Hämta BehovsBoBoxen med:
 ```sh
 git clone https://github.com/guni12/bbbnode
 ```
--   Öppna filen `/home/pi/bbbnode/scripts/install.sh` och ändra *LååångtLösenord* till ditt eget val (ca rad 50)
--   Öppna en treminal och kör:
+-   Öppna filen `/home/pi/bbbnode/scripts/install.sh` och ändra *LååångtLösenord* till ditt eget val (rad 75)
+-   Ändra också *din@email.se* och *hemlig* till dina val (rad 88)
+-   Öppna en terminal och kör följande kommando - (det kan ta en stund, sqlite ger många varningar, men fungerar):
 ```sh
 sudo sh /home/pi/bbbnode/scripts/install.sh
 ```
--   Efter reboot gå till bbbnode katalogen:
--   `cd bbbnode`
--   Kör följande kommandon:
-
-```sh
-npm install
-cd db
-sqlite3 texts.sqlite
-.read migrate.sql
-.exit
-```
--   Gå tillbaka till bbbnode:
--   `cd ..`
--   Öppna en terminal och kör igång servern (den ska alltid rulla):
-```sh
-npm run production
-```
--   Skapa ditt användarkonto via en ny terminal, ändra *din@email.se* och *hemlig* till dina val:
-```sh
-curl -d "column=din@email.se&value=hemlig" -X POST http://localhost:1337/register
-```
--   Installera sensorer, mer info följer om detta...
 -   När det finns installerade sensorer:
--   Gå in i webbläsaren med `http://localhost:1337/find`
--   sedan `http://localhost:1337/init`
--   hämta spotpriser genom följande pythonscript (via en terminal)
-```sh
-sudo python3 /home/pi/bbbnode/public/scripts/spot/checkfile.py
-sudo python3 /home/pi/bbbnode/public/scripts/spot/movefiles.py
-```
--   Kör följande kommandon:
--   `http://localhost:1337/spotcal`
--   `http://localhost:1337/tempupdate`
--   `http://localhost:1337/controlupdate`
--   `http://localhost:1337/hourcontrol`
--   Detta sker automatiskt också med hjälp av crontab, se:
-```sh
-sudo crontab -l
-```
 -   Gå till hemsidan `http://ditt.ip.n.r:8787`
 -   Klicka på fliken 'Zoner'
 -   Ändra namn på zonerna (bara att skriva, sparas efter 1.5 sek)

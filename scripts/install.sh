@@ -1,11 +1,7 @@
 #!/bin/sh
-#2019-07-22
+#2019-09-16
 
-# Enable ssh
-# Andra configurationer som tangentbord etc
-# Byt lösenord!!!
-# Enable 1-Wire
-# Enable spi
+sudo sed -i '/deb-src/s/^#//g' /etc/apt/sources.list.d/raspi.list
 
 sudo apt-get update -y
 #gets Raspian updates
@@ -14,28 +10,56 @@ sudo apt-get dist-upgrade -y
 #installs Raspian updates
 
 curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
-# downloads newest version Node.js (kolla på nodejs.org - vi kan inte ha senaste pga dependencies)
-
-sudo apt-get install -y nodejs
-# installs it
+sudo apt-get install -y nodejs nginx build-essential g++ node-gyp
 
 sudo apt-get install unattended-upgrades -y
 
 sudo apt-get install sqlite3 -y
 sudo apt-get install libsqlite3-dev
 
-sudo apt install build-essential -y
+sqlite3 -batch texts.sqlite "DROP TABLE IF EXISTS users;"
+sqlite3 -batch texts.sqlite "DROP TABLE IF EXISTS settings;"
+sqlite3 -batch texts.sqlite "DROP TABLE IF EXISTS zones;"
+sqlite3 -batch texts.sqlite "CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY,
+    email VARCHAR(255) NOT NULL,
+    password VARCHAR(60) NOT NULL,
+    UNIQUE(email)
+);"
+sqlite3 -batch texts.sqlite "CREATE TABLE IF NOT EXISTS settings (
+    id INTEGER PRIMARY KEY,
+    area VARCHAR(20) NOT NULL,
+    currency VARCHAR(20)NOT NULL,
+    dsmon INTEGER NOT NULL,
+    percenton INTEGER NOT NULL,
+    percent INTEGER NOT NULL,
+    awayfrom DATETIME,
+    awayto DATETIME
+);"
+sqlite3 -batch texts.sqlite "CREATE TABLE IF NOT EXISTS zones (
+    id INTEGER PRIMARY KEY,
+    sensorid VARCHAR(50) NOT NULL,
+    zone VARCHAR(30) NOT NULL,
+    gpio INTEGER,
+    away INTEGER,
+    dsm INTEGER,
+    tempis REAL,
+    isoff INTEGER,
+    ison INTEGER,
+    max INTEGER,
+    min INTEGER,
+    should INTEGER,
+    name VARCHAR(50),
+    measured VARCHAR(50)
+);"
 
-#Fixa att läsa in migrate
+sqlite3 -batch texts.sqlite "INSERT INTO settings(area,currency,percent,dsmon,percenton) VALUES('SE1', 'SEK', 2, 0, 1);"
 
 sudo apt-get install lsof -y
-
-sudo apt-get install nginx -y
 
 sudo cp /home/pi/bbbnode/scripts/etc/nginx/sites-available/react /etc/nginx/sites-available/
 sudo ln -s /etc/nginx/sites-available/react /etc/nginx/sites-enabled/react
 
-#Gå in i /etc/apt/sources.list.d/raspi.list och avkommentera sista raden
 sudo apt-get install gcc-4.8 -y
 
 echo 'SUBSYSTEM=="bcm2835-gpiomem", KERNEL=="gpiomem", GROUP="gpio", MODE="0660"' | sudo tee -a /etc/udev/rules.d/20-gpiomem.rules > /dev/null
@@ -49,18 +73,26 @@ sudo cp -R /home/pi/bbbnode/scripts/var/www/react/html /var/www/react
 sudo nginx
 
 echo 'export JWT_SECRET="LååångtLösenord"' | sudo tee -a /home/pi/.profile > /dev/null
-#curl -d "column=din@email.se&value=hemlig" -X POST http://localhost:1337/register
-
-sudo npm install –g pm2
-sudo env PATH=$PATH:/usr/local/bin /usr/local/lib/node_modules/pm2/bin/pm2 startup systemd -u pi --hp /home/pi
-sudo npm install -g ds18b20-raspi
 
 sudo crontab -l -u root |  cat /home/pi/bbbnode/scripts/cron.txt | sudo crontab -u root -
 
 sudo python3 /home/pi/bbbnode/public/scripts/spot/checkfile.py
+sudo python3 /home/pi/bbbnode/public/scripts/spot/movefiles.py
+
+npm install –g pm2
+sudo env PATH=$PATH:/usr/local/bin /usr/local/lib/node_modules/pm2/bin/pm2 startup systemd -u pi --hp /home/pi
+npm install -g ds18b20-raspi
+cd /home/pi/bbbnode
+npm install
+pm2 start app.js --name="bbbnode"
+
+curl -d "column=din@email.se&value=hemlig" -X POST http://localhost:1337/register
+curl http://localhost:1337/find
+curl http://localhost:1337/init
+curl http://localhost:1337/spotcal
+curl http://localhost:1337/tempupdate
+curl http://localhost:1337/controlupdate
+curl http://localhost:1337/hourcontrol
 
 echo "installation ok, the system will restart" | sudo tee -a /boot/config.txt
 sudo reboot
-
-# läs sqlite cd db ...
-# Uppdatera cron vid reboot ?
