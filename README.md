@@ -41,12 +41,13 @@ git clone https://github.com/guni12/bbbnode
 -   Ändra också *din@email.se* och *hemlig* till dina val (rad 88)
 -   Öppna en terminal och kör följande kommando - (det kan ta en stund, sqlite ger många varningar, men fungerar):
 ```sh
-sudo sh /home/pi/bbbnode/scripts/install.sh
+sh /home/pi/bbbnode/scripts/install.sh
 ```
 -   När det finns installerade sensorer:
--   Gå till hemsidan `http://ditt.ip.n.r`
+-   Gå till hemsidan `http://ditt.ip.n.r:8787`
+-   Logga in med ditt nyskapade användarkonto (bara att skriva, sparas efter 1.5 sek)
 -   Klicka på fliken 'Zoner'
--   Ändra namn på zonerna (bara att skriva, sparas efter 1.5 sek)
+-   Ändra namn på zonerna
 -   Klicka på filen 'Rpio'
 -   Koppla aktiva relän till respektive zon, via dropdown-listan
 

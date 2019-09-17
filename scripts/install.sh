@@ -79,12 +79,15 @@ sudo crontab -l -u root |  cat /home/pi/bbbnode/scripts/cron.txt | sudo crontab 
 sudo python3 /home/pi/bbbnode/public/scripts/spot/checkfile.py
 sudo python3 /home/pi/bbbnode/public/scripts/spot/movefiles.py
 
-npm install –g pm2
-sudo env PATH=$PATH:/usr/local/bin /usr/local/lib/node_modules/pm2/bin/pm2 startup systemd -u pi --hp /home/pi
-npm install -g ds18b20-raspi
+npm install ds18b20-raspi -g
 cd /home/pi/bbbnode
+npm install node-pre-gyp -g
+npm install node-gyp -g
+npm install pm2 -g
+sudo env PATH=$PATH:/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u pi --hp /home/pi
+npm install sqlite3 --build-from-source
 npm install
-pm2 start app.js --name="bbbnode"
+pm2 start npm -- start
 
 curl -d "column=din@email.se&value=hemlig" -X POST http://localhost:1337/register
 curl http://localhost:1337/find
