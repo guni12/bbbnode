@@ -43,21 +43,19 @@ git clone https://github.com/guni12/bbbnode
 ```sh
 sh /home/pi/bbbnode/scripts/install.sh
 ```
--   När det finns installerade sensorer:
--   Gå till hemsidan `http://ditt.ip.n.r:8787`
--   Logga in med ditt nyskapade användarkonto (bara att skriva, sparas efter 1.5 sek)
--   Klicka på fliken 'Zoner'
--   Ändra namn på zonerna
--   Klicka på filen 'Rpio'
--   Koppla aktiva relän till respektive zon, via dropdown-listan
+När det finns installerade sensorer, gå till hemsidan `http://ditt.ip.n.r:8787` och logga in med ditt nyskapade användarkonto (bara att skriva, sparas efter 1.5 sek)
 
--   port forwarding...
--   För att läsa temperaturerna direkt i terminalen:
+Du landar då på sidan *Zoner* där du ändrar namn på zonerna.
+
+Därefter ska du binda aktiva relän till respektive zon. Gå till sidan *Rpio*och välj en zon till aktuell gpio-pinne genom dropdown-listan.
+
+Om du vill såkan du göra en port forwarding...
+
+För att läsa temperaturerna direkt i terminalen, skriv:
 ```sh
 ds18b20 -a -d 2
 ```
 ## API
-
 
 | Sökväg         | Uträttar                                              |
 |----------------|-------------------------------------------------------|
