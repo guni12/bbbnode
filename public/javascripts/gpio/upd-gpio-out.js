@@ -5,7 +5,7 @@ function updOut(req, res, next, obj) {
     try {
         let stat = contactRpio(obj);
 
-        if (stat) {
+        if (stat || stat > -1) {
             req.updated = { gpio: obj.gpio, status: contactRpio(obj), mode: obj.mode };
         } else {
             let text = "Gpio pinne kunde ej kontaktas";
