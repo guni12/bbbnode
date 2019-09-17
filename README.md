@@ -1,15 +1,12 @@
+# BehovsBoBoxen
 [![Build Status](https://travis-ci.org/guni12/bbbnode.svg?branch=master)](https://travis-ci.org/guni12/bbbnode) 
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/guni12/bbbnode/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/guni12/bbbnode/?branch=master) 
 [![Build Status](https://scrutinizer-ci.com/g/guni12/bbbnode/badges/build.png?b=master)](https://scrutinizer-ci.com/g/guni12/bbbnode/build-status/master) 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/b293df61900a45f5afae54b63d759876)](https://www.codacy.com/app/guni12/bbbnode?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=guni12/bbbnode&amp;utm_campaign=Badge_Grade) 
 [![Coverage Status](https://coveralls.io/repos/github/guni12/bbbnode/badge.png?branch=master)](https://coveralls.io/github/guni12/bbbnode?branch=master) 
 [![Maintainability](https://api.codeclimate.com/v1/badges/d358e99378a19a9ec839/maintainability)](https://codeclimate.com/github/guni12/bbbnode/maintainability)
-
-# BehovsBoBoxen
-## Ett styrsystem för att spara energi (effekt) i hemmet
-
 ![detta behöver du](http://www.behovsbo.se/themes/images/bbbmaterial.jpg)
-
+## Styr effekt i hemmet
 | Bom | Antal    | Materiallista                     |
 | --- | ---------|---------------------------------- |
 | 1   | 1        | Raspberry pi 3 modell B           |
@@ -26,20 +23,20 @@ Mjukvaran för styrsystemet är byggt med Node.js, Express, React och Sqlite3.
 
 ## Gör så här
 
--   Konfigurera sd-kortet, installera raspbian och konfigurera till svenska förhållanden.
--   `https://www.raspberrypi.org/documentation/installation/noobs.md`
--   Aktivera ssh.
--   Byt lösenord!!!
--   Aktivera 1-Wire
--   Aktivera spi
--   Installera sensorer, mer info följer om detta...
--   Hämta BehovsBoBoxen med:
+Konfigurera sd-kortet, installera raspbian och konfigurera till svenska förhållanden.  
+`https://www.raspberrypi.org/documentation/installation/noobs.md`  
+Aktivera ssh.  
+Byt lösenord!!!  
+Aktivera 1-Wire  
+Aktivera spi  
+Installera sensorer, mer info följer om detta...  
+Hämta BehovsBoBoxen med:  
 ```sh
 git clone https://github.com/guni12/bbbnode
 ```
--   Öppna filen `/home/pi/bbbnode/scripts/install.sh` och ändra *LååångtLösenord* till ditt eget val (rad 75)
--   Ändra också *din@email.se* och *hemlig* till dina val (rad 88)
--   Öppna en terminal och kör följande kommando - (det kan ta en stund, sqlite ger många varningar, men fungerar):
+Öppna filen `/home/pi/bbbnode/scripts/install.sh` och ändra *LååångtLösenord* till ditt eget val (rad 76)  
+Ändra också *din@email.se* och *hemlig* till dina val (rad 95)  
+Öppna en terminal och kör följande kommando - (det kan ta en stund, sqlite ger många varningar, men fungerar):  
 ```sh
 sh /home/pi/bbbnode/scripts/install.sh
 ```
@@ -47,14 +44,13 @@ När det finns installerade sensorer, gå till hemsidan `http://ditt.ip.n.r:8787
 
 Du landar då på sidan *Zoner* där du ändrar namn på zonerna.
 
-Därefter ska du binda aktiva relän till respektive zon. Gå till sidan *Rpio*och välj en zon till aktuell gpio-pinne genom dropdown-listan.
-
-Om du vill såkan du göra en port forwarding...
+Därefter ska du binda aktiva relän till respektive zon. Gå till sidan *Rpio* och välj en zon till aktuell gpio-pinne genom dropdown-listan.
 
 För att läsa temperaturerna direkt i terminalen, skriv:
 ```sh
 ds18b20 -a -d 2
 ```
+Port forwarding beskrivning...
 ## API
 
 | Sökväg         | Uträttar                                              |
