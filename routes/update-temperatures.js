@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const swt = require('../public/javascripts/sensorsWithTime');
+const swt = require('../public/javascripts/sensors/sensorsWithTime');
 const pf = require('../public/javascripts/printFile.js');
-const update = require('../public/javascripts/updateSensors.js');
+const update = require('../public/javascripts/sensors/updateSensors.js');
 const where = './public/scripts/sensordetails.txt';
 const params = { where: where, what: 'content' };
 const ah = require('./asynchandler');

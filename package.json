@@ -45,7 +45,7 @@
     "clean": "rm -rf npm-debug.log coverage .nyc_output",
     "eslint": "eslint .",
     "startall": "concurrently \"npm run dev\" \"npm run client\"",
-    "start": "node app.js"
+    "start": "npm run production"
   },
   "keywords": [],
   "author": "",

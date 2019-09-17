@@ -1,11 +1,10 @@
-const db = require('../../db/database.js');
-const reg = require('./status.js');
+const db = require('../../../db/database.js');
+const reg = require('../status.js');
 const saltRounds = 10;
 
 function hashbcrypt(req, res) {
     const bcrypt = require('bcrypt');
 
-    //bcrypt.hash(req.body.password, saltRounds, function(err, hash) {
     bcrypt.hash(req.body.value, saltRounds, function(err, hash) {
         if (err) {
             let obj = reg.reterror(500, "/register", "bcrypt error");

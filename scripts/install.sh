@@ -10,12 +10,16 @@ sudo apt-get dist-upgrade -y
 #installs Raspian updates
 
 curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
-sudo apt-get install -y nodejs nginx build-essential g++ node-gyp
+sudo apt-get install -y nodejs nginx build-essential g++
 
 sudo apt-get install unattended-upgrades -y
 
 sudo apt-get install sqlite3 -y
 sudo apt-get install libsqlite3-dev
+sudo apt-get install lsof -y
+sudo apt-get install gcc-4.8 -y
+
+cd /home/pi/bbbnode/db
 
 sqlite3 -batch texts.sqlite "DROP TABLE IF EXISTS users;"
 sqlite3 -batch texts.sqlite "DROP TABLE IF EXISTS settings;"
@@ -55,20 +59,17 @@ sqlite3 -batch texts.sqlite "CREATE TABLE IF NOT EXISTS zones (
 
 sqlite3 -batch texts.sqlite "INSERT INTO settings(area,currency,percent,dsmon,percenton) VALUES('SE1', 'SEK', 2, 0, 1);"
 
-sudo apt-get install lsof -y
-
 sudo cp /home/pi/bbbnode/scripts/etc/nginx/sites-available/react /etc/nginx/sites-available/
 sudo ln -s /etc/nginx/sites-available/react /etc/nginx/sites-enabled/react
-
-sudo apt-get install gcc-4.8 -y
 
 echo 'SUBSYSTEM=="bcm2835-gpiomem", KERNEL=="gpiomem", GROUP="gpio", MODE="0660"' | sudo tee -a /etc/udev/rules.d/20-gpiomem.rules > /dev/null
 
 grep -q -F "dtoverlay=w1-gpio,gpiopin=4" /boot/config.txt || sudo bash -c "echo 'dtoverlay=w1-gpio,gpiopin=4' >> /boot/config.txt"
-sudo chown -R pi:www-data /var/www
+
 
 sudo mkdir /var/www/react
 sudo cp -R /home/pi/bbbnode/scripts/var/www/react/html /var/www/react
+sudo chown -R pi:www-data /var/www/react
 
 sudo nginx
 
@@ -76,16 +77,18 @@ echo 'export JWT_SECRET="LååångtLösenord"' | sudo tee -a /home/pi/.profile >
 
 sudo crontab -l -u root |  cat /home/pi/bbbnode/scripts/cron.txt | sudo crontab -u root -
 
+cd /home/pi/bbbnode
 sudo python3 /home/pi/bbbnode/public/scripts/spot/checkfile.py
 sudo python3 /home/pi/bbbnode/public/scripts/spot/movefiles.py
 
-npm install ds18b20-raspi -g
-cd /home/pi/bbbnode
-npm install node-pre-gyp -g
-npm install node-gyp -g
-npm install pm2 -g
+sudo npm install ds18b20-raspi -g
+sudo npm install node-pre-gyp -g
+sudo npm install node-gyp -g
+sudo npm install pm2 -g
 sudo env PATH=$PATH:/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u pi --hp /home/pi
 npm install sqlite3 --build-from-source
+npm install bcrypt
+npm install rpio
 npm install
 pm2 start npm -- start
 

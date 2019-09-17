@@ -51,16 +51,6 @@ sh /home/pi/bbbnode/scripts/install.sh
 -   Klicka på filen 'Rpio'
 -   Koppla aktiva relän till respektive zon, via dropdown-listan
 
-
--   Om du vill se vilka processer som är aktiva och lyssnar till viss port:
-```sh
-sudo lsof -i -P -n | grep LISTEN
-```
--   För att släcka server-process med porten 1337 och därefter starta om node.js:
-```sh
-sudo fuser -k 1337/tcp
-npm run production
-```
 -   port forwarding...
 -   För att läsa temperaturerna direkt i terminalen:
 ```sh

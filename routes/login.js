@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 
-const login = require('../public/javascripts/login.js');
+const login = require('../public/javascripts/login/login.js');
 const prep = require('../public/javascripts/prepare.js');
-const email = require('../public/javascripts/sql-email.js');
+const email = require('../public/javascripts/db/sql-email.js');
 const text = "Email eller lösenord saknas";
 const params = { where: '/login', text: text };
 

@@ -1,6 +1,6 @@
 const sensor = require('ds18b20-raspi');
-const th = require('./throw');
-const ct = require('./currtime.js');
+const th = require('../throw');
+const ct = require('../currtime.js');
 
 let time = ct.time;
 let date = ct.date;

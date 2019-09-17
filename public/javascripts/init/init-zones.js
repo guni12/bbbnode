@@ -1,4 +1,4 @@
-const asyn = require('./db/sqliteAsync');
+const asyn = require('../db/sqliteAsync');
 
 async function check(req, res, next) {
     let sql = "SELECT * FROM zones";

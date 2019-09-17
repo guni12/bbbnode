@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const rf= require('../public/javascripts/readFile.js');
-const init = require('../public/javascripts/init-zones.js');
-const insert = require('../public/javascripts/insert-zones.js');
+const init = require('../public/javascripts/init/init-zones.js');
+const insert = require('../public/javascripts/init/insert-zones.js');
 const where = './public/scripts/sensordetails.txt';
 const params = { where: where, what: 'content' };
 const ah = require('./asynchandler');

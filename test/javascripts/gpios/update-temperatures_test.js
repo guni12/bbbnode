@@ -7,7 +7,7 @@ const chaiHttp = require("chai-http");
 const server = require("../../../app");
 const sinon = require("sinon");
 const sinonChai = require('sinon-chai');
-const update = require('../../../public/javascripts/updateSensors');
+const update = require('../../../public/javascripts/sensors/updateSensors');
 //const updtemp = require('../../../public/javascripts/update-temperatures');
 
 chai.use(chaiHttp);

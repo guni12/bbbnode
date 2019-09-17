@@ -1,5 +1,5 @@
-const db = require('../../db/database');
-const reg = require('./status');
+const db = require('../../../db/database');
+const reg = require('../status');
 
 function asksqlite(req, res, next) {
     db.get("SELECT * FROM users WHERE email = ?",

@@ -1,4 +1,4 @@
-const th = require('./throw');
+const th = require('../throw');
 const fg = require('./fillGpioList');
 
 async function initPins(req, res, next) {

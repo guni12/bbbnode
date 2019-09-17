@@ -12,8 +12,8 @@ const rpio = require('rpio');
 const sensor = require('ds18b20-raspi');
 let writeFileStub;
 let sensorStub;
-const findSensors = require('../../../public/javascripts/find-sensors');
-const swt = require('../../../public/javascripts/sensorsWithTime');
+const findSensors = require('../../../public/javascripts/sensors/find-sensors');
+const swt = require('../../../public/javascripts/sensors/sensorsWithTime');
 const pf = require('../../../public/javascripts/printFile');
 
 rpio.init({mock: 'raspi-3'});

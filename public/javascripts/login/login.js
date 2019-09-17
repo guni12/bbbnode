@@ -1,4 +1,4 @@
-const reg = require('./status.js');
+const reg = require('../status.js');
 
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
