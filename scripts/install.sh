@@ -81,7 +81,7 @@ cd /home/pi/bbbnode
 sudo python3 /home/pi/bbbnode/public/scripts/spot/checkfile.py
 sudo python3 /home/pi/bbbnode/public/scripts/spot/movefiles.py
 
-npm init -y
+#npm init -y
 sudo npm install ds18b20-raspi -g
 sudo npm install node-pre-gyp -g
 sudo npm install node-gyp -g
