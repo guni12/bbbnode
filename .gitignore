@@ -94,5 +94,7 @@ withAuth.jsjs
 *.sqlite
 .coveralls.yml
 
-scripts/etc/nginx/sites-available/react_evok
+scripts/etc/nginx/sites-available/reactevok
 scripts/etc/nginx/sites-available/react_old
+
+package-lock.json
