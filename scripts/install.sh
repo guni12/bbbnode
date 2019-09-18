@@ -1,5 +1,5 @@
 #!/bin/sh
-#2019-09-16
+#2019-09-18
 
 sudo sed -i '/deb-src/s/^#//g' /etc/apt/sources.list.d/raspi.list
 
@@ -91,14 +91,6 @@ npm install bcrypt
 npm install rpio
 npm install
 pm2 start npm -- start
-
-curl -d "column=din@email.se&value=hemlig" -X POST http://localhost:1337/register
-curl http://localhost:1337/find
-curl http://localhost:1337/init
-curl http://localhost:1337/spotcal
-curl http://localhost:1337/tempupdate
-curl http://localhost:1337/controlupdate
-curl http://localhost:1337/hourcontrol
 
 echo "installation ok, the system will restart" | sudo tee -a /boot/config.txt
 sudo reboot
