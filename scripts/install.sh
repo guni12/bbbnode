@@ -81,6 +81,7 @@ cd /home/pi/bbbnode
 sudo python3 /home/pi/bbbnode/public/scripts/spot/checkfile.py
 sudo python3 /home/pi/bbbnode/public/scripts/spot/movefiles.py
 
+npm init -y
 sudo npm install ds18b20-raspi -g
 sudo npm install node-pre-gyp -g
 sudo npm install node-gyp -g
@@ -89,7 +90,8 @@ sudo env PATH=$PATH:/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -
 npm install sqlite3 --build-from-source
 npm install bcrypt
 npm install rpio
-npm install
+npm install cookie-parser express cors morgan 
+npm install ds18b20-raspi fast-csv jsonwebtoken
 pm2 start npm -- start
 
 echo "installation ok, the system will restart" | sudo tee -a /boot/config.txt
