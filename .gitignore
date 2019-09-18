@@ -98,4 +98,3 @@ scripts/etc/nginx/sites-available/reactevok
 scripts/etc/nginx/sites-available/react_old
 
 package-lock.json
-package.json
