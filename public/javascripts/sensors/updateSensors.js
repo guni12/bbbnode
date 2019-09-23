@@ -12,7 +12,7 @@ async function updateSensors(req, res, next) {
             sql += ", measured = '" + when + "' WHERE sensorid = '" + req.content[i].id + "';";
             await asyn.Async(sql, 'run');
         }
-        req.show = {"message": "Klart"};
+        req.show = {"message": "Klart, " + when};
     } catch (err) {
         //console.log("I updateSensors", err);
         next(err);
