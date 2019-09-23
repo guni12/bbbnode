@@ -12,7 +12,7 @@ async function insert(req, res, next) {
 
     cols += " max, min, should, name, measured)";
     try {
-        for (let i = 0; i < len - 1; i++) {
+        for (let i = 0; i < len; i++) {
             let zone = "zone" + nr;
             let params = par.params(content, zone, when, i);
             let sql = "INSERT INTO zones " + cols + " VALUES ( " + params + " );";

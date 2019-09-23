@@ -1,11 +1,10 @@
 const sensor = require('ds18b20-raspi');
 const th = require('../throw');
-const ct = require('../currtime.js');
-
-let time = ct.time;
-let date = ct.date;
+const ct = require('./currtime.js');
 
 async function sensorsWithTime(req, res, next) {
+    let time = ct.getTime();
+    let date = ct.getDate();
     let item = {time: time, date: date};
 
     try {

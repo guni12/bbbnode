@@ -94,7 +94,7 @@ npm install sqlite3 --build-from-source
 npm install bcrypt
 npm install rpio
 
-pm2 start npm -- start
+pm2 start npm -- start --watch --ignore-watch="node_modules"
 
 echo "installation ok, the system will restart" | sudo tee -a /boot/config.txt
 sudo reboot

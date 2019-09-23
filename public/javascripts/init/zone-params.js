@@ -9,7 +9,7 @@ function params(list, zone, when, i) {
         0,
         0,
         0,
-        `"Namn"`,
+        '"' + zone + '"',
         '"' + when + '"'
     ];
 }
