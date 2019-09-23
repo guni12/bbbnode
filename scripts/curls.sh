@@ -10,8 +10,3 @@ curl http://localhost:1337/spotcal
 curl http://localhost:1337/tempupdate
 curl http://localhost:1337/controlupdate
 curl http://localhost:1337/hourcontrol
-
-sudo fuser -k 1337/tcp
-sudo fuser -k 1337/tcp
-
-pm2 start npm -- start --watch --ignore-watch="node_modules"

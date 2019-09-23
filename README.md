@@ -54,6 +54,13 @@ Du landar då på sidan *Zoner* där du ändrar namn på zonerna.
 
 Därefter ska du binda aktiva relän till respektive zon. Gå till sidan *Rpio* och välj en zon till aktuell gpio-pinne genom dropdown-listan.
 
+När zon och gpio-tagg är knutna till varandra är det bra att avsluta development-server-processen och starta en pm2 process som sedan startar om automatiskt vid reboot
+
+```sh
+sudo fuser -k 1337/tcp
+pm2 start npm -- start --watch --ignore-watch="node_modules"
+```
+
 För att läsa temperaturerna direkt i terminalen, skriv:
 ```sh
 ds18b20 -a -d 2
