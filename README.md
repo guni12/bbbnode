@@ -54,6 +54,19 @@ För att läsa temperaturerna direkt i terminalen, skriv:
 ds18b20 -a -d 2
 ```
 Port forwarding beskrivning...
+
+Användbara kommandon för att se eller döda processer
+```sh
+sudo lsof -i -P -n | grep LISTEN
+sudo lsof -i :1337
+sudo fuser -k 1337/tcp
+```
+För att se pm2 respektive döda den installerade processen och starta om
+```sh
+pm2 log
+pm2 delete npm
+pm2 start npm -- start --watch --ignore-watch="node_modules"
+```
 ## API
 
 | Sökväg         | Uträttar                                              |
