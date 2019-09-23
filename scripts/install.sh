@@ -17,7 +17,7 @@ sudo apt-get install unattended-upgrades -y
 sudo apt-get install sqlite3 -y
 sudo apt-get install libsqlite3-dev
 sudo apt-get install lsof -y
-sudo apt-get install gcc-4.8 -y
+sudo apt-get install gcc-4.8 -y # needed for node-rpio and its C++11 support
 
 cd /home/pi/bbbnode/db
 
@@ -82,19 +82,17 @@ sudo python3 /home/pi/bbbnode/public/scripts/spot/checkfile.py
 sudo python3 /home/pi/bbbnode/public/scripts/spot/movefiles.py
 
 tmp=$(mktemp)
-jq 'del(.dependencies.bcrypt, .dependencies.rpio, .dependencies.sqlite3)' package.json > "$tmp" && mv "$tmp" package.json
+jq 'del(.dependencies.bcrypt, .dependencies.rpio, .dependencies.sqlite3)' /home/pi/bbbnode/package.json > "$tmp" && mv "$tmp" /home/pi/bbbnode/package.json
 
 sudo npm install ds18b20-raspi -g
 sudo npm install node-pre-gyp -g
 sudo npm install node-gyp -g
 sudo npm install pm2 -g
 sudo env PATH=$PATH:/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u pi --hp /home/pi
-npm install --production
+npm install --production # installs modules without devDependencies
 npm install sqlite3 --build-from-source
 npm install bcrypt
 npm install rpio
-
-pm2 start npm -- start --watch --ignore-watch="node_modules"
 
 echo "installation ok, the system will restart" | sudo tee -a /boot/config.txt
 sudo reboot
