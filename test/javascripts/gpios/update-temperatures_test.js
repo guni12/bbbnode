@@ -83,7 +83,7 @@ describe("Visit sensors and update temperatures", function() {
             const req = mockRequest(temps);
             const res = mockResponse();
             const spy = sinon.spy();
-            const check = {"message": "Klart"};
+            const check = {"message": "Klart, 2019-08-10 09:30:01"};
 
             await update.updateSensors(req, res, spy);
             req.show.should.eql(check);
