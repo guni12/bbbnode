@@ -1,6 +1,6 @@
 const reg = require('../status.js');
 
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 function login(req, res) {

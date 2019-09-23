@@ -82,7 +82,7 @@ sudo python3 /home/pi/bbbnode/public/scripts/spot/checkfile.py
 sudo python3 /home/pi/bbbnode/public/scripts/spot/movefiles.py
 
 tmp=$(mktemp)
-jq 'del(.dependencies.bcrypt, .dependencies.rpio, .dependencies.sqlite3)' /home/pi/bbbnode/package.json > "$tmp" && mv "$tmp" /home/pi/bbbnode/package.json
+jq 'del(.dependencies.rpio, .dependencies.sqlite3)' /home/pi/bbbnode/package.json > "$tmp" && mv "$tmp" /home/pi/bbbnode/package.json
 
 sudo npm install ds18b20-raspi -g
 sudo npm install node-pre-gyp -g
@@ -91,7 +91,6 @@ sudo npm install pm2 -g
 sudo env PATH=$PATH:/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u pi --hp /home/pi
 npm install --production # installs modules without devDependencies
 npm install sqlite3 --build-from-source
-npm install bcrypt
 npm install rpio
 
 echo "installation ok, the system will restart" | sudo tee -a /boot/config.txt
