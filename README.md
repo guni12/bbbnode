@@ -58,7 +58,7 @@ När zon och gpio-tagg är knutna till varandra är det bra att avsluta developm
 
 ```sh
 sudo fuser -k 1337/tcp
-pm2 start npm -- start --watch --ignore-watch="node_modules"
+pm2 start npm -- start
 ```
 
 För att läsa temperaturerna direkt i terminalen, skriv:
@@ -74,9 +74,12 @@ sudo lsof -i :1337
 sudo fuser -k 1337/tcp
 ```
 För att se pm2 respektive döda den installerade processen och starta om
+
+Även en process somm startar om vid förändring i koden (för den som vill)
 ```sh
 pm2 log
 pm2 delete npm
+pm2 start npm -- start
 pm2 start npm -- start --watch --ignore-watch="node_modules"
 ```
 ## API
