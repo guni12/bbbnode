@@ -10,7 +10,7 @@ function insert(req, res, params) {
                 return res.status(500).json(obj);
             }
 
-            res.status(201).json({
+            return res.status(201).json({
                 data: {
                     message: "User " + params[0] + " registered with: ." + params[1]
                 }

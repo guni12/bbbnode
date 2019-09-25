@@ -9,14 +9,14 @@ async function hourList(req, res, next, params) {
         temp = await getList(temp, params, next);
         return await finishOff(temp, params);
     } catch (err) {
-        //console.log.bind(console);
         next(err);
+        return undefined;
     }
 }
 
 async function finishOff(temp, params) {
     let filtered = temp.filter(function (el) {
-        return el != null;
+        return el !== null;
     });
 
     return cl.checkLast(filtered, params);

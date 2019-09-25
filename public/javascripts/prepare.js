@@ -8,6 +8,7 @@ function hascred(req, res, next, params) {
         return res.status(401).json(obj);
     }
     next();
+    return undefined;
 }
 
 
@@ -18,6 +19,7 @@ function isundefined(req, res, next) {
         return res.status(401).json(obj);
     }
     next();
+    return undefined;
 }
 
 module.exports = {

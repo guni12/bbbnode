@@ -14,7 +14,6 @@ async function update(req, res, next, params) {
             await one.updateOne(req, res, next, par) :
             await all.updateAll(req, res, next, par);
     } catch (err) {
-        console.log("I hour-control, err");
         next(err);
     }
 }

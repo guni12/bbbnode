@@ -23,11 +23,10 @@ function login(req, res) {
             res.cookie('token', token, { httpOnly: true });
 
             return res.status(200).json(obj);
-        } else {
-            let obj = reg.reterror(401, "/login", "Fel lösenord.");
-
-            return res.status(401).json(obj);
         }
+        let obj = reg.reterror(401, "/login", "Fel lösenord.");
+
+        return res.status(401).json(obj);
     });
 }
 

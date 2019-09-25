@@ -8,11 +8,11 @@ function isHigh(key, params, next) {
 
         if (price) {
             return oz.oneOrZero(price, params.marker, params.avg);
-        } else {
-            return undefined;
         }
+        return undefined;
     } catch (err) {
         next(err);
+        return undefined;
     }
 }
 

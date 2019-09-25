@@ -22,8 +22,8 @@ async function insert(req, res, next) {
         }
         return message;
     } catch (err) {
-        //console.log(err, "I insert-zones");
         next(err);
+        return undefined;
     }
 }
 

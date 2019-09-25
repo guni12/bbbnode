@@ -12,6 +12,7 @@ function hashbcrypt(req, res) {
             }
 
             insert.insert(req, res, [req.body.column, hash]);
+            return undefined;
         });
     });
 }
