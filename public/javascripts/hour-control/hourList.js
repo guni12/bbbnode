@@ -16,7 +16,7 @@ async function hourList(req, res, next, params) {
 
 async function finishOff(temp, params) {
     let filtered = temp.filter(function (el) {
-        return el !== null;
+        return el !== null && el !== undefined;
     });
 
     return cl.checkLast(filtered, params);

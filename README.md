@@ -75,8 +75,7 @@ sudo lsof -i :1337
 sudo fuser -k 1337/tcp
 ```
 För att se pm2 respektive döda den installerade processen och starta om
-
-Även en process somm startar om vid förändring i koden (för den som vill)
+    Även en process som startar om vid förändring i koden (för den som vill)
 ```sh
 pm2 log
 pm2 delete npm
