@@ -16,10 +16,9 @@ function mockDateNow() {
 
 describe("Visit and get spotcal", function() {
     describe("GET /spotcal", () => {
-        const originalDateNow;
+        let originalDateNow = Date.now();
 
         beforeEach(() => {
-            originalDateNow = Date.now();
             Date.now = mockDateNow();
         });
 
