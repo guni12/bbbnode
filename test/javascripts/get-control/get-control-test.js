@@ -10,7 +10,7 @@ chai.use(chaiHttp);
 chai.should();
 
 describe("Get todays control-values for each hour from file", function() {
-    describe("GET /control", () => {
+    describe("GET /controls", () => {
         it("1. 200 HAPPY PATH", (done) => {
             chai.request(server)
                 .get("/controls")

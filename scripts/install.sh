@@ -90,6 +90,7 @@ sudo npm install node-gyp -g
 sudo npm install pm2 -g
 sudo env PATH=$PATH:/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u pi --hp /home/pi
 npm install --production # installs modules without devDependencies
+npm install nodemon
 #npm install sqlite3 --build-from-source --sqlite=/usr
 #npm install rpio
 
