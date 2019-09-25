@@ -1,5 +1,6 @@
 const si = require('./spotinfo');
 const th = require('../throw');
+const path = require('path');
 
 async function makeSpotInfo(req) {
     let d = new Date();
@@ -9,7 +10,7 @@ async function makeSpotInfo(req) {
     if (req.params && req.params.id === '2' && hour > 16) {
         day = 'spotprice2.txt';
     }
-    let file = __dirname + '/../../scripts/spot/' + day;
+    let file = path.normalize( __dirname + '/../../scripts/spot/' + day);
 
     try {
         await si.collectInfo(file, req);

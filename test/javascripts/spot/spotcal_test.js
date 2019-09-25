@@ -1,3 +1,4 @@
+/** global: constantDate */
 "use strict";
 
 process.env.NODE_ENV = "test";
@@ -9,22 +10,21 @@ const server = require("../../../app.js");
 chai.use(chaiHttp);
 chai.should();
 
+function mockDateNow() {
+    return new Date('2018-01-01T17:00:00');
+}
+
 describe("Visit and get spotcal", function() {
     describe("GET /spotcal", () => {
-        const RealDate = Date;
-        const constantDate = new Date('2018-01-01T17:00:00');
+        const originalDateNow;
 
         beforeEach(() => {
-            global.Date = class extends Date {
-                constructor() {
-                    super();
-                    return constantDate;
-                }
-            };
+            originalDateNow = Date.now();
+            Date.now = mockDateNow();
         });
 
-        afterEach(() => {
-            global.Date = RealDate;
+        after(() => {
+            Date.now = originalDateNow;
         });
 
 
