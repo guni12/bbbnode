@@ -6,7 +6,7 @@ async function updateOne(req, res, next, par) {
     let list = req.gpios;
     let rms = req.rooms[0];
     let status = m[par.key](req.rooms);
-    let gpar = { list: list, status: status, gpio: rms.gpio, id: rms.senid, what: 'gpiodetails' };
+    let gpar = { list: list, status: status, gpio: rms.gpio, id: rms.id, what: 'gpiodetails' };
 
     try {
         if (rms.gpio === 0) {

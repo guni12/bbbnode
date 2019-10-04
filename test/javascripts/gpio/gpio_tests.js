@@ -105,7 +105,7 @@ describe("Handle gpios", function() {
     });
 
     describe("Test more functions individually", () => {
-        it("1. Test initGpios", hp.mochaAsync(async () => {
+        it("1. Test initGpios spy called", hp.mochaAsync(async () => {
             const spy = sinon.spy();
             const res = hp.mockResponse();
             const req = hp.mockRequest();
@@ -116,7 +116,7 @@ describe("Handle gpios", function() {
         }));
 
 
-        it("2. Test initGpios", hp.mochaAsync(async () => {
+        it("2. Test initGpios OK", hp.mochaAsync(async () => {
             const spy = sinon.spy();
             const res = hp.mockResponse();
             const req = hp.mockRequest();

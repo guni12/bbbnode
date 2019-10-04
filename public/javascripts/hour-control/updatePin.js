@@ -10,7 +10,7 @@ async function updatePin(req, res, next, par) {
 
     req[what] = { gpio: par.gpio, status: stat, mode: 'out', id: par.id };
     req.updated= { gpio: par.gpio, status: stat, mode: 'out', id: par.id };
-    if (stat) {
+    if (stat === 0 || stat === 1) {
         await eg.update(req, res, next, params);
     } else {
         let text = "Gpio pinne kunde ej nås";

@@ -2,6 +2,7 @@ const reg = require('../status');
 const asyn = require('./sqliteAsync');
 
 async function hascred(req, res, next, params) {
+    console.log(req.body);
     if (!req.body || !req.body.gpio || !req.body.mode) {
         let obj = reg.reterror(401, params.where, params.text);
 

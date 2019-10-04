@@ -1,7 +1,7 @@
 const sinon = require("sinon");
 
-function testOneRoom() {
-    return [{
+function room2() {
+    return {
         id: 4,
         sensor: '28-0214672d0cff',
         name: null,
@@ -19,49 +19,39 @@ function testOneRoom() {
         isoff: null,
         roomname: 'Klicka för att hantera',
         mainroom: 0
-    }];
+    };
+}
+
+function room3() {
+    return {
+        id: 1,
+        sensor: '28-021466fea4ff',
+        name: null,
+        tempis: 21.25,
+        measured: '2019-08-10 09:30:01',
+        gpio: 0,
+        room: null,
+        roomid: 3,
+        should: 0,
+        max: 0,
+        min: 0,
+        away: 0,
+        dsm: 0,
+        ison: null,
+        isoff: null,
+        roomname: 'Klicka för att hantera',
+        mainroom: 0
+    };
+}
+
+function testOneRoom() {
+    return [room2()];
 }
 
 function testTwoRooms() {
     return [
-        {
-            id: 4,
-            sensor: '28-0214672d0cff',
-            name: null,
-            tempis: 21.19,
-            measured: '2019-08-10 09:30:01',
-            gpio: 0,
-            room: null,
-            roomid: 2,
-            should: 0,
-            max: 0,
-            min: 0,
-            away: 0,
-            dsm: 0,
-            ison: null,
-            isoff: null,
-            roomname: 'Klicka för att hantera',
-            mainroom: 0
-        },
-        {
-            id: 1,
-            sensor: '28-021466fea4ff',
-            name: null,
-            tempis: 21.25,
-            measured: '2019-08-10 09:30:01',
-            gpio: 0,
-            room: null,
-            roomid: 3,
-            should: 0,
-            max: 0,
-            min: 0,
-            away: 0,
-            dsm: 0,
-            ison: null,
-            isoff: null,
-            roomname: 'Klicka för att hantera',
-            mainroom: 0
-        }
+        room2(),
+        room3()
     ];
 }
 
@@ -225,13 +215,20 @@ let mochaAsync = (fn) => {
 
 
 function makeid() {
-    var text = "";
-    var possible = "abcdefghijklmnopqrstuvwxyz";
+    let text = "";
 
     for (var i = 0; i < 5; i++) {
-        text += possible.charAt(Math.floor(Math.random() * possible.length));
+        let nr = Math.floor(Math.random() * 26);
+
+        text += getrandom(nr);
     }
     return text;
+}
+
+function getrandom(nr) {
+    let possible = "abcdefghijklmnopqrstuvwxyz";
+
+    return possible.charAt(nr);
 }
 
 function controlslist() {

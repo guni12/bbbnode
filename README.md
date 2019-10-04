@@ -40,18 +40,18 @@ git clone https://github.com/guni12/bbbnode
 sh /home/pi/bbbnode/scripts/install.sh
 ```
 Efter reboot ändra i filen `/home/pi/bbbnode/scripts/curls.sh` *din@email.se* och *hemlig* till dina val.  
-Kör följande:
+Kör igång API-servern och låt den rulla:
 ```sh
 cd bbbnode
 npm run dev
 ```
-och i en ny terminal
+Öppna en ny terminal och kör:
 ```sh
 cd bbbnode
 sh /home/pi/bbbnode/scripts/curls.sh
 ```
 
-Det finns två alternativa portnummer. `:8787` är med inloggning och då ska du bara skriva dina nyskapade användaruppgifter (det sparas automatiskt).  
+Det finns två alternativa portnummer till gränssnittet. `:8787` har inloggning och då ska du bara skriva dina nyskapade användaruppgifter (det sparas automatiskt).  
 
 När det finns installerade sensorer och dessa är hittade av systemet, gå till hemsidan utan inloggning `http://ditt.ip.n.r:8686`.  
 
@@ -78,46 +78,47 @@ sudo lsof -i -P -n | grep LISTEN
 sudo lsof -i :1337
 sudo fuser -k 1337/tcp
 ```
-För att se pm2 respektive döda den installerade processen och starta om
-    Även en process som startar om vid förändring i koden (för den som vill)
+För att se pm2 respektive döda den installerade processen och starta om.  
+Även en process som startar om vid förändring i koden (för den som vill)
 ```sh
 pm2 log
 pm2 delete npm
 pm2 start npm -- start
 pm2 start npm -- start --watch --ignore-watch="node_modules"
 ```
-## API
+## API 
+### `http://ditt.ip.n.r:1337`
 
-| Sökväg               | Uträttar                                              |
-|----------------------|-------------------------------------------------------|
-| (GET)                |                                                       |
-| /                    | Testsida                                              |
-| /savesensors         | Hittar och sparar nya sensorer till databasen         |
-| /showsensors         | Visar de sparade senorerna med ev alias               |
-| /showsensors/id(int) | Visar sensor med id                                   |
-| /deletesensor/id(int)| Tar bort sensor med id                                |
-| /initgpios           | Initierar gpio-pinnarna till databasen                |
-| /showgpios           | Visar de sparade gpio-pinnarna från databasen         |
-| /showgpios/id(int)   | Visar gpio-pinne med id                               |
-| /settings            | Visar inställda värden                                |
-| /spotcal             | Plockar ut dagens spotpriser enligt settings          |
-| /spotcal/2           | Plockar ut morgondagens spotpriser, om efter kl.16    |
-| /today               | Visar dagens utvunna spotprislista enligt settings    |
-| /today2              | Visar morgondagens utvunna spotprislista              |
-| /addroom             | Lägger till rum om kopplad sensor finns               |
-| /rooms               | Visar info om tillagda rum                            |
-| /rooms/id(int)       | Visar info om rum (id)                                |
-| /deleteroom/id(int)  | Tar bort rum med id                                   |
-| /roomssensors        | Visar all rum med kopplad sensor                      |
-| /roomssensors/id(int)| Visar rum med kopplad sensor (rum-id)                 |
-| /controlupdate       | Räknar ut styrning enligt spotpris                    |
-| /controls            | Visar kontroll-inställningarna                        |
-| /hourcontrol         | Ställer in styrning, inställd att köras var 10e minut |
-| /tempupdate          | Läser av gpio-sensorerna och uppdaterar zonerna       |
-| (POST)               |                                                       |
-| /login               | Inloggning som skapar en tidsbegränsad token          |
-| /register            | Skapa ny medlem (email, password) i tabell *'user'*   |
-| /editroom            | Uppdatera *'room'* med ett nytt värde                 |
-| /editsettings        | Uppdatera *'settings'* med ett nytt värde             |
-| /editgpio            | Uppdatera *'gpios'* med (mode, status)                |
-| /editsensor          | Uppdatera *'sensors'* med (namn, temp, gpio, rum)     |
+| Sökväg                | Uträttar                                              |
+|-----------------------|-------------------------------------------------------|
+| (GET)                 |                                                       |
+| /                     | Testsida                                              |
+| /savesensors          | Hittar och sparar nya sensorer till databasen         |
+| /showsensors          | Visar de sparade senorerna med ev alias               |
+| /showsensors/id(int)  | Visar sensor med id                                   |
+| /deletesensor/id(int) | Tar bort sensor med id                                |
+| /initgpios            | Initierar gpio-pinnarna till databasen                |
+| /showgpios            | Visar de sparade gpio-pinnarna från databasen         |
+| /showgpios/id(int)    | Visar gpio-pinne med id                               |
+| /settings             | Visar inställda värden                                |
+| /spotcal              | Plockar ut dagens spotpriser enligt settings          |
+| /spotcal/2            | Plockar ut morgondagens spotpriser, om efter kl.16    |
+| /today                | Visar dagens utvunna spotprislista enligt settings    |
+| /today2               | Visar morgondagens utvunna spotprislista              |
+| /addroom              | Lägger till rum om kopplad sensor finns               |
+| /rooms                | Visar info om tillagda rum                            |
+| /rooms/id(int)        | Visar info om rum (id)                                |
+| /deleteroom/id(int)   | Tar bort rum med id                                   |
+| /roomssensors         | Visar all rum med kopplad sensor                      |
+| /roomssensors/id(int) | Visar rum med kopplad sensor (rum-id)                 |
+| /controlupdate        | Räknar ut styrning enligt spotpris                    |
+| /controls             | Visar kontroll-inställningarna                        |
+| /hourcontrol          | Ställer in styrning, inställd att köras var 10e minut |
+| /tempupdate           | Läser av gpio-sensorerna och uppdaterar zonerna       |
+| (POST)                |                                                       |
+| /login                | Inloggning som skapar en tidsbegränsad token          |
+| /register             | Skapa ny medlem (email, password) i tabell *'user'*   |
+| /editroom             | Uppdatera *'room'* med ett nytt värde                 |
+| /editsettings         | Uppdatera *'settings'* med ett nytt värde             |
+| /editgpio             | Uppdatera *'gpios'* med (mode, status)                |
+| /editsensor           | Uppdatera *'sensors'* med (namn, temp, gpio, rum)     |

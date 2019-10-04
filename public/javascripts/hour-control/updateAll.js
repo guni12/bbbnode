@@ -9,7 +9,7 @@ async function updateAll(req, res, next, par) {
         let status = m[par.key](item);
         let what = index === (req.rooms.length-1) ? 'gpiodetails' : null;
         //console.log("I updateAll", par.key, item, status);
-        let params = { list: list, status: status, gpio: item.gpio, id: item.senid, what: what };
+        let params = { list: list, status: status, gpio: item.gpio, id: item.id, what: what };
 
         try {
             if (item.gpio === 0) {

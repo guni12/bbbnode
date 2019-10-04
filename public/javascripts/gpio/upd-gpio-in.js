@@ -5,7 +5,7 @@ async function updIn(req, res, next, obj) {
     try {
         let stat = await cr.contactRpioIn(obj);
 
-        if (stat && stat > -1) {
+        if (stat === 0 || stat === 1) {
             req.updated = { gpio: obj.gpio, status: stat, mode: "in" };
         } else {
             let text = "Gpio pinne kunde ej kontaktas";
