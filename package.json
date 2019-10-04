@@ -17,6 +17,7 @@
   },
   "devDependencies": {
     "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
     "chai-http": "^4.3.0",
     "codecov": "^3.5.0",
     "concurrently": "^4.1.1",
@@ -27,6 +28,7 @@
     "javascript-style-guide": "^1.0.1",
     "mocha": "^6.2.0",
     "mocha-lcov-reporter": "^1.3.0",
+    "mockdate": "^2.0.5",
     "nodemon": "^1.19.2",
     "nyc": "^14.1.1",
     "sinon": "^7.4.2",
@@ -34,16 +36,13 @@
   },
   "scripts": {
     "pretest": "$(db/reset_test_db.bash)",
-    "test": "nyc --reporter=html --reporter=text mocha 'test/javascripts/**/*.js' --env NODE_ENV='test'",
+    "test": "nyc --reporter=html --reporter=text mocha 'test/javascripts/**/*.js' --env NODE_ENV='test' --timeout 10000",
     "posttest": "npm run eslint",
     "dev": "nodemon app.js",
     "production": "NODE_ENV='production' node app.js",
-    "client": "cd ../bbbreact/bbb && npm start",
     "report-coveralls": "nyc report --reporter=text-lcov | coveralls",
     "report-codecov": "nyc report --reporter=lcov > coverage.lcov && codecov",
-    "clean": "rm -rf npm-debug.log coverage .nyc_output",
     "eslint": "eslint .",
-    "startall": "concurrently \"npm run dev\" \"npm run client\"",
     "start": "npm run production"
   },
   "keywords": [],

@@ -13,7 +13,6 @@ const ah = require('./asynchandler');
 
 router.get("/:id?",
     ah.asyncHandler(async (req, res, next) => {
-        req.table = "settings";
         await settings.getOne(req, res, next, settingsParams);
         await rf.getFile(req, res, next, spotParams);
         await hc.tocontrol(req, res, next);

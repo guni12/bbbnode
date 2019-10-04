@@ -1,22 +1,46 @@
-const reg = require('../status');
 const insert = require('./insert');
 const bcrypt = require('bcryptjs');
+const th = require('../throw');
 
-function hashbcrypt(req, res) {
-    bcrypt.genSalt(10, function(err, salt) {
-        bcrypt.hash(req.body.value, salt, function(err, hash) {
-            if (err) {
-                let obj = reg.reterror(500, "register", "bcrypt error");
+async function hashbcrypt(req, res, next) {
+    try {
+        let salt = await makesalt();
 
-                return res.status(500).json(obj);
-            }
-
-            insert.insert(req, res, [req.body.column, hash]);
-            return undefined;
-        });
-    });
+        await makehash(req, res, next, salt);
+    } catch (err) {
+        return next(err);
+    }
 }
 
+async function makesalt() {
+    return bcrypt.genSaltSync(10);
+}
+
+async function makehash(req, res, next, salt) {
+    try {
+        bcrypt.hash(req.body.value, salt, function(err, hash) {
+            try {
+                if (!err) {
+                    insert.insert(req, res, [req.body.column, hash]);
+                    return undefined;
+                } else {
+                    let text = "Bcrypt - hash problem";
+                    let obj = th.throwerror("Error", 500, "register", text);
+
+                    throw { obj, error: new Error() };
+                }
+            } catch (err) {
+                //console.log("REG", err);
+                return next(err);
+            }
+        });
+    } catch (err) {
+        return next(err);
+    }
+}
+
+
 module.exports = {
-    hashbcrypt: hashbcrypt
+    hashbcrypt: hashbcrypt,
+    makehash: makehash
 };

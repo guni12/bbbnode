@@ -1,22 +1,21 @@
-const rpio = require('rpio');
 const th = require('../throw');
+const cr = require('./contactRpio');
 
 async function updIn(req, res, next, obj) {
-    let stat = contactRpio(obj);
+    try {
+        let stat = await cr.contactRpioIn(obj);
 
-    if (stat) {
-        req.updated = { gpio: obj.gpio, status: stat, mode: obj.mode };
-    } else {
-        let text = "Gpio pinne kunde ej kontaktas";
-        let obj = th.throwerror("Error", 500, "/upd-gpio-in", text);
+        if (stat && stat > -1) {
+            req.updated = { gpio: obj.gpio, status: stat, mode: "in" };
+        } else {
+            let text = "Gpio pinne kunde ej kontaktas";
+            let obj = th.throwerror("Error", 500, "/upd-gpio-in", text);
 
-        throw { obj, error: new Error() };
+            throw { obj, error: new Error() };
+        }
+    } catch (err) {
+        next(err);
     }
-}
-
-function contactRpio(obj) {
-    rpio.open(obj.gpio, rpio.INPUT);
-    return rpio.read(obj.gpio);
 }
 
 module.exports = {

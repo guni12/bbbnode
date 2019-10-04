@@ -34,3 +34,8 @@ else:
     FHANDLE = open(TFILE, "w")
     FHANDLE.write(TEXT)
     FHANDLE.close()
+
+    FHANDLE = open(CHECKFILE, "w")
+    FHANDLE.write(TESTTEXT)
+    FHANDLE.close()
+

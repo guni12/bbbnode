@@ -7,7 +7,7 @@ async function makeSpotInfo(req) {
     let hour = d.getHours();
     let day = 'spotprice.txt';
 
-    if (req.params && req.params.id === '2' && hour > 16) {
+    if (req.params && req.params.id === '2' && hour >= 16) {
         day = 'spotprice2.txt';
     }
     let filePath = path.join('scripts', 'spot', day);

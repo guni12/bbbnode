@@ -12,7 +12,7 @@ async function update(req, res, next) {
             await ugi.updIn(req, res, next, { gpio: gpio, status: stat, mode: mode });
         //console.log("Resultat i update-gpio", result);
     } catch (err) {
-        //console.log("update-gpio catch", err);
+        console.log("update-gpio catch", err);
         next(err);
     }
 }

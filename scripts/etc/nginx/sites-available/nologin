@@ -1,0 +1,19 @@
+server {
+    listen 8686;
+    listen [::]:8686;
+
+    server_name nologin;
+
+    root /var/www/nologin/html;
+
+    index index.html index.htm;
+    charset utf-8;
+
+    error_page 404 /error.html;
+
+    location / {
+        if (!-e $request_filename) {
+            rewrite ^(.*)$ /index.html break;
+        }
+    }
+}

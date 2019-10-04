@@ -3,10 +3,9 @@ const router = express.Router();
 
 const settings = require('../public/javascripts/db/getOneRow.js');
 const settingsParams = { table: 'settings', what: 'settings' };
-const where = './public/scripts/today.txt';
 const spi = require('../public/javascripts/spi/makeSpotInfo');
 const pf = require('../public/javascripts/printFile.js');
-const chosenParams = { where: where, what: 'chosen' };
+const chosenParams = { what: 'chosen' };
 const ah = require('./asynchandler');
 
 router.get("/:id?",
@@ -14,6 +13,9 @@ router.get("/:id?",
         await settings.getOne(req, res, next, settingsParams);
         await spi.makeSpotInfo(req);
         if (req.chosen) {
+            chosenParams.where = req.params.id === '2' ?
+                './public/scripts/today2.txt' :
+                './public/scripts/today.txt';
             await pf.printFile(req, res, next, chosenParams);
             res.json(req.chosen);
         }

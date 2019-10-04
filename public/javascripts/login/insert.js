@@ -5,7 +5,7 @@ function insert(req, res, params) {
     db.run("INSERT INTO users (email, password) VALUES (?, ?)",
         params, (err) => {
             if (err) {
-                let obj = reg.reterror(500, "register", err.message);
+                let obj = reg.reterror(500, "insert", err.message);
 
                 return res.status(500).json(obj);
             }

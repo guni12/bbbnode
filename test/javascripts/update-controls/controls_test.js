@@ -7,118 +7,20 @@ const chaiHttp = require("chai-http");
 const server = require("../../../app");
 const sinon = require("sinon");
 const sinonChai = require('sinon-chai');
-const rpio = require('rpio');
 const controls = require('../../../public/javascripts/hour-control/controls');
-//const hourcontrol = require('../../../public/javascripts/hour-control');
 const adh = require('../../../public/javascripts/hour-control/addHeat');
-const up = require('../../../public/javascripts/hour-control/update-pins');
+const cl = require('../../../public/javascripts/hour-control/checkLast');
+const pf = require('../../../public/javascripts/printFile');
+const rf = require('../../../public/javascripts/readFile');
+const ev = require('../../../public/javascripts/extractValue');
 const hp = require('../../helper.js');
 const fs = require('fs').promises;
-
-
-let mochaAsync = (fn) => {
-    return done => {
-        fn.call().then(done, err => {
-            done(err);
-        });
-    };
-};
-
-const mockRequest = (f, lt) => ({
-    file: f,
-    printobj: lt,
-    content: lt,
-    gpiodetails: lt,
-    prep_gpiodetails: lt
-});
-
-rpio.init({mock: 'raspi-3'});
 
 chai.use(chaiHttp);
 chai.use(sinonChai);
 chai.should();
 
 describe("Test controls", function() {
-    describe("GET /hourcontrol", () => {
-        let writeFileStub;
-
-        beforeEach(function () {
-            writeFileStub = sinon.stub(fs, 'writeFile');
-        });
-
-        afterEach(function () {
-            writeFileStub.restore();
-        });
-
-        it("1. 500 rpio can't reach pins", (done) => {
-            let check = "Gpio pinne måste knytas till varje zon";
-
-            chai.request(server)
-                .get("/hourcontrol")
-                .end((err, res) => {
-                    if (err) {
-                        done(err);
-                    }
-                    res.should.have.status(500);
-                    res.headers['content-type'].should.contain('application/json');
-                    res.body.should.be.an("object");
-                    res.body.errors[0].message.should.equal(check);
-                    done();
-                });
-        });
-
-
-        it("2. 500 rpio can't reach pins - though correct id", (done) => {
-            let check = "Gpio pinne måste knytas till varje zon";
-
-            chai.request(server)
-                .get("/hourcontrol/3")
-                .end((err, res) => {
-                    if (err) {
-                        done(err);
-                    }
-                    //console.log("2. 500 rpio", res.body.errors[0].message);
-                    res.should.have.status(500);
-                    res.headers['content-type'].should.contain('application/json');
-                    res.body.should.be.an("object");
-                    res.body.errors[0].message.should.equal(check);
-                    done();
-                });
-        });
-
-
-        it("3. 400 rpio can't reach pins - with wrong id", (done) => {
-            let check = "Detta id finns inte";
-
-            chai.request(server)
-                .get("/hourcontrol/13")
-                .end((err, res) => {
-                    if (err) {
-                        done(err);
-                    }
-                    //console.log(res.body);
-                    res.should.have.status(400);
-                    res.headers['content-type'].should.contain('application/json');
-                    res.body.should.be.an("object");
-                    res.body.errors[0].message.should.equal(check);
-                    done();
-                });
-        });
-
-
-        it("4. update-pins with stub", hp.mochaAsync(async () => {
-            const req = hp.mockRequest();
-            const res = hp.mockResponse();
-            const spy = sinon.spy();
-            let list = hp.gpiolist();
-            let params = {what: 'det', gpio: 5, status: 1, list: list};
-
-            await up.updateList(req, res, spy, params);
-            spy.called.should.be.false;
-        }));
-    });
-
-
     describe("Individual functions", () => {
         it("1. Test first control", () => {
             let item = {
@@ -201,16 +103,63 @@ describe("Test controls", function() {
                     done();
                 });
         });
+
+        it("2. Test printFile with nothing in req", hp.mochaAsync(async () => {
+            const req = hp.mockRequest();
+            const res = hp.mockResponse();
+            const spy = sinon.spy();
+            const params = { where: './public/scripts/gpiodetails.txt', what: 'newlist' };
+
+            //writeFileStub.yields( new Error("Testfel här"));
+            await pf.printFile(req, res, spy, params);
+
+            writeFileStub.should.not.have.been.called;
+            spy.called.should.be.true;
+        }));
+
+        it("3. Test readFile with nothing in req", hp.mochaAsync(async () => {
+            const req = hp.mockRequest();
+            const res = hp.mockResponse();
+            const spy = sinon.spy();
+            const params = {other: "Hej"};
+
+            await rf.getFile(req, res, spy, params);
+            spy.called.should.be.true;
+        }));
+
+        it("3. Test extVal with null", (done) => {
+            let test = ev.extVal("null");
+
+            test.should.eql(NaN);
+            done();
+        });
+
+        it("4. Test checkLast when isaway is true", (done) => {
+            let params = {isaway: true};
+            let tocheck = hp.controlslist();
+            let list = cl.checkLast(tocheck, params);
+
+            list[3].should.eql(3);
+            done();
+        });
+
+        it("4. Test checkLast when percon is true", (done) => {
+            let params = {percon: true};
+            let tocheck = hp.controlslist();
+
+            tocheck[3].should.not.eql(0);
+            let list = cl.checkLast(tocheck, params);
+
+            list[3].should.eql(0);
+            done();
+        });
     });
 
 
 
     describe("Test affecting controls", () => {
-        it("1. Test addHeat with controls", mochaAsync(async () => {
-            const req = mockRequest(
-                "",
-                []
-            );
+        it("1. Test addHeat with controls", hp.mochaAsync(async () => {
+            const req = hp.mockRequest();
             const con = [0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0];
             const spy = sinon.spy();
 

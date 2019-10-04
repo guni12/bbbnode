@@ -1,20 +1,21 @@
 const m = require('./controls');
-const updl = require('./update-pins');
+const up = require('./updatePin');
 const th = require('../throw');
 
 async function updateOne(req, res, next, par) {
-    let list = JSON.parse(req.prepGpiodetails);
-    let status = m[par.key](req.zones);
-    let gpar = { list: list, status: status, gpio: req.zones.gpio, what: par.params.what };
+    let list = req.gpios;
+    let rms = req.rooms[0];
+    let status = m[par.key](req.rooms);
+    let gpar = { list: list, status: status, gpio: rms.gpio, id: rms.senid, what: 'gpiodetails' };
 
     try {
-        if (req.zones.gpio === 0) {
+        if (rms.gpio === 0) {
             let text = "Gpio pinne måste knytas till varje zon";
             let obj = th.throwerror("Error", 500, "/updateOne", text);
 
             throw { obj, error: new Error() };
         } else {
-            await updl.updateList(req, res, next, gpar);
+            await up.updatePin(req, res, next, gpar);
         }
     } catch (err) {
         next(err);

@@ -7,7 +7,7 @@ async function tocontrol(req, res, next) {
 
     if (req.settings.awayfrom !== null &&
         req.settings.awayto !== null
-        && req.settings.awayto > date) {
+        && req.settings.awayto > date-1) {
         isaway = true;
     }
     await extract.extractControls(req, res, next, isaway);

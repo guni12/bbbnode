@@ -1,17 +1,15 @@
 const m = require('./controls');
-const updl = require('./update-pins');
+const up = require('./updatePin');
 const th = require('../throw');
 
 async function updateAll(req, res, next, par) {
-    //console.log("I updateAll", req.zones);
-    //console.log(req.prepGpiodetails, typeof(req.prepGpiodetails));
-    let list = JSON.parse(req.prepGpiodetails);
+    let list = req.gpios;
 
-    Promise.all(req.zones.map(async (item, index) => {
+    Promise.all(req.rooms.map(async (item, index) => {
         let status = m[par.key](item);
-        let what = index === (req.zones.length-1) ? 'gpiodetails' : null;
-        //console.log("I updateAll", key, item, status);
-        let params = { list: list, status: status, gpio: item.gpio, what: what };
+        let what = index === (req.rooms.length-1) ? 'gpiodetails' : null;
+        //console.log("I updateAll", par.key, item, status);
+        let params = { list: list, status: status, gpio: item.gpio, id: item.senid, what: what };
 
         try {
             if (item.gpio === 0) {
@@ -20,11 +18,11 @@ async function updateAll(req, res, next, par) {
 
                 throw { obj, error: new Error() };
             } else {
-                await updl.updateList(req, res, next, params);
+                await up.updatePin(req, res, next, params);
             }
         } catch (err) {
             next(err);
-            //console.log("updateOne err: ", err);
+            //console.log("updateAll err: ", err);
         }
     }))
         .catch(function(err) {

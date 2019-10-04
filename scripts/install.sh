@@ -21,46 +21,12 @@ sudo apt-get install gcc-4.8 -y # needed for node-rpio and its C++11 support
 
 cd /home/pi/bbbnode/db
 
-sqlite3 -batch texts.sqlite "DROP TABLE IF EXISTS users;"
-sqlite3 -batch texts.sqlite "DROP TABLE IF EXISTS settings;"
-sqlite3 -batch texts.sqlite "DROP TABLE IF EXISTS zones;"
-sqlite3 -batch texts.sqlite "CREATE TABLE IF NOT EXISTS users (
-    id INTEGER PRIMARY KEY,
-    email VARCHAR(255) NOT NULL,
-    password VARCHAR(60) NOT NULL,
-    UNIQUE(email)
-);"
-sqlite3 -batch texts.sqlite "CREATE TABLE IF NOT EXISTS settings (
-    id INTEGER PRIMARY KEY,
-    area VARCHAR(20) NOT NULL,
-    currency VARCHAR(20)NOT NULL,
-    dsmon INTEGER NOT NULL,
-    percenton INTEGER NOT NULL,
-    percent INTEGER NOT NULL,
-    awayfrom DATETIME,
-    awayto DATETIME
-);"
-sqlite3 -batch texts.sqlite "CREATE TABLE IF NOT EXISTS zones (
-    id INTEGER PRIMARY KEY,
-    sensorid VARCHAR(50) NOT NULL,
-    zone VARCHAR(30) NOT NULL,
-    gpio INTEGER,
-    away INTEGER,
-    dsm INTEGER,
-    tempis REAL,
-    isoff INTEGER,
-    ison INTEGER,
-    max INTEGER,
-    min INTEGER,
-    should INTEGER,
-    name VARCHAR(50),
-    measured VARCHAR(50)
-);"
-
-sqlite3 -batch texts.sqlite "INSERT INTO settings(area,currency,percent,dsmon,percenton) VALUES('SE1', 'SEK', 2, 0, 1);"
+sqlite3 -batch texts.sqlite ".read migrate.sql"
 
 sudo cp /home/pi/bbbnode/scripts/etc/nginx/sites-available/react /etc/nginx/sites-available/
+sudo cp /home/pi/bbbnode/scripts/etc/nginx/sites-available/nologin /etc/nginx/sites-available/
 sudo ln -s /etc/nginx/sites-available/react /etc/nginx/sites-enabled/react
+sudo ln -s /etc/nginx/sites-available/nologin /etc/nginx/sites-enabled/nologin
 
 echo 'SUBSYSTEM=="bcm2835-gpiomem", KERNEL=="gpiomem", GROUP="gpio", MODE="0660"' | sudo tee -a /etc/udev/rules.d/20-gpiomem.rules > /dev/null
 
@@ -71,18 +37,17 @@ sudo mkdir /var/www/react
 sudo cp -R /home/pi/bbbnode/scripts/var/www/react/html /var/www/react
 sudo chown -R pi:www-data /var/www/react
 
+sudo mkdir /var/www/nologin
+sudo cp -R /home/pi/bbbnode/scripts/var/www/nologin/html /var/www/nologin
+sudo chown -R pi:www-data /var/www/nologin
+
 sudo nginx
 
 echo 'export JWT_SECRET="LååångtLösenord"' | sudo tee -a /home/pi/.profile > /dev/null
 
-sudo crontab -l -u root |  cat /home/pi/bbbnode/scripts/cron.txt | sudo crontab -u root -
-
 cd /home/pi/bbbnode
 sudo python3 /home/pi/bbbnode/public/scripts/spot/checkfile.py
 sudo python3 /home/pi/bbbnode/public/scripts/spot/movefiles.py
-
-#tmp=$(mktemp)
-#jq 'del(.dependencies.rpio, .dependencies.sqlite3)' /home/pi/bbbnode/package.json > "$tmp" && mv "$tmp" /home/pi/bbbnode/package.json
 
 sudo npm install ds18b20-raspi -g
 sudo npm install node-pre-gyp -g
@@ -91,8 +56,6 @@ sudo npm install pm2 -g
 sudo env PATH=$PATH:/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u pi --hp /home/pi
 npm install --production # installs modules without devDependencies
 npm install nodemon
-#npm install sqlite3 --build-from-source --sqlite=/usr
-#npm install rpio
 
 echo "installation ok, the system will restart" | sudo tee -a /boot/config.txt
 sudo reboot

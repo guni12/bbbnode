@@ -1,17 +1,25 @@
-const rpio = require('rpio');
+const eg = require('../db/edit-gpio');
+const th = require('../throw');
+const cr = require('../gpio/contactRpio');
 
 async function updatePin(req, res, next, par) {
-    if (par.gpio === 0) {
-        req.error = "Gpio pinne måste knytas till varje zon";
-    } else {
-        rpio.open(par.gpio, rpio.OUTPUT, par.status);
-        rpio.write(par.gpio, par.status);
-        let stat = rpio.read(par.gpio);
-        let what = 'gpio' + par.gpio;
+    //console.log("UPDATEPIN - par.gpio", par, par.gpio);
+    let stat = await cr.contactRpioOut(par);
+    let what = 'gpio' + par.gpio;
+    const params = { table: 'gpios'};
 
-        req[what] = { gpio: par.gpio, status: stat, mode: 'out' };
+    req[what] = { gpio: par.gpio, status: stat, mode: 'out', id: par.id };
+    req.updated= { gpio: par.gpio, status: stat, mode: 'out', id: par.id };
+    if (stat) {
+        await eg.update(req, res, next, params);
+    } else {
+        let text = "Gpio pinne kunde ej nås";
+        let obj = th.throwerror("Error", 500, "updatePin", text);
+
+        throw { obj, error: new Error() };
     }
 }
+
 
 module.exports = {
     updatePin: updatePin

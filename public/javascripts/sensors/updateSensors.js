@@ -1,4 +1,4 @@
-const wv = require('../whenVar');
+const wv = require('./whenVar');
 const asyn = require('../db/sqliteAsync');
 
 async function updateSensors(req, res, next) {
@@ -7,9 +7,9 @@ async function updateSensors(req, res, next) {
 
     try {
         for (let i = 0; i < len - 1; i++) {
-            let sql = "UPDATE zones SET tempis = " + req.content[i].t;
+            let sql = "UPDATE sensors SET tempis = " + req.content[i].t;
 
-            sql += ", measured = '" + when + "' WHERE sensorid = '" + req.content[i].id + "';";
+            sql += ", measured = '" + when + "' WHERE sensor = '" + req.content[i].id + "';";
             await asyn.Async(sql, 'run');
         }
         req.show = {"message": "Klart, " + when};

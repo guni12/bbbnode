@@ -3,10 +3,10 @@
 
 curl -d "column=din@email.se&value=hemlig" -X POST http://localhost:1337/register
 sudo python3 /home/pi/bbbnode/public/scripts/spot/checkfile.py
-sudo python3 /home/pi/bbbnode/public/scripts/spot/movefiles.py
-curl http://localhost:1337/find
-curl http://localhost:1337/init
+curl http://localhost:1337/savesensors
+curl http://localhost:1337/initgpios
 curl http://localhost:1337/spotcal
+curl http://localhost:1337/spotcal/2
 curl http://localhost:1337/tempupdate
 curl http://localhost:1337/controlupdate
-curl http://localhost:1337/hourcontrol
+sudo crontab -l -u root |  cat /home/pi/bbbnode/scripts/cron.txt | sudo crontab -u root -
