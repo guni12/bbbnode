@@ -1,15 +1,14 @@
 const reg = require('./status.js');
 
 async function hascred(req, res, next, params) {
-    console.log("I prepare", req.body);
+    //console.log("I prepare", req.body);
     if (!req.body.column || !req.body.value) {
         let obj = reg.reterror(401, params.where, params.text);
 
         return res.status(401).json(obj);
-    } else {
-        next();
-        return undefined;
     }
+    next();
+    return undefined;
 }
 
 

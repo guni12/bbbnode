@@ -201,7 +201,8 @@ const mockRequest = (f, lt, id=null, c=null) => ({
     show: c,
     body: c,
     rooms: c,
-    gpios: c
+    gpios: c,
+    stat: c
 });
 
 

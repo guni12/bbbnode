@@ -55,11 +55,16 @@ Det finns två alternativa portnummer till gränssnittet. `:8787` har inloggning
 
 När det finns installerade sensorer och dessa är hittade av systemet, gå till hemsidan utan inloggning `http://ditt.ip.n.r:8686`.  
 
-Börja med att ge namn till dina sensorer (sidan *Sensorer*) allteftersom du identifierar dem. Därefter ska du binda de sensorer som ska styra "sin" gpio pinne. Det gör du genom dropdown-listan på sidan *Rpio*. 
+Börja med att ge namn till dina sensorer (sidan *Sensorer*) allteftersom du identifierar dem.  
+Därefter ska du binda de sensorer som ska styra "sin" gpio pinne. Det gör du genom dropdown-listan på sidan *Rpio*. 
 
 När detta moment är gjort kan du lägga till rum på sidan *Rum* och ställa in dina önskade temperaturer. 
 
-När du är nöjd med ovanstående är det bra att avsluta development-server-processen och starta en pm2 process som sedan startar om automatiskt vid reboot.
+När du är nöjd med ovanstående är det dags att installera några kommandon som körs regelbundet via cron. Om du vill ändra hur ofta uppdateringar körs, är det här du ska gå in och ändra (med `sudo crontab -e`).
+```sh
+sudo crontab -l -u root |  cat /home/pi/bbbnode/scripts/cron.txt | sudo crontab -u root -
+```
+Det är också bra att avsluta development-server-processen och starta en pm2 process som sedan startar om automatiskt vid reboot.
 
 ```sh
 sudo fuser -k 1337/tcp
@@ -70,7 +75,7 @@ För att läsa temperaturerna direkt i terminalen, skriv:
 ```sh
 ds18b20 -a -d 2
 ```
-Port forwarding beskrivning...
+För att använda hemsidan från fjärr behövs port forwarding och det är två portar som behöver öppnas, både port 1337 och antingen 8686 (utan inloggning) eller 8787 (med inloggning).
 
 Användbara kommandon för att se eller döda processer
 ```sh
@@ -79,7 +84,7 @@ sudo lsof -i :1337
 sudo fuser -k 1337/tcp
 ```
 För att se pm2 respektive döda den installerade processen och starta om.  
-Även en process som startar om vid förändring i koden (för den som vill)
+Även en process som startar om vid förändring i koden (för den som själv utvecklar koden)
 ```sh
 pm2 log
 pm2 delete npm

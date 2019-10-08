@@ -10,13 +10,16 @@ const sinonChai = require('sinon-chai');
 const rpio = require('rpio');
 const hp = require('../../helper');
 let rpStub;
+let rpInStub;
 let rpioStub;
+let statStub;
 
 const fg = require('../../../public/javascripts/gpio/fillGpioList');
 const ip = require('../../../public/javascripts/gpio/initPins');
 const ig = require('../../../public/javascripts/gpio/initGpios');
-const updin = require('../../../public/javascripts/gpio/upd-gpio-in');
-const updout = require('../../../public/javascripts/gpio/upd-gpio-out');
+const ud = require('../../../public/javascripts/gpio/update');
+//const updin = require('../../../public/javascripts/gpio/upd-gpio-in');
+//const updout = require('../../../public/javascripts/gpio/upd-gpio-out');
 const cr = require('../../../public/javascripts/gpio/contactRpio');
 const ug = require('../../../public/javascripts/gpio/update-gpio');
 const eg = require('../../../public/javascripts/db/edit-gpio');
@@ -139,7 +142,7 @@ describe("Handle gpios", function() {
                 });
         });
 
-        it("4. Test gpio-out without stub", hp.mochaAsync(async () => {
+        it("4. Test get status without stub", hp.mochaAsync(async () => {
             const req = hp.mockRequest();
             const res = hp.mockResponse();
             const spy = sinon.spy();
@@ -150,27 +153,107 @@ describe("Handle gpios", function() {
                 mode: "out"
             };
 
-            await updout.updOut(req, res, spy, content);
-
-            spy.called.should.be.true;
+            await ud.getstat(req, res, spy, content);
+            spy.called.should.be.false;
         }));
 
-        it("5. Test gpio-in without stub", hp.mochaAsync(async () => {
+
+        it("5. Test get status mode in without stub", hp.mochaAsync(async () => {
             const req = hp.mockRequest();
             const res = hp.mockResponse();
             const spy = sinon.spy();
 
             let content = {
-                gpio: 11,
-                status: 1
+                gpio: 5,
+                status: 1,
+                mode: "in"
             };
 
-            await updin.updIn(req, res, spy, content);
-
-            spy.called.should.be.true;
+            await ud.getstat(req, res, spy, content);
+            spy.called.should.be.false;
         }));
 
-        it("6. Test update-gpio without stub", hp.mochaAsync(async () => {
+
+        it("4. Test get status without mode and stub", hp.mochaAsync(async () => {
+            const req = hp.mockRequest();
+            const res = hp.mockResponse();
+            const spy = sinon.spy();
+
+            let content = {};
+
+            await ud.getstat(req, res, spy, content);
+            spy.called.should.be.true;
+        }));
+    });
+
+    describe("contactRpio as stub - gpio-tests", () => {
+        beforeEach(function () {
+            rpStub = sinon.stub(cr, 'contactRpioOut');
+            rpStub.returns(1);
+            rpInStub = sinon.stub(cr, 'contactRpioIn');
+            rpInStub.returns(1);
+            statStub = sinon.stub(ud, 'getstat');
+        });
+
+        afterEach(function () {
+            rpStub.restore();
+            rpInStub.restore();
+            statStub.restore();
+        });
+
+        it("1. Test get status with stub", hp.mochaAsync(async () => {
+            const req = hp.mockRequest();
+            const res = hp.mockResponse();
+            const spy = sinon.spy();
+
+            let content = {
+                gpio: 5,
+                status: 1,
+                mode: "out"
+            };
+
+            await ud.getstat(req, res, spy, content);
+            spy.called.should.be.false;
+        }));
+
+
+        it("2. Test update-gpio with stub", hp.mochaAsync(async () => {
+            const req = hp.mockRequest();
+            const res = hp.mockResponse();
+            const spy = sinon.spy();
+            let content = {
+                gpio: 13,
+                status: 1,
+                mode: "out"
+            };
+
+            statStub.returns(1);
+            req.body = content;
+            await ug.update(req, res, spy);
+            spy.called.should.be.false;
+        }));
+
+
+        it("3. Test update-gpio with stub and fail", hp.mochaAsync(async () => {
+            const req = hp.mockRequest();
+            const res = hp.mockResponse();
+            const spy = sinon.spy();
+            let content = {
+                gpio: 13,
+                status: 1,
+                mode: "out"
+            };
+
+            statStub.returns(undefined);
+            req.body = content;
+            await ug.update(req, res, spy);
+            spy.called.should.be.true;
+        }));
+    });
+
+
+    describe("Gpio tests without stub", () => {
+        it("1. Test update-gpio without stub", hp.mochaAsync(async () => {
             const req = hp.mockRequest();
             const res = hp.mockResponse();
             const spy = sinon.spy();
@@ -187,7 +270,7 @@ describe("Handle gpios", function() {
             spy.called.should.be.true;
         }));
 
-        it("7. Test update-gpio without stub for in", hp.mochaAsync(async () => {
+        it("2. Test update-gpio without stub for in", hp.mochaAsync(async () => {
             const req = hp.mockRequest();
             const res = hp.mockResponse();
             const spy = sinon.spy();
@@ -205,7 +288,7 @@ describe("Handle gpios", function() {
         }));
 
 
-        it("8. TESTING !!!! editgpio, but cannot pass req.something", hp.mochaAsync(async () => {
+        it("3. TESTING !!!! editgpio, but cannot pass req.something", hp.mochaAsync(async () => {
             let content = {
                 id: 3,
                 gpio: 7,
@@ -235,7 +318,7 @@ describe("Handle gpios", function() {
         }));
 
 
-        it("9. Editgpio hascred missing params", hp.mochaAsync(async () => {
+        it("4. Editgpio hascred missing params", hp.mochaAsync(async () => {
             const req = hp.mockRequest();
             const res = hp.mockResponse();
             const spy = sinon.spy();
@@ -245,7 +328,8 @@ describe("Handle gpios", function() {
             spy.called.should.be.false;
         }));
 
-        it("10. Editgpio update wrong data", hp.mochaAsync(async () => {
+
+        it("5. Editgpio update wrong data", hp.mochaAsync(async () => {
             const req = hp.mockRequest();
             const res = hp.mockResponse();
             const spy = sinon.spy();
@@ -259,64 +343,6 @@ describe("Handle gpios", function() {
             req.updated = content;
             await eg.update(req, res, spy);
             spy.called.should.be.true;
-        }));
-    });
-
-    describe("Test updates with stubs", () => {
-        it("1. Test gpio-out with stub", hp.mochaAsync(async () => {
-            const req = hp.mockRequest();
-            const res = hp.mockResponse();
-            const spy = sinon.spy();
-            let content = {
-                gpio: 5,
-                status: 1,
-                mode: "out"
-            };
-
-            rpStub = sinon.stub(cr, 'contactRpioOut');
-            rpStub.returns(1);
-            await updout.updOut(req, res, spy, content);
-
-            spy.called.should.be.false;
-            rpStub.restore();
-        }));
-
-
-        it("2. Test gpio-in with stub", hp.mochaAsync(async () => {
-            const req = hp.mockRequest();
-            const res = hp.mockResponse();
-            const spy = sinon.spy();
-            let content = {
-                gpio: 11,
-                status: 1
-            };
-
-            rpStub = sinon.stub(cr, 'contactRpioIn');
-            rpStub.returns(1);
-            await updin.updIn(req, res, spy, content);
-
-            spy.called.should.be.false;
-            rpStub.restore();
-        }));
-
-        it("2. Test update-gpio with stub", hp.mochaAsync(async () => {
-            const req = hp.mockRequest();
-            const res = hp.mockResponse();
-            const spy = sinon.spy();
-            let content = {
-                gpio: 13,
-                status: 1,
-                mode: "out"
-            };
-
-            rpStub = sinon.stub(cr, 'contactRpioOut');
-            req.body = content;
-            rpStub.returns(1);
-
-            await ug.update(req, res, spy);
-
-            spy.called.should.be.false;
-            rpStub.restore();
         }));
     });
 });

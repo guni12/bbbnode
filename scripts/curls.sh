@@ -9,4 +9,3 @@ curl http://localhost:1337/spotcal
 curl http://localhost:1337/spotcal/2
 curl http://localhost:1337/tempupdate
 curl http://localhost:1337/controlupdate
-sudo crontab -l -u root |  cat /home/pi/bbbnode/scripts/cron.txt | sudo crontab -u root -

@@ -7,6 +7,7 @@ async function hashbcrypt(req, res, next) {
         let salt = await makesalt();
 
         await makehash(req, res, next, salt);
+        return undefined;
     } catch (err) {
         return next(err);
     }

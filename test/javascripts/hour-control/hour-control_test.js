@@ -9,11 +9,11 @@ const sinon = require("sinon");
 const sinonChai = require('sinon-chai');
 const rpio = require('rpio');
 const hp = require('../../helper');
-let pinStub;
 
 const cr = require('../../../public/javascripts/gpio/contactRpio');
 const uo = require('../../../public/javascripts/hour-control/updateOne');
 const ua = require('../../../public/javascripts/hour-control/updateAll');
+let rpStub;
 
 rpio.init({mock: 'raspi-3'});
 
@@ -72,12 +72,22 @@ describe("Test hour-controls", function() {
                     done();
                 });
         });
+    });
 
-        it("2. 500 with stub but not async", (done) => {
+
+    describe("contactRpio as stub", () => {
+        beforeEach(function () {
+            rpStub = sinon.stub(cr, 'contactRpioOut');
+        });
+
+        afterEach(function () {
+            rpStub.restore();
+        });
+
+        it("1. 500 with stub but not async", (done) => {
             let check = "Gpio pinne kunde ej nås";
 
-            pinStub = sinon.stub(cr, 'contactRpioOut');
-            pinStub.returns(1);
+            rpStub.returns(1);
 
             chai.request(server)
                 .get("/hourcontrol")
@@ -91,23 +101,23 @@ describe("Test hour-controls", function() {
                     res.body.errors[0].message.should.equal(check);
                     done();
                 });
-            pinStub.restore();
+            rpStub.restore();
         });
 
-        it("3. 200 HAPPY PATH with stub, id and async", hp.mochaAsync(async () => {
-            pinStub = sinon.stub(cr, 'contactRpioOut');
-            pinStub.returns(1);
+        it("2. 200 HAPPY PATH with stub, id and async", hp.mochaAsync(async () => {
+            rpStub.returns(1);
 
             let res = await chai.request(server)
                 .get("/hourcontrol/2");
 
             //console.log(res.body);
             res.status.should.eql(200);
-            pinStub.restore();
         }));
+    });
 
 
-        it("4. 500 with wrong gpio id", (done) => {
+    describe("hourcontrol fails", () => {
+        it("1. 500 with wrong gpio id", (done) => {
             let check = "Cannot read property 'gpio' of undefined";
 
             chai.request(server)

@@ -59,7 +59,7 @@ describe("Visit and get spotcal", function() {
             let res = await chai.request(server)
                 .get("/spotcal/2");
 
-            //console.log(res.body);
+            console.log(res.body);
             res.status.should.eql(200);
         }));
 
