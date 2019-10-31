@@ -7,12 +7,15 @@ const chaiHttp = require("chai-http");
 const server = require("../../../app.js");
 const sinon = require("sinon");
 const sinonChai = require('sinon-chai');
+let expect = require('chai').expect;
 const rpio = require('rpio');
 const hp = require('../../helper');
 
 const cr = require('../../../public/javascripts/gpio/contactRpio');
 const uo = require('../../../public/javascripts/hour-control/updateOne');
 const ua = require('../../../public/javascripts/hour-control/updateAll');
+const up = require('../../../public/javascripts/hour-control/updatePin');
+const sp = require('../../../public/javascripts/hour-control/spotcal');
 let rpStub;
 
 rpio.init({mock: 'raspi-3'});
@@ -55,17 +58,18 @@ describe("Test hour-controls", function() {
 
         it("X. POST /editsensor", (done) => {
             let content = {
-                column: "gpio",
-                value: 8,
+                column: "name",
+                value: "sensor 1",
                 id: 4
             };
-            let check = "gpio updaterat med: 8";
+            let check = "name updaterat med: sensor 1";
 
             chai.request(server)
                 .post("/editsensor")
                 .set('content-type', 'application/x-www-form-urlencoded')
                 .send(content)
                 .end((err, res) => {
+                    //console.log(res.body);
                     res.should.have.status(200);
                     res.body.should.be.an("object");
                     res.body.message.should.eql(check);
@@ -84,9 +88,7 @@ describe("Test hour-controls", function() {
             rpStub.restore();
         });
 
-        it("1. 500 with stub but not async", (done) => {
-            let check = "Gpio pinne kunde ej nås";
-
+        it("1. 200 with stub but not async", (done) => {
             rpStub.returns(1);
 
             chai.request(server)
@@ -95,13 +97,11 @@ describe("Test hour-controls", function() {
                     if (err) {
                         done(err);
                     }
-                    //console.log("2 - 500", res.body);
-                    res.should.have.status(500);
+                    //console.log("1 - 200", res.body);
+                    res.should.have.status(200);
                     res.headers['content-type'].should.contain('application/json');
-                    res.body.errors[0].message.should.equal(check);
                     done();
                 });
-            rpStub.restore();
         });
 
         it("2. 200 HAPPY PATH with stub, id and async", hp.mochaAsync(async () => {
@@ -112,6 +112,20 @@ describe("Test hour-controls", function() {
 
             //console.log(res.body);
             res.status.should.eql(200);
+        }));
+
+        it("3. Test updatePin with stub fails", hp.mochaAsync(async () => {
+            const spy = sinon.spy();
+            const res = hp.mockResponse();
+            const req = hp.mockRequest();
+            const params = { id: 1, gpio: 3 };
+
+            rpStub.returns(null);
+
+            await expect(up.updatePin(req, res, spy, params))
+                .to.be.rejectedWith({Object});
+
+            spy.called.should.be.false;
         }));
     });
 
@@ -159,5 +173,17 @@ describe("Test hour-controls", function() {
             await ua.updateAll(req, res, spy, params);
             spy.called.should.be.true;
         }));
+
+        it("6. Test spotcal away", hp.mochaAsync(async () => {
+            const spy = sinon.spy();
+            const res = hp.mockResponse();
+            const req = hp.mockRequest();
+
+            req.settings = hp.settings();
+            req.content = hp.spot();
+            await sp.tocontrol(req, res, spy);
+            spy.called.should.be.false;
+        }));
     });
 });
+

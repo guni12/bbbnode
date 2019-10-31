@@ -1,7 +1,7 @@
 const asyn = require('./sqliteAsync');
 
 async function leftJoin(req, res, next) {
-    let sql = "SELECT sens.*, rms.id AS roomid, rms.should, rms.max, rms.min, ";
+    let sql = "SELECT sens.*, rms.id AS roomid, rms.should, rms.max, rms.min, rms.gpio, ";
 
     sql += "rms.away, rms.dsm, rms.ison, rms.isoff, rms.roomname, rms.mainroom ";
     sql += "FROM sensors sens JOIN rooms rms ";

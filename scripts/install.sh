@@ -40,6 +40,7 @@ sudo chown -R pi:www-data /var/www/react
 sudo mkdir /var/www/nologin
 sudo cp -R /home/pi/bbbnode/scripts/var/www/nologin/html /var/www/nologin
 sudo chown -R pi:www-data /var/www/nologin
+sudo update-rc.d -f nginx defaults
 
 sudo nginx
 

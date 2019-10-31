@@ -3,11 +3,11 @@ const ct = require('../sensors/currtime');
 
 async function tocontrol(req, res, next) {
     let isaway = false;
-    let date = ct.getDate();
+    let date = ct.dateMinusOne();
 
     if (req.settings.awayfrom !== null &&
         req.settings.awayto !== null
-        && req.settings.awayto > date-1) {
+        && req.settings.awayto > date) {
         isaway = true;
     }
     await extract.extractControls(req, res, next, isaway);

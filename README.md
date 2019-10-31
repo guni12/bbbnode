@@ -34,39 +34,43 @@ Hämta BehovsBoBoxen med:
 ```sh
 git clone https://github.com/guni12/bbbnode
 ```
-Öppna filen `/home/pi/bbbnode/scripts/install.sh` och ändra *LååångtLösenord* till ditt eget val (rad 46)  
+Öppna filen `/home/pi/bbbnode/scripts/install.sh` och ändra *LååångtLösenord* till ditt eget val (rad 47)  
 Öppna en terminal och kör följande kommando - (det kan ta en stund, sqlite ger många varningar, men fungerar):  
 ```sh
 sh /home/pi/bbbnode/scripts/install.sh
 ```
-Efter reboot ändra i filen `/home/pi/bbbnode/scripts/curls.sh` *din@email.se* och *hemlig* till dina val.  
+Efter att filen körts klart och gjort en reboot, ändra i filen `/home/pi/bbbnode/scripts/curls.sh` *din@email.se* och *hemlig* till dina val.  
 Kör igång API-servern och låt den rulla:
 ```sh
 cd bbbnode
 npm run dev
 ```
-Öppna en ny terminal och kör:
+Öppna en ny terminal och kör filen:
 ```sh
 cd bbbnode
 sh /home/pi/bbbnode/scripts/curls.sh
 ```
+Det som händer här är att alla installerade sensorer hittas av systemet.  
+En lista med alla relän initieras.  
+Aktuellt spotpris hämtas.  
+Temperaturerna uppdateras.  
+Samt styrning enligt default inställningar räknas ut.  
 
 Det finns två alternativa portnummer till gränssnittet. `:8787` har inloggning och då ska du bara skriva dina nyskapade användaruppgifter (det sparas automatiskt).  
 
-När det finns installerade sensorer och dessa är hittade av systemet, gå till hemsidan utan inloggning `http://ditt.ip.n.r:8686`.  
+Gå till hemsidan utan inloggning `http://ditt.ip.n.r:8686`.  
 
-Börja med att ge namn till dina sensorer (sidan *Sensorer*) allteftersom du identifierar dem.  
-Därefter ska du binda de sensorer som ska styra "sin" gpio pinne. Det gör du genom dropdown-listan på sidan *Rpio*. 
-
-När detta moment är gjort kan du lägga till rum på sidan *Rum* och ställa in dina önskade temperaturer. 
+Börja med att ge namn till dina sensorer (sidan *Sensorer*) allteftersom du identifierar dem. (Det enklaste är att värma sensorerna i handen och använda `http://ditt.ip.n.r:1337/tempupdate` för att uppdatera värdena.)  
+På sidan *Rum* kan man lägga till de sensorer som man vill ska styra relän. Namnge rummet och välj sensor, respektive relä i varsin dropdown-lista. Här ställer du också in önskade temperaturer.  
 
 När du är nöjd med ovanstående är det dags att installera några kommandon som körs regelbundet via cron. Om du vill ändra hur ofta uppdateringar körs, är det här du ska gå in och ändra (med `sudo crontab -e`).
 ```sh
 sudo crontab -l -u root |  cat /home/pi/bbbnode/scripts/cron.txt | sudo crontab -u root -
 ```
-Det är också bra att avsluta development-server-processen och starta en pm2 process som sedan startar om automatiskt vid reboot.
+Det är också bra att avsluta development-server-processen (ctrl + c) och starta en pm2 process som sedan startar om automatiskt vid reboot eller strömavbrott.
 
 ```sh
+cd bbbnode
 sudo fuser -k 1337/tcp
 pm2 start npm -- start
 ```
@@ -88,6 +92,7 @@ För att se pm2 respektive döda den installerade processen och starta om.
 ```sh
 pm2 log
 pm2 delete npm
+pm2 show npm
 pm2 start npm -- start
 pm2 start npm -- start --watch --ignore-watch="node_modules"
 ```

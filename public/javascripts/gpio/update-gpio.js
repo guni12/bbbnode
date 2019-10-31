@@ -10,7 +10,7 @@ async function update(req, res, next) {
     try {
         let newstat = await ug.getstat(req, res, next, obj);
 
-        if (newstat && (newstat === 0 || newstat === 1)) {
+        if (newstat === 0 || newstat === 1) {
             await newdata(req, obj, newstat);
         } else {
             let text = "Gpio pinne kunde ej kontaktas";

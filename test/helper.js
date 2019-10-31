@@ -1,5 +1,19 @@
 const sinon = require("sinon");
 
+function spot() {
+    let json = '{"Data type(PR)":"PR","Code(SO,SF)":"SO","Year":"2019",';
+
+    json += '"Week":"44","Day of week":"3","Date(dd.mm.yyyy)":"30.10.2019",';
+    json += '"Area":"SE1","Currency":"EUR","Hour1":"38,44","Hour2":"37,60",';
+    json += '"Hour3A":"37,34","Hour3B":"","Hour4":"36,98","Hour5":"37,91",';
+    json += '"Hour6":"39,42","Hour7":"41,00","Hour8":"42,21","Hour9":"43,16",';
+    json += '"Hour10":"42,54","Hour11":"41,96","Hour12":"41,12","Hour13":"40,50",';
+    json += '"Hour14":"40,49","Hour15":"40,30","Hour16":"39,81","Hour17":"39,68",';
+    json += '"Hour18":"39,41","Hour19":"39,11","Hour20":"38,94","Hour21":"38,79",';
+    json += '"Hour22":"38,85","Hour23":"38,32","Hour24":"36,57","Average":"39,60"}';
+    return json;
+}
+
 function room2() {
     return {
         id: 4,
@@ -185,6 +199,20 @@ function swtsmall() {
     ];
 }
 
+
+function settings() {
+    return {
+        id: 1,
+        area: 'SE1',
+        currency: 'EUR',
+        dsmon: 0,
+        percenton: 1,
+        percent: 2,
+        awayfrom: '2019-12-19',
+        awayto: '2022-12-19'
+    };
+}
+
 const mockResponse = () => {
     const res = {};
 
@@ -202,7 +230,8 @@ const mockRequest = (f, lt, id=null, c=null) => ({
     body: c,
     rooms: c,
     gpios: c,
-    stat: c
+    stat: c,
+    settings: c
 });
 
 
@@ -253,5 +282,7 @@ module.exports = {
     controlslist: controlslist,
     sensorlist: sensorlist,
     newsensors: newsensors,
-    swtsmall: swtsmall
+    swtsmall: swtsmall,
+    settings: settings,
+    spot: spot
 };

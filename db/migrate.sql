@@ -16,7 +16,6 @@ CREATE TABLE IF NOT EXISTS sensors (
     name VARCHAR(50),
     tempis REAL,
     measured VARCHAR(50),
-    gpio INTEGER UNIQUE,
     room VARCHAR(100)
 );
 
@@ -42,6 +41,7 @@ CREATE TABLE IF NOT EXISTS settings (
 CREATE TABLE IF NOT EXISTS rooms (
     id INTEGER PRIMARY KEY,
     sensorid VARCHAR(50) UNIQUE,
+    gpio INTEGER UNIQUE,
     away INTEGER,
     dsm INTEGER,
     isoff INTEGER,

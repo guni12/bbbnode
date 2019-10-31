@@ -23,7 +23,15 @@ function getDate() {
     return d.toLocaleDateString('sv-SE', options);
 }
 
+function dateMinusOne() {
+    let d = new Date();
+
+    d.setDate(d.getDate()-1);
+    return d.toLocaleDateString('sv-SE', options);
+}
+
 module.exports = {
     getTime: getTime,
-    getDate: getDate
+    getDate: getDate,
+    dateMinusOne: dateMinusOne
 };
