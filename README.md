@@ -23,50 +23,74 @@ Mjukvaran för styrsystemet är byggt med Node.js, Express, React och Sqlite3.
 
 ## Gör så här
 
-Konfigurera sd-kortet, installera raspbian och konfigurera till svenska förhållanden.  
+### 1. Förbered Raspberry Pi
+
+Konfigurera sd-kortet, installera raspbian och konfigurera till svenska förhållanden: 
 `https://www.raspberrypi.org/documentation/installation/noobs.md`  
 Aktivera ssh.  
 Byt lösenord!!!  
 Aktivera 1-Wire  
-Aktivera spi  
-Installera sensorer, mer info följer om detta...  
-Hämta BehovsBoBoxen med:  
+
+För att kunna läsa denna readme-fil i raspbians webbläsare, aktivera chrome-tillägget 'Markdown Viewer'. Aktivera också en 'JSON Viewer', för trevligare läsupplevelse av BehovsBoBoxens API. (Googla för ytterligare installations-uppgifter. Bra instruktioner finns.)
+
+### 2. Installera sensorer
+[Instuktioner här](sensor-init.md)  
+
+### 3. Hämta BehovsBoBoxen
 ```sh
 git clone https://github.com/guni12/bbbnode
 ```
+
+### 4. Ändra lösenord, användaruppgifter och installera
 Öppna filen `/home/pi/bbbnode/scripts/install.sh` och ändra *LååångtLösenord* till ditt eget val (rad 47)  
+Ändra i filen `/home/pi/bbbnode/scripts/curls.sh` *din@email.se* och *hemlig* till dina val.  
 Öppna en terminal och kör följande kommando - (det kan ta en stund, sqlite ger många varningar, men fungerar):  
 ```sh
 sh /home/pi/bbbnode/scripts/install.sh
 ```
-Efter att filen körts klart och gjort en reboot, ändra i filen `/home/pi/bbbnode/scripts/curls.sh` *din@email.se* och *hemlig* till dina val.  
-Kör igång API-servern och låt den rulla:
+Efter detta startas systemet om.
+
+### 5. Starta en utvecklings-server
+Öppna en egen terminal och kör följande kommandon:  
 ```sh
 cd bbbnode
 npm run dev
 ```
+Denna process ska rulla under installationen.
+
+### 6. Nu kan vi initiera BehovsBoBoxen
 Öppna en ny terminal och kör filen:
 ```sh
 cd bbbnode
 sh /home/pi/bbbnode/scripts/curls.sh
 ```
 Det som händer här är att alla installerade sensorer hittas av systemet.  
-En lista med alla relän initieras.  
-Aktuellt spotpris hämtas.  
-Temperaturerna uppdateras.  
-Samt styrning enligt default inställningar räknas ut.  
+En lista med alla relän initieras. Aktuellt spotpris hämtas. Temperaturerna uppdateras och styrning enligt default inställningar räknas ut.  
 
-Det finns två alternativa portnummer till gränssnittet. `:8787` har inloggning och då ska du bara skriva dina nyskapade användaruppgifter (det sparas automatiskt).  
+### 7. Nu är det dags för gränssnittet
 
 Gå till hemsidan utan inloggning `http://ditt.ip.n.r:8686`.  
 
+(Det finns två alternativa portnummer till gränssnittet. `:8787` har inloggning och då ska du bara skriva dina nyskapade användaruppgifter - det sparas automatiskt.)  
+
+### 8. Namnge sensorer
+
 Börja med att ge namn till dina sensorer (sidan *Sensorer*) allteftersom du identifierar dem. (Det enklaste är att värma sensorerna i handen och använda `http://ditt.ip.n.r:1337/tempupdate` för att uppdatera värdena.)  
-På sidan *Rum* kan man lägga till de sensorer som man vill ska styra relän. Namnge rummet och välj sensor, respektive relä i varsin dropdown-lista. Här ställer du också in önskade temperaturer.  
+Alternativt använd terminalen direkt med kommandot `ds18b20 -a -d 2`.
+Uppdatera sidan *Sensorer* och klicka på den hittade sensorn. Ge den ett alias, så du lättare kan hålla reda på den.
+
+### 9. Skapa rum
+
+På sidan *Rum* kan man välja de sensorer som man vill ska styra relän. Namnge rummet och välj sensor, respektive relä i varsin dropdown-lista. Här ställer du också in önskade temperaturer.  
+
+### 10. Läsa temperaturer och uppdatera värden
 
 När du är nöjd med ovanstående är det dags att installera några kommandon som körs regelbundet via cron. Om du vill ändra hur ofta uppdateringar körs, är det här du ska gå in och ändra (med `sudo crontab -e`).
 ```sh
 sudo crontab -l -u root |  cat /home/pi/bbbnode/scripts/cron.txt | sudo crontab -u root -
 ```
+
+### 11. Starta en production server
 Det är också bra att avsluta development-server-processen (ctrl + c) och starta en pm2 process som sedan startar om automatiskt vid reboot eller strömavbrott.
 
 ```sh
@@ -75,13 +99,14 @@ sudo fuser -k 1337/tcp
 pm2 start npm -- start
 ```
 
+### 12. Användbara kommandon
+
 För att läsa temperaturerna direkt i terminalen, skriv:
 ```sh
 ds18b20 -a -d 2
 ```
-För att använda hemsidan från fjärr behövs port forwarding och det är två portar som behöver öppnas, både port 1337 och antingen 8686 (utan inloggning) eller 8787 (med inloggning).
 
-Användbara kommandon för att se eller döda processer
+För att se eller döda processer
 ```sh
 sudo lsof -i -P -n | grep LISTEN
 sudo lsof -i :1337
@@ -96,6 +121,11 @@ pm2 show npm
 pm2 start npm -- start
 pm2 start npm -- start --watch --ignore-watch="node_modules"
 ```
+
+### 13. Port forwarding
+
+För att använda hemsidan från fjärr behövs port forwarding och det är två portar som behöver öppnas, både port 1337 och antingen 8686 (utan inloggning) eller 8787 (med inloggning).
+
 ## API 
 ### `http://ditt.ip.n.r:1337`
 
