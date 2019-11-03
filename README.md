@@ -94,15 +94,15 @@ Ge den ett alias, så du lättare kan hålla reda på den.
 
 På sidan **Rum** kan man välja de sensorer som man vill ska styra relän.  
 
-![development-server](doc/room1.png)
+![development-server](doc/room_1.png)
 
 Namnge rummet och välj sensor, respektive relä i varsin dropdown-lista.  
 
-![development-server](doc/room2.png)
+![development-server](doc/room_2.png)
 
  Här ställer du också in önskade temperaturer.  
 
-![development-server](doc/room3.png)
+![development-server](doc/room-3.png)
 
 På sidan **Rpio** kan du se dina aktiva relän.  
 
@@ -110,7 +110,7 @@ På sidan **Rpio** kan du se dina aktiva relän.
 
 På hem-sidan *Hub* finns dags-info om priser mm.  
 
-![development-server](doc/hub.png)
+![development-server](doc/hub_1.png)
 
 ### 10. Läsa temperaturer och uppdatera värden
 
