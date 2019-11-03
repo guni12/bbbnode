@@ -102,13 +102,13 @@ Namnge rummet och välj sensor, respektive relä i varsin dropdown-lista.
 
  Här ställer du också in önskade temperaturer.  
 
-![development-server](doc/room-3.png)
+![development-server](doc/room_3.png)
 
 På sidan **Rpio** kan du se dina aktiva relän.  
 
 ![development-server](doc/rpio.png)
 
-På hem-sidan *Hub* finns dags-info om priser mm.  
+På hem-sidan **Hub** finns dags-info om priser mm.  
 
 ![development-server](doc/hub_1.png)
 
@@ -120,7 +120,8 @@ sudo crontab -l -u root |  cat /home/pi/bbbnode/scripts/cron.txt | sudo crontab 
 ```
 
 ### 11. Starta en production server
-Det är också bra att avsluta development-server-processen (ctrl + c) och starta en pm2 process som sedan startar om automatiskt vid reboot eller strömavbrott.
+Det är också bra att avsluta development-server-processen (ctrl + c) och starta en pm2 process som sedan startar om automatiskt vid reboot eller strömavbrott.  
+[https://pm2.keymetrics.io/](https://pm2.keymetrics.io/)
 
 ```sh
 cd bbbnode
