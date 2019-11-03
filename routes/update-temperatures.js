@@ -9,7 +9,7 @@ router.get("/",
         await swt.sensorsWithTime(req, res, next);
         if (req.content) {
             await update.updateSensors(req, res, next);
-            res.json(req.show);
+            res.json(req.content);
         }
     }),
 );

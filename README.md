@@ -1,40 +1,33 @@
-# BehovsBoBoxen
+# BehovsBoBoxen<br>Styr effekt i hemmet
+
 [![Build Status](https://travis-ci.org/guni12/bbbnode.svg?branch=master)](https://travis-ci.org/guni12/bbbnode) 
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/guni12/bbbnode/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/guni12/bbbnode/?branch=master) 
 [![Build Status](https://scrutinizer-ci.com/g/guni12/bbbnode/badges/build.png?b=master)](https://scrutinizer-ci.com/g/guni12/bbbnode/build-status/master) 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/b293df61900a45f5afae54b63d759876)](https://www.codacy.com/app/guni12/bbbnode?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=guni12/bbbnode&amp;utm_campaign=Badge_Grade) 
 [![Coverage Status](https://coveralls.io/repos/github/guni12/bbbnode/badge.png?branch=master)](https://coveralls.io/github/guni12/bbbnode?branch=master) 
 [![Maintainability](https://api.codeclimate.com/v1/badges/d358e99378a19a9ec839/maintainability)](https://codeclimate.com/github/guni12/bbbnode/maintainability)
-![detta behöver du](http://www.behovsbo.se/themes/images/bbbmaterial.jpg)
-## Styr effekt i hemmet
-| Bom | Antal    | Materiallista                     |
-| --- | ---------|---------------------------------- |
-| 1   | 1        | Raspberry pi 3 modell B           |
-| 2   | &#8805;2 | ds18b20 (1-wire eller dallas)     |
-| 3   | 1        | micro SD kort, gärna minst 32GB   |
-| 4   | 1        | reläkort med 8 relän              |
-| 5   | 1        | 5V 2,1A USB laddare               |
-| 6   | 1        | kopplingsdäck                     |
-| 7   | 1        | knippe kopplingssladdar hane-hane |
-| 8   | 1        | knippe kopplingssladdar hona-hona |
-| 9   | 1        | Ethernetsladd                     |
 
 Mjukvaran för styrsystemet är byggt med Node.js, Express, React och Sqlite3.
 
 ## Gör så här
 
+[Materiallista](https://github.com/guni12/bbbnode/blob/master/doc/sensor-init.md#detta-behover-du)  
+
 ### 1. Förbered Raspberry Pi
 
-Konfigurera sd-kortet, installera raspbian och konfigurera till svenska förhållanden: 
-`https://www.raspberrypi.org/documentation/installation/noobs.md`  
-Aktivera ssh.  
-Byt lösenord!!!  
-Aktivera 1-Wire  
+Konfigurera sd-kortet, installera raspbian och konfigurera till svenska förhållanden:  
+[https://www.raspberrypi.org/documentation/installation/noobs.md](https://www.raspberrypi.org/documentation/installation/noobs.md)  
+* Aktivera ssh.  
+* Byt lösenord!!!  
+* Aktivera 1-Wire  
 
-För att kunna läsa denna readme-fil i raspbians webbläsare, aktivera chrome-tillägget 'Markdown Viewer'. Aktivera också en 'JSON Viewer', för trevligare läsupplevelse av BehovsBoBoxens API. (Googla för ytterligare installations-uppgifter. Bra instruktioner finns.)
+För att kunna läsa denna readme-fil i raspbians webbläsare, aktivera chrome-tillägget 'Markdown Viewer'. Aktivera också en 'JSON Viewer', för trevligare läsupplevelse av BehovsBoBoxens API.  
+[https://chrome.google.com/webstore/search/json%20viewer](https://chrome.google.com/webstore/search/json%20viewer)  
+[https://chrome.google.com/webstore/search/markdown%20viewer](https://chrome.google.com/webstore/search/markdown%20viewer)  
+(Googla för ytterligare installations-uppgifter. Bra instruktioner finns.)
 
 ### 2. Installera sensorer
-[Instuktioner här](sensor-init.md)  
+[Instruktioner här](doc/sensor-init.md#installera-sensorer)  
 
 ### 3. Hämta BehovsBoBoxen
 ```sh
@@ -56,9 +49,11 @@ Efter detta startas systemet om.
 cd bbbnode
 npm run dev
 ```
-Denna process ska rulla under installationen.
+Processen ska rulla under installationen.  
+![development-server](doc/devserver.png)
 
-### 6. Nu kan vi initiera BehovsBoBoxen
+
+### 6. Initiera BehovsBoBoxen
 Öppna en ny terminal och kör filen:
 ```sh
 cd bbbnode
@@ -67,21 +62,41 @@ sh /home/pi/bbbnode/scripts/curls.sh
 Det som händer här är att alla installerade sensorer hittas av systemet.  
 En lista med alla relän initieras. Aktuellt spotpris hämtas. Temperaturerna uppdateras och styrning enligt default inställningar räknas ut.  
 
-### 7. Nu är det dags för gränssnittet
+### 7. Gränssnittet
 
 Gå till hemsidan utan inloggning `http://ditt.ip.n.r:8686`.  
 
-(Det finns två alternativa portnummer till gränssnittet. `:8787` har inloggning och då ska du bara skriva dina nyskapade användaruppgifter - det sparas automatiskt.)  
+(Det finns två alternativa portnummer till gränssnittet. `:8787` är med inloggning.)  
 
 ### 8. Namnge sensorer
 
-Börja med att ge namn till dina sensorer (sidan *Sensorer*) allteftersom du identifierar dem. (Det enklaste är att värma sensorerna i handen och använda `http://ditt.ip.n.r:1337/tempupdate` för att uppdatera värdena.)  
-Alternativt använd terminalen direkt med kommandot `ds18b20 -a -d 2`.
-Uppdatera sidan *Sensorer* och klicka på den hittade sensorn. Ge den ett alias, så du lättare kan hålla reda på den.
+Börja med att ge namn till dina sensorer (sidan *Sensorer*) allteftersom du identifierar dem. 
+![development-server](doc/sensor1.png)
+
+Du kan värma sensorerna i handen och använda `http://ditt.ip.n.r:1337/tempupdate` för att uppdatera värdena.  
+
+Alternativt använd terminalen direkt med kommandot `ds18b20 -a -d 2`.  
+![development-server](doc/ds18b20.png)
+
+Uppdatera sidan *Sensorer* och klicka på den hittade sensorn.  
+![development-server](doc/sensor2.png)
+
+Ge den ett alias, så du lättare kan hålla reda på den.  
+![development-server](doc/sensor3.png)
 
 ### 9. Skapa rum
 
-På sidan *Rum* kan man välja de sensorer som man vill ska styra relän. Namnge rummet och välj sensor, respektive relä i varsin dropdown-lista. Här ställer du också in önskade temperaturer.  
+På sidan *Rum* kan man välja de sensorer som man vill ska styra relän.  
+![development-server](doc/rum1.png)
+
+Namnge rummet och välj sensor, respektive relä i varsin dropdown-lista. Här ställer du också in önskade temperaturer.  
+![development-server](doc/rum2.png)
+
+På sidan *Rpio* kan du se dina aktiva relän.  
+![development-server](doc/rpio.png)
+
+På hem-sidan *Hub* finns dags-info om priser mm.  
+![development-server](doc/hub2.png)
 
 ### 10. Läsa temperaturer och uppdatera värden
 
