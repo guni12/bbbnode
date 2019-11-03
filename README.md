@@ -66,7 +66,6 @@ En lista med alla relän initieras. Aktuellt spotpris hämtas. Temperaturerna up
 ### 7. Gränssnittet
 
 Gå till hemsidan utan inloggning `http://ditt.ip.n.r:8686`.  
-
 (Det finns två alternativa portnummer till gränssnittet. `:8787` är med inloggning.)  
 
 ### 8. Namnge sensorer
