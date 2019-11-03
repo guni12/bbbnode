@@ -11,7 +11,7 @@ Mjukvaran för styrsystemet är byggt med Node.js, Express, React och Sqlite3.
 
 ## Gör så här
 
-[Materiallista](https://github.com/guni12/bbbnode/blob/master/doc/sensor-init.md#detta-behover-du)  
+[Materiallista](doc/sensor-init.md#detta-behover-du)  
 
 ### 1. Förbered Raspberry Pi
 
@@ -50,6 +50,7 @@ cd bbbnode
 npm run dev
 ```
 Processen ska rulla under installationen.  
+
 ![development-server](doc/devserver.png)
 
 
@@ -70,33 +71,47 @@ Gå till hemsidan utan inloggning `http://ditt.ip.n.r:8686`.
 
 ### 8. Namnge sensorer
 
-Börja med att ge namn till dina sensorer (sidan *Sensorer*) allteftersom du identifierar dem. 
-![development-server](doc/sensor1.png)
+Börja med att ge namn till dina sensorer (sidan **Sensorer**) allteftersom du identifierar dem.  
+
+![development-server](doc/sensor1.png)  
 
 Du kan värma sensorerna i handen och använda `http://ditt.ip.n.r:1337/tempupdate` för att uppdatera värdena.  
 
-Alternativt använd terminalen direkt med kommandot `ds18b20 -a -d 2`.  
-![development-server](doc/ds18b20.png)
+![development-server](doc/tempupdate.png)  
 
-Uppdatera sidan *Sensorer* och klicka på den hittade sensorn.  
-![development-server](doc/sensor2.png)
+Alternativt använd terminalen direkt med kommandot `ds18b20 -a -d 2`.  
+
+![development-server](doc/ds18b20.png)  
+
+Uppdatera sidan **Sensorer** och klicka på den hittade sensorn.  
+
+![development-server](doc/sensor2.png)  
 
 Ge den ett alias, så du lättare kan hålla reda på den.  
-![development-server](doc/sensor3.png)
+
+![development-server](doc/sensor3.png)  
 
 ### 9. Skapa rum
 
-På sidan *Rum* kan man välja de sensorer som man vill ska styra relän.  
-![development-server](doc/rum1.png)
+På sidan **Rum** kan man välja de sensorer som man vill ska styra relän.  
 
-Namnge rummet och välj sensor, respektive relä i varsin dropdown-lista. Här ställer du också in önskade temperaturer.  
-![development-server](doc/rum2.png)
+![development-server](doc/room1.png)
 
-På sidan *Rpio* kan du se dina aktiva relän.  
+Namnge rummet och välj sensor, respektive relä i varsin dropdown-lista.  
+
+![development-server](doc/room2.png)
+
+ Här ställer du också in önskade temperaturer.  
+
+![development-server](doc/room3.png)
+
+På sidan **Rpio** kan du se dina aktiva relän.  
+
 ![development-server](doc/rpio.png)
 
 På hem-sidan *Hub* finns dags-info om priser mm.  
-![development-server](doc/hub2.png)
+
+![development-server](doc/hub.png)
 
 ### 10. Läsa temperaturer och uppdatera värden
 
@@ -127,8 +142,8 @@ sudo lsof -i -P -n | grep LISTEN
 sudo lsof -i :1337
 sudo fuser -k 1337/tcp
 ```
-För att se pm2 respektive döda den installerade processen och starta om.  
-Även en process som startar om vid förändring i koden (för den som själv utvecklar koden)
+Läs pm2 log, se info om processen eller döda den, respektive starta om.  
+Längst ner ett kommando för att starta om servern vid förändring i koden (för den som själv vill göra ändringar).
 ```sh
 pm2 log
 pm2 delete npm

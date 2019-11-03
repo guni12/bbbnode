@@ -1,6 +1,6 @@
 # Materiallista och<br>Instruktioner för att installera relän:
 
-[Tillbaka till README](https://github.com/guni12/bbbnode/blob/master/README.md#behovsboboxen)  
+[Tillbaka till README](../README.md#behovsboboxen)  
 
 ## Detta behöver du
 
@@ -22,4 +22,4 @@
 
 ## Installera sensorer
 
-[Tillbaka till README](https://github.com/guni12/bbbnode/blob/master/README.md#behovsboboxen)  
+[Tillbaka till README](../README.md#behovsboboxen)  
