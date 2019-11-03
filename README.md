@@ -71,9 +71,6 @@ Gå till hemsidan utan inloggning `http://ditt.ip.n.r:8686`.
 ### 8. Namnge sensorer
 
 Börja med att ge namn till dina sensorer (sidan **Sensorer**) allteftersom du identifierar dem.  
-
-![development-server](doc/sensor1.png)  
-
 Du kan värma sensorerna i handen och använda `http://ditt.ip.n.r:1337/tempupdate` för att uppdatera värdena.  
 
 ![development-server](doc/tempupdate.png)  
@@ -83,6 +80,8 @@ Alternativt använd terminalen direkt med kommandot `ds18b20 -a -d 2`.
 ![development-server](doc/ds18b20.png)  
 
 Uppdatera sidan **Sensorer** och klicka på den hittade sensorn.  
+
+![development-server](doc/sensor1.png)  
 
 ![development-server](doc/sensor2.png)  
 
