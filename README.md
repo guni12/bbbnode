@@ -21,10 +21,15 @@ Konfigurera sd-kortet, installera raspbian och konfigurera till svenska förhål
 * Byt lösenord!!!  
 * Aktivera 1-Wire  
 
-För att kunna läsa denna readme-fil i raspbians webbläsare, aktivera chrome-tillägget 'Markdown Viewer'. Aktivera också en 'JSON Viewer', för trevligare läsupplevelse av BehovsBoBoxens API.  
+#### Tips!
+* Aktivera en 'JSON Viewer', för trevligare läsupplevelse av BehovsBoBoxens API.  
 [https://chrome.google.com/webstore/search/json%20viewer](https://chrome.google.com/webstore/search/json%20viewer)  
+* För att kunna läsa lokala md-filer, t.ex. denna readme-fil i raspbians webbläsare, aktivera chrome-tillägget 'Markdown Viewer':
 [https://chrome.google.com/webstore/search/markdown%20viewer](https://chrome.google.com/webstore/search/markdown%20viewer)  
-(Googla för ytterligare installations-uppgifter. Bra instruktioner finns.)
+1. Gå sedan till `chrome://extensions`
+2. Hitta Markdown Viewer and klicka på `info` knappen
+3. Se till att `Tillåt åtkomst till webbadresser i filen` är på  
+
 
 ### 2. Installera sensorer
 [Instruktioner här](doc/sensor-init.md#installera-sensorer)  
@@ -33,6 +38,7 @@ För att kunna läsa denna readme-fil i raspbians webbläsare, aktivera chrome-t
 ```sh
 git clone https://github.com/guni12/bbbnode
 ```
+Med Markdown-tillägget ovan kan du nu läsa README-filen lokalt (om du vill). Skriv `/home/pi/bbbnode/README.md` i webbläsaren  
 
 ### 4. Ändra lösenord, användaruppgifter och installera
 Öppna filen `/home/pi/bbbnode/scripts/install.sh` och ändra *LååångtLösenord* till ditt eget val (rad 47)  
