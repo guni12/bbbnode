@@ -15,21 +15,7 @@ Mjukvaran för styrsystemet är byggt med Node.js, Express, React och Sqlite3.
 
 ### 1. Förbered Raspberry Pi
 
-Konfigurera sd-kortet, installera raspbian och konfigurera till svenska förhållanden:  
-[https://www.raspberrypi.org/documentation/installation/noobs.md](https://www.raspberrypi.org/documentation/installation/noobs.md)  
-* Aktivera ssh.  
-* Byt lösenord!!!  
-* Aktivera 1-Wire  
-
-#### Tips!
-* Aktivera en 'JSON Viewer', för trevligare läsupplevelse av BehovsBoBoxens API.  
-[https://chrome.google.com/webstore/search/json%20viewer](https://chrome.google.com/webstore/search/json%20viewer)  
-* För att kunna läsa lokala md-filer, t.ex. denna readme-fil i raspbians webbläsare, aktivera chrome-tillägget 'Markdown Viewer':
-[https://chrome.google.com/webstore/search/markdown%20viewer](https://chrome.google.com/webstore/search/markdown%20viewer)  
-1. Gå sedan till `chrome://extensions`
-2. Hitta Markdown Viewer and klicka på `info` knappen
-3. Se till att `Tillåt åtkomst till webbadresser i filen` är på  
-
+[Hårdvaran](doc/sensor-init.md#raspberry-pi)  
 
 ### 2. Installera sensorer
 [Instruktioner här](doc/sensor-init.md#installera-sensorer)  
@@ -38,7 +24,7 @@ Konfigurera sd-kortet, installera raspbian och konfigurera till svenska förhål
 ```sh
 git clone https://github.com/guni12/bbbnode
 ```
-Med Markdown-tillägget ovan kan du nu läsa README-filen lokalt (om du vill). Skriv `/home/pi/bbbnode/README.md` i webbläsaren  
+Med [Markdown Viewer](doc/sensor-init.md#tips) kan du läsa README-filen lokalt (om du vill). Skriv då `/home/pi/bbbnode/README.md` i webbläsaren  
 
 ### 4. Ändra lösenord, användaruppgifter och installera
 Öppna filen `/home/pi/bbbnode/scripts/install.sh` och ändra *LååångtLösenord* till ditt eget val (rad 47)  
@@ -159,7 +145,7 @@ För att starta om.
 pm2 start npm -- start
 pm2 save
 ```
-För att ändringar i koden ska slå igenom måste servern startas om. Det finns ett kommando för det också.
+Utvecklare? För att dina egna ändringar i koden ska slå igenom måste servern startas om. Det finns ett kommando för det också.
 ```sh
 pm2 start npm -- start --watch --ignore-watch="node_modules"
 pm2 save

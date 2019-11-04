@@ -20,6 +20,24 @@
 | 8   | 1        | knippe kopplingssladdar hona-hona |
 | 9   | 1        | Ethernetsladd                     |
 
+## Raspberry Pi
+
+Konfigurera sd-kortet, installera raspbian och konfigurera till svenska förhållanden:  
+[https://www.raspberrypi.org/documentation/installation/noobs.md](https://www.raspberrypi.org/documentation/installation/noobs.md)  
+* Aktivera ssh.  
+* Byt lösenord!!!  
+* Aktivera 1-Wire  
+
+#### Tips!
+* Aktivera en 'JSON Viewer', för trevligare läsupplevelse av BehovsBoBoxens API.  
+[https://chrome.google.com/webstore/search/json%20viewer](https://chrome.google.com/webstore/search/json%20viewer)  
+* För att kunna läsa lokala md-filer, t.ex. denna readme-fil i raspbians webbläsare, aktivera chrome-tillägget 'Markdown Viewer':
+[https://chrome.google.com/webstore/search/markdown%20viewer](https://chrome.google.com/webstore/search/markdown%20viewer)  
+1. Gå sedan till `chrome://extensions`
+2. Hitta Markdown Viewer and klicka på `info` knappen
+3. Se till att `Tillåt åtkomst till webbadresser i filen` är på  
+
+
 ## Installera sensorer
 
 [Tillbaka till README](../README.md#behovsboboxen)  
