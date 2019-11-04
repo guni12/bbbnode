@@ -132,6 +132,7 @@ Det är också bra att avsluta development-server-processen (ctrl + c) och start
 cd bbbnode
 sudo fuser -k 1337/tcp
 pm2 start npm -- start
+pm2 save
 ```
 
 ### 12. Användbara kommandon
@@ -141,21 +142,30 @@ För att läsa temperaturerna direkt i terminalen, skriv:
 ds18b20 -a -d 2
 ```
 
-För att se eller döda processer
+För att se eller döda processer (-i info, -k kill)
 ```sh
 sudo lsof -i -P -n | grep LISTEN
 sudo lsof -i :1337
 sudo fuser -k 1337/tcp
 ```
-Läs pm2 log, se info om processen eller döda den, respektive starta om.  
-Längst ner ett kommando för att starta om servern vid förändring i koden (för den som själv vill göra ändringar).
+För att studera pm2 log, se info om processen eller döda den
 ```sh
 pm2 log
-pm2 delete npm
 pm2 show npm
-pm2 start npm -- start
-pm2 start npm -- start --watch --ignore-watch="node_modules"
+pm2 delete npm
 ```
+För att starta om.  
+```sh
+pm2 start npm -- start
+pm2 save
+```
+För att ändringar i koden ska slå igenom måste servern startas om. Det finns ett kommando för det också.
+```sh
+pm2 start npm -- start --watch --ignore-watch="node_modules"
+pm2 save
+```
+
+[pm2 Quick Start](https://pm2.keymetrics.io/docs/usage/quick-start/)
 
 ### 13. Port forwarding
 
