@@ -16,7 +16,7 @@
 | 6   |          |                                     | 1        | knippe kopplingssladdar           |
 | 7   | 1        | Ethernetsladd                       | 1        | Ethernetsladd                     |
 
-![raspberry pi x 2](raspar2.jpg)
+![raspberry pi x 2](raspar3.jpg)
 
 ## Raspberry Pi
 
