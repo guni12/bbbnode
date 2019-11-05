@@ -41,9 +41,8 @@ Konfigurera sd-kortet, installera raspbian och konfigurera till svenska förhål
 På bilden ovan pekar de röda pilarna på plus och de blå pilarna på minus. De vita pilarna pekar på signal.
 
 ### BehovsBoBoxen 2017 har ett löst reläkort som kopplas med så kallade dupontsladdar  
-Koppla relä (nr 1 - 8) från pinne 29,31,33,36,35,38,40,37.  
+Koppla relä (nr 1 - 8), se den gröna pilen, från pinne 29,31,33,36,35,38,40,37.  
 Koppla plus från pinne 2 eller 4 och minus från pinne 6, 9,14,25,30,34 eller 39.  
-
 Koppla in ”dallasgivarna” till plus och minus, samt signalen till pinne 7.  
 
 ### För BehovsBoBoxen 2019 har vi valt att köpa ett påhängskort från Hi-tech chain  
