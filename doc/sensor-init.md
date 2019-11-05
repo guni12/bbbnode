@@ -16,7 +16,7 @@
 | 6   |          |                                     | 1        | knippe kopplingssladdar           |
 | 7   | 1        | Ethernetsladd                       | 1        | Ethernetsladd                     |
 
-![raspberry pi x 2](raspar3.jpg)
+![raspberry pi x 2](raspar.jpg)
 
 ## Raspberry Pi
 
@@ -36,20 +36,19 @@ Konfigurera sd-kortet, installera raspbian och konfigurera till svenska förhål
 3. Se till att `Tillåt åtkomst till webbadresser i filen` är på  
 
 
-## Installera sensorer
+## Installera sensorer och reläkort
+
+På bilden ovan pekar de röda pilarna på plus och de blå pilarna på minus. De vita pilarna pekar på signal.
 
 ### BehovsBoBoxen 2017 har ett löst reläkort som kopplas med så kallade dupontsladdar  
-Koppla relä 1,2,3,4,5,6,7,8, från pinne 29,31,33,36,35,38,40,37.  
-Koppla + från pinne 2 eller 4 och – från pinne 6, 9,14,25,30,34 eller 39.  
-Koppla in ”dallasgivarna” till + och – samt signalen till pinne 7.  
-På bilden ovan pekar den röda pilen på den vita sladden som är kopplad till pinne 37 och sedan kopplad till relä ?  
-Identifiera relä och pinne enligt tabellen.
+Koppla relä (nr 1 - 8) från pinne 29,31,33,36,35,38,40,37.  
+Koppla plus från pinne 2 eller 4 och minus från pinne 6, 9,14,25,30,34 eller 39.  
 
-![relän](relan.png)
+Koppla in ”dallasgivarna” till plus och minus, samt signalen till pinne 7.  
 
 ### För BehovsBoBoxen 2019 har vi valt att köpa ett påhängskort från Hi-tech chain  
 [https://hitechchain.se/raspberry-pi/raspberry-pi-8-ch-relay-expansion-board](https://hitechchain.se/raspberry-pi/raspberry-pi-8-ch-relay-expansion-board)  
-Koppla in dallasgivarna på skruvplintarna till + och – samt tryck eller löd fast signalen på hål P4.  
+Koppla in dallasgivarna på skruvplintarna till plus och minus samt tryck eller löd fast signalen på hål P4.  
 
 
 [Tillbaka till README](../README.md#behovsboboxen)  

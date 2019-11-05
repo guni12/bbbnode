@@ -17,8 +17,8 @@ Mjukvaran för styrsystemet är byggt med Node.js, Express, React och Sqlite3.
 
 [Hårdvaran](doc/sensor-init.md#raspberry-pi)  
 
-### 2. Installera sensorer
-[Instruktioner här](doc/sensor-init.md#installera-sensorer)  
+### 2. Installera sensorer och reläkort
+[Instruktioner här](doc/sensor-init.md#installera-sensorere-och-relakort)  
 
 ### 3. Hämta BehovsBoBoxen
 ```sh
