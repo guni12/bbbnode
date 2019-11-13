@@ -28,7 +28,7 @@ describe("Test controls", function() {
                 should: 19,
                 tempis: 22.4
             };
-            let check = 0;
+            let check = 1;
             let answer = controls.c0(item);
 
             answer.should.be.a("number");
@@ -42,7 +42,7 @@ describe("Test controls", function() {
                 min: 14,
                 tempis: 22.4
             };
-            let check = 0;
+            let check = 1;
             let answer = controls.c1(item);
 
             answer.should.be.a("number");
@@ -56,7 +56,7 @@ describe("Test controls", function() {
                 max: 25,
                 tempis: 22.4
             };
-            let check = 1;
+            let check = 0;
             let answer = controls.c2(item);
 
             answer.should.be.a("number");
@@ -70,7 +70,7 @@ describe("Test controls", function() {
                 away: 19,
                 tempis: 22.4
             };
-            let check = 0;
+            let check = 1;
             let answer = controls.c3(item);
 
             answer.should.be.a("number");
