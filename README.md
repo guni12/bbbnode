@@ -24,7 +24,7 @@ Mjukvaran för styrsystemet är byggt med Node.js, Express, React och Sqlite3.
 ```sh
 git clone https://github.com/guni12/bbbnode
 ```
-Med [Markdown Viewer](doc/sensor-init.md#tips) kan du läsa README-filen lokalt (om du vill). Skriv då `/home/pi/bbbnode/README.md` i webbläsaren  
+Med [Markdown Viewer](doc/sensor-init.md#tips) kan du läsa README-filen lokalt (om du vill). Skriv då [/home/pi/bbbnode/README.md](/home/pi/bbbnode/README.md) i webbläsaren  
 
 ### 4. Ändra lösenord, användaruppgifter och installera
 Öppna filen `/home/pi/bbbnode/scripts/install.sh` och ändra *LååångtLösenord* till ditt eget val (rad 47)  
@@ -98,6 +98,9 @@ Namnge rummet och välj sensor, respektive relä i varsin dropdown-lista.
 På sidan **Rpio** kan du se dina aktiva relän.  
 
 ![development-server](doc/rpio.png)
+
+OBS!!! Om du har omvänd funktion på reläna (till och från), gå in i filen  
+```/home/pi/bbbnode/public/javascripts/hour-control/controls.js``` och på rad 18 ändra etta och nolla till ```return c1 < c2 ? 1 : 0;```
 
 På hem-sidan **Hub** finns dags-info om priser mm.  
 

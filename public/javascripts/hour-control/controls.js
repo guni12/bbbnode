@@ -15,7 +15,7 @@ function c3(item) {
 }
 
 function oneOrZero(c1, c2) {
-    return c1 < c2 ? 1 : 0;
+    return c1 < c2 ? 0 : 1;
 }
 
 module.exports = {
