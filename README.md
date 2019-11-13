@@ -155,7 +155,7 @@ pm2 save
 
 ### 13. Port forwarding
 
-För att använda hemsidan från fjärr behövs port forwarding och det är två portar som behöver öppnas, både port 1337 och antingen 8686 (utan inloggning) eller 8787 (med inloggning).
+För att använda hemsidan från fjärr behöver port 8686 (utan inloggning) öppnas eller 8787 (med inloggning).
 
 ## API 
 ### `http://ditt.ip.n.r:1337`

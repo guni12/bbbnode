@@ -28,6 +28,8 @@ const editGpio = require("./routes/edit-gpio");
 const hourControlRouter = require("./routes/hour-control");
 const updateControls = require("./routes/control-update");
 const updateTempRouter = require("./routes/update-temperatures");
+const isAuthRouter = require("./routes/isauth");
+const logoutRouter = require("./routes/logout");
 
 const app = express();
 
@@ -74,6 +76,8 @@ app.use('/editgpio', editGpio);
 app.use('/hourcontrol', hourControlRouter);
 app.use('/controlupdate', updateControls);
 app.use('/tempupdate', updateTempRouter);
+app.use('/isauth', isAuthRouter);
+app.use('/logout', logoutRouter);
 
 
 // catch 404 and forward to error handler
