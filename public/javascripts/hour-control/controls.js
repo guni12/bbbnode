@@ -14,8 +14,9 @@ function c3(item) {
     return oneOrZero(item.tempis, item.away);
 }
 
-function oneOrZero(c1, c2) {
-    return c1 < c2 ? 0 : 1;
+function oneOrZero(tempis, tempset) {
+    //In this case 0 means on and 1 off
+    return tempis < tempset ? 0 : 1;
 }
 
 module.exports = {

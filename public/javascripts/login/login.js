@@ -20,7 +20,7 @@ function login(req, res) {
             const text = "Medlem " + payload.id + " loggade in";
             let obj = reg.retsuccess(payload.id, token, text);
 
-            res.cookie('token', token, { httpOnly: true });
+            res.cookie('token', token, { maxAge: 30 * 60 * 1000, httpOnly: true });
 
             return res.status(200).json(obj);
         }
