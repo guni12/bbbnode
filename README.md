@@ -100,7 +100,9 @@ På sidan **Rpio** kan du se dina aktiva relän.
 ![development-server](doc/rpio.png)
 
 OBS!!! Om du har omvänd funktion på reläna (till och från), gå in i filen  
-```/home/pi/bbbnode/public/javascripts/hour-control/controls.js``` och på rad 18 ändra etta och nolla till ```return c1 < c2 ? 1 : 0;```
+```/home/pi/bbbnode/public/javascripts/hour-control/controls.js```  
+och på rad 18 ändra etta och nolla till  
+```return c1 < c2 ? 1 : 0;```
 
 På hem-sidan **Hub** finns dags-info om priser mm.  
 
