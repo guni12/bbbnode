@@ -31,7 +31,7 @@ Konfigurera sd-kortet, installera raspbian och konfigurera till svenska förhål
 [https://chrome.google.com/webstore/search/json%20viewer](https://chrome.google.com/webstore/search/json%20viewer)  
 * För att kunna läsa lokala md-filer, t.ex. denna readme-fil i raspbians webbläsare, aktivera chrome-tillägget 'Markdown Viewer':
 [https://chrome.google.com/webstore/search/markdown%20viewer](https://chrome.google.com/webstore/search/markdown%20viewer)  
-1. Gå sedan till [chrome://extensions](chrome://extensions)
+1. Gå sedan till [```chrome://extensions```](chrome://extensions)
 2. Hitta Markdown Viewer and klicka på `info` knappen
 3. Se till att `Tillåt åtkomst till webbadresser i filen` är på  
 
