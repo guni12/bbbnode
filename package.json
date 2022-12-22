@@ -10,7 +10,7 @@
     "ds18b20-raspi": "^0.3.3",
     "express": "^4.17.1",
     "fast-csv": "^3.1.0",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "morgan": "^1.9.1",
     "rpio": "^1.0.13",
     "sqlite3": "^4.0.9"
